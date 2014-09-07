@@ -1,0 +1,10 @@
+bin/
+obj/
+publish/
+Debug/
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.psess
+*.vsp
