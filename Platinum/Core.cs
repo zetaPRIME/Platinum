@@ -19,7 +19,7 @@ namespace Platinum
 		public Core()
 		{
 			graphics = new GraphicsDeviceManager(this);
-			Content.RootDirectory = "Content";
+			Content.RootDirectory = "Content/Native";
 		}
 
 		protected override void Initialize()

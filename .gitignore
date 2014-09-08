@@ -1,4 +1,5 @@
 bin/
+!bin/Release/Content/
 obj/
 publish/
 Debug/
