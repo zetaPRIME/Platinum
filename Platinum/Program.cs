@@ -9,7 +9,10 @@ namespace Platinum
 	{
 		public static void Main()
 		{
-			//
+			using (Core core = Core.instance = new Core())
+			{
+				core.Run();
+			}
 		}
 	}
 }

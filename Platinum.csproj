@@ -87,6 +87,7 @@
     <Compile Include="LitJson\JsonWriter.cs" />
     <Compile Include="LitJson\Lexer.cs" />
     <Compile Include="LitJson\ParserToken.cs" />
+    <Compile Include="Platinum\Core.cs" />
     <Compile Include="Platinum\Program.cs" />
   </ItemGroup>
   <ItemGroup>
