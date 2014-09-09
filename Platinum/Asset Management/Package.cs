@@ -7,5 +7,6 @@ namespace Platinum
 {
 	public class Package
 	{
+		public Dictionary<string, ExtTexture> textures = new Dictionary<string, ExtTexture>();
 	}
 }
