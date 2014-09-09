@@ -87,8 +87,13 @@
     <Compile Include="LitJson\JsonWriter.cs" />
     <Compile Include="LitJson\Lexer.cs" />
     <Compile Include="LitJson\ParserToken.cs" />
-    <Compile Include="Platinum\Core.cs" />
-    <Compile Include="Platinum\Program.cs" />
+    <Compile Include="Platinum\Asset Management\Package.cs" />
+    <Compile Include="Platinum\Asset Management\PackageManager.cs" />
+    <Compile Include="Platinum\Asset Management\RootPackage.cs" />
+    <Compile Include="Platinum\Basics\Core.cs" />
+    <Compile Include="Platinum\Basics\Program.cs" />
+    <Compile Include="Platinum\Data Types\ExtTexture.cs" />
+    <Compile Include="Platinum\Utilities\Extensions_Graphics.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
