@@ -7,8 +7,8 @@ namespace Platinum
 {
 	public class PackageManager
 	{
-		public RootPackage rootPackage;
+		public static RootPackage rootPackage;
 
-		public Dictionary<string, Package> loadedPackages = new Dictionary<string, Package>();
+		public static Dictionary<string, Package> loadedPackages = new Dictionary<string, Package>();
 	}
 }
