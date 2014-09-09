@@ -24,6 +24,8 @@ namespace Platinum
 
 		protected override void Initialize()
 		{
+			573.ToString(); // because why not
+
 			// making sure of a few things
 			IsFixedTimeStep = true;
 
