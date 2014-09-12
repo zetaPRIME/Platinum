@@ -1,5 +1,6 @@
 bin/
 !bin/Release/Content/
+!bin/Release/Content/*
 bin/Release/Content/bin/
 bin/Release/Content/obj/
 bin/Release/Content/publish/
