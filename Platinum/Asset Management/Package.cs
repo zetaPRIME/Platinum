@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.CodeDom.Compiler;
+using System.IO;
 
+using System.Reflection;
+
+using System.CodeDom.Compiler;
 using Microsoft.CSharp;
+
+using FluentPath;
+using Ionic.Zip;
+using LitJson;
 
 namespace Platinum
 {
@@ -24,6 +29,8 @@ namespace Platinum
 		public PackageType type = PackageType.Library;
 
 		public string path;
+
+		public JsonData def;
 
 		public Dictionary<string, ExtTexture> textures = new Dictionary<string, ExtTexture>();
 		public Dictionary<string, byte[]> files = new Dictionary<string, byte[]>();
@@ -52,6 +59,43 @@ namespace Platinum
 			if (files.ContainsKey(name)) return files[name];
 			foreach (Package pkg in inherit) if (pkg.files.ContainsKey(name)) return pkg.files[name];
 			return null;
+		}
+
+		public void AddFiles(FPath path)
+		{
+			FPathCollection pfiles = path.GetFiles();
+
+			foreach (FPath p in pfiles)
+			{
+				string subName = p.ToString().Replace("\\", "/");
+				if (subName.StartsWith("Content/")) subName = subName.Substring("Content/".Length);
+				string qpath = this.path + "/";
+				if (subName.StartsWith(qpath)) subName = subName.Substring(qpath.Length);
+
+				if (p.Extension == ".zip") continue; // zips are assumed to be subpackages
+				if (p.Extension == ".png")
+				{
+					// todo: load in textures!
+				}
+				else
+				{
+					byte[] file = null;
+					p.Open((FileStream fs) =>
+					{
+						file = new byte[fs.Length];
+						fs.Read(file, 0, (int)fs.Length);
+					});
+					files.Add(subName, file);
+				}
+			}
+
+			FPathCollection pdirs = path.GetDirectories();
+
+			foreach (FPath p in pdirs)
+			{
+				if (PackageManager.IsPackage(p)) continue; // don't read into subpackages
+				AddFiles(p);
+			}
 		}
 
 		public void MakeAssembly()

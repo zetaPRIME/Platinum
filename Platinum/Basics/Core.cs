@@ -51,6 +51,7 @@ namespace Platinum
 			spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
 
 			PackageManager.FindPackages();
+			PackageManager.LoadPackage("Library/test");
 		}
 
 		protected override void Update(GameTime gameTime)
