@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using FluentPath;
+using Ionic.Zip;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -46,6 +49,8 @@ namespace Platinum
 		protected override void LoadContent()
 		{
 			spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
+
+			PackageManager.FindPackages();
 		}
 
 		protected override void Update(GameTime gameTime)

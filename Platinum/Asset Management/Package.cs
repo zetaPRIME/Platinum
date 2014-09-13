@@ -10,8 +10,19 @@ using Microsoft.CSharp;
 
 namespace Platinum
 {
+	public enum PackageType
+	{
+		Global,
+		Library,
+		SceneMode,
+		Scene,
+		Entity
+	}
+
 	public class Package
 	{
+		public PackageType type = PackageType.Library;
+
 		public string path;
 
 		public Dictionary<string, ExtTexture> textures = new Dictionary<string, ExtTexture>();
