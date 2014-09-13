@@ -52,7 +52,20 @@ namespace Platinum
 
 			PackageManager.FindPackages();
 
-			PackageManager.LoadPackage("Global", true);
+			Package global = PackageManager.LoadPackage("Global", true);
+			if (global.assembly != null)
+			{
+				Type[] types = global.assembly.GetTypes();
+
+				foreach (Type t in types)
+				{
+					if (t.IsSubclassOf(typeof(GameService)))
+					{
+						GameDef.gameService = (t.GetConstructor(new Type[0]).Invoke(new object[0])) as GameService;
+						break;
+					}
+				}
+			}
 		}
 
 		protected override void Update(GameTime gameTime)
@@ -68,6 +81,8 @@ namespace Platinum
 
 			spriteBatch.GraphicsDevice.Clear(new Color(0.5f, 0f, 1f));
 			spriteBatch.Begin();
+
+			GameDef.gameService.PostDraw(spriteBatch);
 			spriteBatch.End();
 
 			base.Draw(gameTime);

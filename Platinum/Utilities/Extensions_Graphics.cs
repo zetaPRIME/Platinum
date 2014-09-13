@@ -10,9 +10,9 @@ namespace Platinum
 {
 	public static partial class Extensions
 	{
-		public static void Draw(this SpriteBatch sb, ExtTexture texture, Vector2 position, float scale = 1f, float rotation = 1f)
+		public static void Draw(this SpriteBatch sb, ExtTexture texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale, SpriteEffects spriteEffects)
 		{
-			sb.Draw(texture.texture, position, null, Color.White, rotation, Vector2.Zero, scale, SpriteEffects.None, 0f);
+			sb.Draw(texture.texture, position, sourceRectangle, color, rotation, origin, scale * texture.baseScale, SpriteEffects.None, 0f);
 		}
 	}
 }

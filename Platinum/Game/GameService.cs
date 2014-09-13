@@ -8,11 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Platinum
 {
-	public class Entity : EventPassable
+	public class GameService
 	{
-		public Vector2 position;
-
-		public virtual void Update() { }
-		public virtual void Draw(SpriteBatch sb) { }
+		public virtual void PostDraw(SpriteBatch sb) { }
 	}
 }

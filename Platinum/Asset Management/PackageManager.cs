@@ -108,7 +108,7 @@ namespace Platinum
 			availablePackages.Add(str);
 		}
 
-		public static void LoadPackage(string path, bool global = false)
+		public static Package LoadPackage(string path, bool global = false)
 		{
 			string[] comp = path.Split('/');
 
@@ -130,8 +130,7 @@ namespace Platinum
 				for (int j = i; j < comp.Length; j++) subpath = subpath + comp[j] + "/";
 				using (ZipFile zf = ZipFile.Read(zpath.ToString()))
 				{
-					LoadPackageZip(path, zf, subpath, global);
-					return;
+					return LoadPackageZip(path, zf, subpath, global);
 				}
 			}
 
@@ -183,9 +182,11 @@ namespace Platinum
 
 			// add to loaded only if successful
 			loadedPackages.Add(path, pkg);
+
+			return pkg;
 		}
 
-		public static void LoadPackageZip(string path, ZipFile zf, string subpath, bool global = false)
+		public static Package LoadPackageZip(string path, ZipFile zf, string subpath, bool global = false)
 		{
 			Package pkg = new Package();
 			pkg.path = path;
@@ -236,6 +237,8 @@ namespace Platinum
 
 			// add to loaded only if successful
 			loadedPackages.Add(path, pkg);
+
+			return pkg;
 		}
 	}
 }

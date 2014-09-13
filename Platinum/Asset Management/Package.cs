@@ -14,6 +14,9 @@ using Path = Fluent.IO.Path;
 using Ionic.Zip;
 using LitJson;
 
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 namespace Platinum
 {
 	public enum PackageType
@@ -39,6 +42,7 @@ namespace Platinum
 		public Assembly assembly;
 
 		public List<Package> inherit = new List<Package>();
+		public List<Package> inheritedBy = new List<Package>();
 
 		public string StripPath()
 		{
@@ -62,6 +66,18 @@ namespace Platinum
 			foreach (Package pkg in inherit) if (pkg.files.ContainsKey(name)) return pkg.files[name];
 			if (type != PackageType.Global && PackageManager.globalPackage.files.ContainsKey(name)) return PackageManager.globalPackage.files[name];
 			return null;
+		}
+
+		public void Free(Package from)
+		{
+			if (inheritedBy.Contains(from)) inheritedBy.Remove(from);
+			if (type == PackageType.Library && inheritedBy.Count == 0) Unload();
+		}
+
+		public void Unload()
+		{
+			foreach (Package pkg in inherit) pkg.Free(this);
+			PackageManager.loadedPackages.Remove(path);
 		}
 
 		public void ReadDef()
@@ -90,7 +106,12 @@ namespace Platinum
 
 			if (ipath == "") return;
 			if (!PackageManager.loadedPackages.ContainsKey(ipath)) PackageManager.LoadPackage(ipath);
-			if (PackageManager.loadedPackages.ContainsKey(ipath)) inherit.Add(PackageManager.loadedPackages[ipath]);
+			if (PackageManager.loadedPackages.ContainsKey(ipath))
+			{
+				Package pkg = PackageManager.loadedPackages[ipath];
+				inherit.Add(pkg);
+				pkg.inheritedBy.Add(this);
+			}
 
 		}
 
@@ -108,7 +129,10 @@ namespace Platinum
 				if (p.Extension == ".zip") continue; // zips are assumed to be subpackages
 				if (p.Extension == ".png")
 				{
-					// todo: load in textures!
+					p.Open((FileStream fs) =>
+					{
+						LoadTexture(subName, fs);
+					});
 				}
 				else
 				{
@@ -143,7 +167,11 @@ namespace Platinum
 				if (subName.EndsWith(".zip")) throw new Exception("Subpackage zip " + subName + " found in zipped package " + path + "; nested zipped packages are not supported."); // YOU'RE DOIN' IT WRONG
 				if (subName.EndsWith(".png"))
 				{
-					// todo: load in textures!
+					using (MemoryStream ms = new MemoryStream())
+					{
+						zf[s].Extract(ms);
+						LoadTexture(subName, ms);
+					}
 				}
 				else
 				{
@@ -154,6 +182,53 @@ namespace Platinum
 					}
 				}
 			}
+		}
+
+		void LoadTexture(string fileName, Stream stream)
+		{
+			ExtTexture ext = new ExtTexture();
+			ext.texture = Texture2D.FromStream(Core.instance.GraphicsDevice, stream);
+			ext.texture = Utils.ConvertToPreMultipliedAlpha(ext.texture);
+
+			if (fileName.EndsWith(".png")) fileName = fileName.Substring(0, fileName.Length - ".png".Length);
+
+			// defaults
+			ext.pixelScale = 1;
+			ext.baseScale = 1;
+
+			if (fileName.EndsWith("]") && fileName.IndexOf('[') > -1)
+			{
+				string args = fileName.Substring(fileName.LastIndexOf('[') + 1);
+				args = args.Substring(0, args.Length - 1);
+
+				// trim
+				fileName = fileName.Substring(0, fileName.LastIndexOf('['));
+
+				string[] arg = args.Split(',');
+
+				foreach (string p in arg)
+				{
+					if (p.StartsWith("px"))
+					{
+						int px = int.Parse(p.Substring(2));
+						if (px < 1) px = 1;
+						ext.pixelScale = px;
+					}
+					else if (p.StartsWith("x"))
+					{
+						string np = p;
+						if (np.StartsWith(".")) np = "0" + np;
+						float x = float.Parse(np.Substring(2));
+						ext.baseScale = x;
+					}
+				}
+			}
+
+			ext.texture = Utils.PixelUpscale(ext.texture, ext.pixelScale);
+
+			fileName = fileName.TrimEnd(' ');
+
+			textures.Add(fileName, ext);
 		}
 
 		public void MakeAssembly()

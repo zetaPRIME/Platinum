@@ -91,9 +91,14 @@
     <Compile Include="Platinum\Asset Management\PackageManager.cs" />
     <Compile Include="Platinum\Asset Management\RootPackage.cs" />
     <Compile Include="Platinum\Basics\Core.cs" />
+    <Compile Include="Platinum\Basics\EventPassable.cs" />
+    <Compile Include="Platinum\Basics\IEventPassable.cs" />
     <Compile Include="Platinum\Basics\Program.cs" />
+    <Compile Include="Platinum\Data Types\EventParams.cs" />
     <Compile Include="Platinum\Data Types\ExtTexture.cs" />
     <Compile Include="Platinum\Game\Entity.cs" />
+    <Compile Include="Platinum\Game\GameDef.cs" />
+    <Compile Include="Platinum\Game\GameService.cs" />
     <Compile Include="Platinum\Game\GameState.cs" />
     <Compile Include="Platinum\Utilities\Extensions_Graphics.cs" />
     <Compile Include="Platinum\Utilities\Utils.cs" />
