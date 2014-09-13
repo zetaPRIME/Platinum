@@ -14,12 +14,23 @@ namespace ExampleBase
 	{
 		float blah = 0;
 
+		bool first = true;
+
 		public override void PostDraw(SpriteBatch sb)
 		{
 			ExtTexture tex = PackageManager.globalPackage.GetTexture("TestImage");
 			sb.Draw(tex, new Vector2(320, 240), null, Color.White, blah, tex.center, 1f + blah, SpriteEffects.None);
 
 			blah += 0.025f;
+		}
+
+		public override void PreUpdate()
+		{
+			if (first)
+			{
+				EntityDef.NewEntity("TestEntity");
+			}
+			first = false;
 		}
 	}
 }

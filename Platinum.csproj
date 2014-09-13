@@ -96,7 +96,9 @@
     <Compile Include="Platinum\Basics\Program.cs" />
     <Compile Include="Platinum\Data Types\EventParams.cs" />
     <Compile Include="Platinum\Data Types\ExtTexture.cs" />
+    <Compile Include="Platinum\Data Types\VecRect.cs" />
     <Compile Include="Platinum\Game\Entity.cs" />
+    <Compile Include="Platinum\Game\EntityDef.cs" />
     <Compile Include="Platinum\Game\GameDef.cs" />
     <Compile Include="Platinum\Game\GameService.cs" />
     <Compile Include="Platinum\Game\GameState.cs" />

@@ -70,6 +70,25 @@ namespace Platinum
 
 		protected override void Update(GameTime gameTime)
 		{
+			GameDef.gameService.PreUpdate();
+
+			// entities
+			foreach (Entity e in GameState.entities)
+			{
+				e.position += e.velocity;
+				e.Update();
+			}
+
+			foreach (Entity e in GameState.entityDel)
+			{
+				e.OnKill();
+				GameState.entities.Remove(e);
+			}
+
+			// particles
+
+			GameDef.gameService.PostUpdate();
+
 			base.Update(gameTime);
 		}
 
@@ -82,7 +101,15 @@ namespace Platinum
 			spriteBatch.GraphicsDevice.Clear(new Color(0.5f, 0f, 1f));
 			spriteBatch.Begin();
 
+			GameDef.gameService.PreDraw(spriteBatch);
+
+			foreach (Entity e in GameState.entities)
+			{
+				e.Draw(spriteBatch);
+			}
+
 			GameDef.gameService.PostDraw(spriteBatch);
+
 			spriteBatch.End();
 
 			base.Draw(gameTime);

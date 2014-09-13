@@ -78,6 +78,8 @@ namespace Platinum
 		{
 			foreach (Package pkg in inherit) pkg.Free(this);
 			PackageManager.loadedPackages.Remove(path);
+
+			if (type == PackageType.Entity) EntityDef.defs.Remove(path);
 		}
 
 		public void ReadDef()

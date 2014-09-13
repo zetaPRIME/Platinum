@@ -10,6 +10,10 @@ namespace Platinum
 {
 	public class GameService
 	{
+		public virtual void PreUpdate() { }
+		public virtual void PostUpdate() { }
+
+		public virtual void PreDraw(SpriteBatch sb) { }
 		public virtual void PostDraw(SpriteBatch sb) { }
 	}
 }
