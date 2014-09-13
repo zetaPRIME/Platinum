@@ -52,6 +52,7 @@ namespace Platinum
 		{
 			if (textures.ContainsKey(name)) return textures[name];
 			foreach (Package pkg in inherit) if (pkg.textures.ContainsKey(name)) return pkg.textures[name];
+			if (type != PackageType.Global && PackageManager.globalPackage.textures.ContainsKey(name)) return PackageManager.globalPackage.textures[name];
 			return null;
 		}
 
@@ -59,6 +60,7 @@ namespace Platinum
 		{
 			if (files.ContainsKey(name)) return files[name];
 			foreach (Package pkg in inherit) if (pkg.files.ContainsKey(name)) return pkg.files[name];
+			if (type != PackageType.Global && PackageManager.globalPackage.files.ContainsKey(name)) return PackageManager.globalPackage.files[name];
 			return null;
 		}
 
@@ -174,7 +176,6 @@ namespace Platinum
 			
 			// reference relevant libraries
 			parameters.ReferencedAssemblies.AddRange(new string[]{
-				Assembly.GetExecutingAssembly().Location,
 				"mscorlib.dll",
 				"System.dll",
 				"System.Core.dll",
@@ -192,7 +193,8 @@ namespace Platinum
 			// add Platinum itself
 			parameters.ReferencedAssemblies.Add(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
-			// todo: reference global assemblies
+			// reference global assembly
+			if (type != PackageType.Global && PackageManager.globalPackage.assembly != null) parameters.ReferencedAssemblies.Add(PackageManager.globalPackage.assembly.Location);
 
 			// reference inherited
 			foreach (Package pkg in inherit) if (pkg.assembly != null) parameters.ReferencedAssemblies.Add(pkg.assembly.Location);
