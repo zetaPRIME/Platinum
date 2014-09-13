@@ -9,7 +9,8 @@ using System.Reflection;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 
-using FluentPath;
+using Fluent.IO;
+using Path = Fluent.IO.Path;
 using Ionic.Zip;
 using LitJson;
 
@@ -91,11 +92,11 @@ namespace Platinum
 
 		}
 
-		public void AddFiles(FPath path)
+		public void AddFiles(Path path)
 		{
-			FPathCollection pfiles = path.GetFiles();
+			Path pfiles = path.Files();
 
-			foreach (FPath p in pfiles)
+			foreach (Path p in pfiles)
 			{
 				string subName = p.ToString().Replace("\\", "/");
 				if (subName.StartsWith("Content/")) subName = subName.Substring("Content/".Length);
@@ -119,9 +120,9 @@ namespace Platinum
 				}
 			}
 
-			FPathCollection pdirs = path.GetDirectories();
+			Path pdirs = path.Directories();
 
-			foreach (FPath p in pdirs)
+			foreach (Path p in pdirs)
 			{
 				if (PackageManager.IsPackage(p)) continue; // don't read into subpackages
 				AddFiles(p);
@@ -165,18 +166,28 @@ namespace Platinum
 			CompilerParameters parameters = new CompilerParameters();
 
 			// set assembly path
-			parameters.OutputAssembly = "tmp\\assembly\\" + StripPath();
+			parameters.OutputAssembly = "tmp\\assembly\\" + StripPath() + ".dll";
 
 			// set up compiler parameters
 			parameters.GenerateInMemory = false;
 			parameters.GenerateExecutable = false;
 			
 			// reference relevant libraries
-			parameters.ReferencedAssemblies.Add("Ionic.Zip.Reduced.dll");
-			parameters.ReferencedAssemblies.Add("Microsoft.Xna.Framework.dll");
-			parameters.ReferencedAssemblies.Add("Microsoft.Xna.Framework.Game.dll");
-			parameters.ReferencedAssemblies.Add("Microsoft.Xna.Framework.Graphics.dll");
-			parameters.ReferencedAssemblies.Add("Microsoft.Xna.Framework.Xact.dll");
+			parameters.ReferencedAssemblies.AddRange(new string[]{
+				Assembly.GetExecutingAssembly().Location,
+				"mscorlib.dll",
+				"System.dll",
+				"System.Core.dll",
+				"System.Drawing.dll",
+				"System.Windows.Forms.dll",
+				"System.Numerics.dll",
+				"System.Xml.dll",
+				"Ionic.Zip.Reduced.dll",
+				"Microsoft.Xna.Framework.dll",
+				"Microsoft.Xna.Framework.Xact.dll",
+				"Microsoft.Xna.Framework.Game.dll",
+				"Microsoft.Xna.Framework.Graphics.dll"
+			});
 
 			// add Platinum itself
 			parameters.ReferencedAssemblies.Add(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -197,7 +208,7 @@ namespace Platinum
 			if (codeFiles.Count == 0) return;
 
 			// compile!
-			CompilerResults results = provider.CompileAssemblyFromFile(parameters, codeFiles.ToArray());
+			CompilerResults results = provider.CompileAssemblyFromSource(parameters, codeFiles.ToArray());
 
 			// finally, load in and apply
 			assembly = results.CompiledAssembly;

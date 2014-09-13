@@ -74,10 +74,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FluentPath\FPath.cs" />
-    <Compile Include="FluentPath\FPathCollection.cs" />
-    <Compile Include="FluentPath\FPathConverter.cs" />
-    <Compile Include="FluentPath\FPathEnumerator.cs" />
+    <Compile Include="FluentPath\Overwrite.cs" />
+    <Compile Include="FluentPath\Path.cs" />
+    <Compile Include="FluentPath\PathBase.cs" />
+    <Compile Include="FluentPath\PathConverter.cs" />
     <Compile Include="LitJson\IJsonWrapper.cs" />
     <Compile Include="LitJson\JsonData.cs" />
     <Compile Include="LitJson\JsonException.cs" />

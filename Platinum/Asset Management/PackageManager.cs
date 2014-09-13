@@ -6,7 +6,8 @@ using System.IO;
 
 using System.Reflection;
 
-using FluentPath;
+using Fluent.IO;
+using Path = Fluent.IO.Path;
 using Ionic.Zip;
 using LitJson;
 
@@ -21,9 +22,14 @@ namespace Platinum
 
 		public static Dictionary<string, Assembly> loadedAssemblies = new Dictionary<string, Assembly>();
 
+		public static Package globalPackage
+		{
+			get { return loadedPackages["Global"]; }
+		}
+
 		public static void FindPackages()
 		{
-			FPath path = new FPath("Content");
+			Path path = new Path("Content");
 
 			// libraries
 			FindPackages(path.Combine("Library"));
@@ -40,15 +46,15 @@ namespace Platinum
 			//
 		}
 
-		public static void FindPackages(FPath basePath)
+		public static void FindPackages(Path basePath)
 		{
 			if (!basePath.Exists) return;
 
 			string[] matchDef = { "library.json", "entity.json", "scenemode.json", "scene.json" };
 
 			// zips first because reasons
-			FPathCollection zips = basePath.GetFiles("*.zip");
-			foreach (FPath p in zips)
+			Path zips = basePath.Files("*.zip", false);
+			foreach (Path p in zips)
 			{
 				string pstr = p.ToString();
 
@@ -68,21 +74,21 @@ namespace Platinum
 			}
 
 			// recursive subdirectory time!
-			FPathCollection dirs = basePath.GetDirectories();
-			foreach (FPath p in dirs)
+			Path dirs = basePath.Directories();
+			foreach (Path p in dirs)
 			{
 				if (IsPackage(p)) AddPackageEntry(p.ToString());
 				/*else*/ FindPackages(p);
 			}
 		}
 
-		public static bool IsPackage(FPath path)
+		public static bool IsPackage(Path path)
 		{
 			string[] match = { "library.json", "entity.json", "scenemode.json", "scene.json" };
 
-			FPathCollection jsons = path.GetFiles("*.json");
+			Path jsons = path.Files("*.json", false);
 
-			foreach (FPath p in jsons) if (match.Contains(p.FileName)) return true;
+			foreach (Path p in jsons) if (match.Contains(p.FileName)) return true;
 
 			return false;
 		}
@@ -106,18 +112,18 @@ namespace Platinum
 		{
 			string[] comp = path.Split('/');
 
-			FPath bpath = new FPath("Content");
+			Path bpath = new Path("Content");
 			
 			for (int i = 0; i < comp.Length; i++)
 			{
-				FPath npath = bpath.Combine(comp[i]);
+				Path npath = bpath.Combine(comp[i]);
 				if (npath.Exists)
 				{
 					bpath = npath;
 					continue;
 				}
 
-				FPath zpath = bpath.Combine(comp[i] + ".zip");
+				Path zpath = bpath.Combine(comp[i] + ".zip");
 				if (!zpath.Exists) throw new Exception("Package not found: " + path);
 
 				string subpath = "";
@@ -135,6 +141,7 @@ namespace Platinum
 			if (global)
 			{
 				pkg.type = PackageType.Global;
+				if (bpath.Combine("game.json").Exists) defName = "game.json";
 			}
 			else if (bpath.Combine("library.json").Exists)
 			{
@@ -166,7 +173,7 @@ namespace Platinum
 					byte[] contents = new byte[fs.Length];
 					fs.Read(contents, 0, (int)fs.Length);
 					def = JsonMapper.ToObject(Encoding.UTF8.GetString(contents));
-				}, FileMode.Open);
+				});//, System.IO.FileMode.Open);
 				pkg.def = def;
 			}
 
@@ -186,6 +193,7 @@ namespace Platinum
 			if (global)
 			{
 				pkg.type = PackageType.Global;
+				if (zf.EntryFileNames.Contains(subpath + "game.json")) defName = "game.json";
 			}
 			else if (zf.EntryFileNames.Contains(subpath + "library.json"))
 			{
