@@ -72,7 +72,7 @@ namespace Platinum
 			foreach (FPath p in dirs)
 			{
 				if (IsPackage(p)) AddPackageEntry(p.ToString());
-				else FindPackages(p);
+				/*else*/ FindPackages(p);
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace Platinum
 			availablePackages.Add(str);
 		}
 
-		public static void LoadPackage(string path)
+		public static void LoadPackage(string path, bool global = false)
 		{
 			string[] comp = path.Split('/');
 
@@ -124,7 +124,7 @@ namespace Platinum
 				for (int j = i; j < comp.Length; j++) subpath = subpath + comp[j] + "/";
 				using (ZipFile zf = ZipFile.Read(zpath.ToString()))
 				{
-					LoadPackageZip(path, zf, subpath);
+					LoadPackageZip(path, zf, subpath, global);
 					return;
 				}
 			}
@@ -132,7 +132,11 @@ namespace Platinum
 			Package pkg = new Package();
 			pkg.path = path;
 			string defName = "";
-			if (bpath.Combine("library.json").Exists)
+			if (global)
+			{
+				pkg.type = PackageType.Global;
+			}
+			else if (bpath.Combine("library.json").Exists)
 			{
 				defName = "library.json";
 				pkg.type = PackageType.Library;
@@ -154,24 +158,76 @@ namespace Platinum
 			}
 			else throw new Exception("No package definition for package " + path);
 
-			JsonData def = null;
-			bpath.Combine(defName).Open((FileStream fs) =>
+			if (defName != "")
 			{
-				byte[] contents = new byte[fs.Length];
-				fs.Read(contents, 0, (int)fs.Length);
-				def = JsonMapper.ToObject(Encoding.UTF8.GetString(contents));
-			}, FileMode.Open);
-			pkg.def = def;
+				JsonData def = null;
+				bpath.Combine(defName).Open((FileStream fs) =>
+				{
+					byte[] contents = new byte[fs.Length];
+					fs.Read(contents, 0, (int)fs.Length);
+					def = JsonMapper.ToObject(Encoding.UTF8.GetString(contents));
+				}, FileMode.Open);
+				pkg.def = def;
+			}
 
 			pkg.AddFiles(bpath);
+			pkg.ReadDef();
+			pkg.MakeAssembly();
 
 			// add to loaded only if successful
 			loadedPackages.Add(path, pkg);
 		}
 
-		public static void LoadPackageZip(string path, ZipFile zf, string subpath)
+		public static void LoadPackageZip(string path, ZipFile zf, string subpath, bool global = false)
 		{
-			//
+			Package pkg = new Package();
+			pkg.path = path;
+			string defName = "";
+			if (global)
+			{
+				pkg.type = PackageType.Global;
+			}
+			else if (zf.EntryFileNames.Contains(subpath + "library.json"))
+			{
+				defName = "library.json";
+				pkg.type = PackageType.Library;
+			}
+			else if (zf.EntryFileNames.Contains(subpath + "entity.json"))
+			{
+				defName = "entity.json";
+				pkg.type = PackageType.Entity;
+			}
+			else if (zf.EntryFileNames.Contains(subpath + "scenemode.json"))
+			{
+				defName = "scenemode.json";
+				pkg.type = PackageType.SceneMode;
+			}
+			else if (zf.EntryFileNames.Contains(subpath + "scene.json"))
+			{
+				defName = "scene.json";
+				pkg.type = PackageType.Scene;
+			}
+			else throw new Exception("No package definition for package " + path);
+
+			if (defName != "")
+			{
+				JsonData def = null;
+				using (MemoryStream ms = new MemoryStream())
+				{
+					zf[subpath + defName].Extract(ms);
+					
+					byte[] contents = ms.ToArray();
+					def = JsonMapper.ToObject(Encoding.UTF8.GetString(contents));
+				}
+				pkg.def = def;
+			}
+
+			pkg.AddFiles(zf, subpath);
+			pkg.ReadDef();
+			pkg.MakeAssembly();
+
+			// add to loaded only if successful
+			loadedPackages.Add(path, pkg);
 		}
 	}
 }

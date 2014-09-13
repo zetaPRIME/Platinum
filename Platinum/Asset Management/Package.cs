@@ -61,6 +61,36 @@ namespace Platinum
 			return null;
 		}
 
+		public void ReadDef()
+		{
+			if (def == null) return; // no definition supplied
+
+			// inheritance
+			if (def.Has("inherit") && def["inherit"].IsArray)
+			{
+				foreach (JsonData j in def["inherit"])
+				{
+					if (!j.IsString) continue;
+					Inherit((string)j);
+				}
+			}
+		}
+		void Inherit(string name)
+		{
+			string ipath = "";
+			// literal
+			if (name.StartsWith("/")) ipath = name.Substring(1);
+			// subpackage
+			else if (PackageManager.availablePackages.Contains(path + "/" + name)) ipath = path + "/" + name;
+			// library
+			else if (PackageManager.availablePackages.Contains("Library/" + name)) ipath = "Library/" + name;
+
+			if (ipath == "") return;
+			if (!PackageManager.loadedPackages.ContainsKey(ipath)) PackageManager.LoadPackage(ipath);
+			if (PackageManager.loadedPackages.ContainsKey(ipath)) inherit.Add(PackageManager.loadedPackages[ipath]);
+
+		}
+
 		public void AddFiles(FPath path)
 		{
 			FPathCollection pfiles = path.GetFiles();
@@ -97,6 +127,31 @@ namespace Platinum
 				AddFiles(p);
 			}
 		}
+		public void AddFiles(ZipFile zf, string subpath)
+		{
+			foreach (string s in zf.EntryFileNames)
+			{
+				if (!s.StartsWith(subpath)) continue;
+				string dir = s.Substring(0, s.LastIndexOf('/'));
+				if (dir != subpath && PackageManager.IsPackage(zf, dir)) continue; // don't read into subpackages
+
+				string subName = s.Substring(subpath.Length);
+
+				if (subName.EndsWith(".zip")) throw new Exception("Subpackage zip " + subName + " found in zipped package " + path + "; nested zipped packages are not supported."); // YOU'RE DOIN' IT WRONG
+				if (subName.EndsWith(".png"))
+				{
+					// todo: load in textures!
+				}
+				else
+				{
+					using (MemoryStream ms = new MemoryStream())
+					{
+						zf[s].Extract(ms);
+						files.Add(subName, ms.ToArray());
+					}
+				}
+			}
+		}
 
 		public void MakeAssembly()
 		{
@@ -129,7 +184,7 @@ namespace Platinum
 			// todo: reference global assemblies
 
 			// reference inherited
-			foreach (Package pkg in inherit) parameters.ReferencedAssemblies.Add(pkg.assembly.Location);
+			foreach (Package pkg in inherit) if (pkg.assembly != null) parameters.ReferencedAssemblies.Add(pkg.assembly.Location);
 
 			// assemble code to compile
 			List<string> codeFiles = new List<string>();
@@ -137,6 +192,9 @@ namespace Platinum
 			{
 				if (kvp.Key.EndsWith(".cs")) codeFiles.Add(System.Text.Encoding.UTF8.GetString(kvp.Value));
 			}
+
+			// abort if no code to compile
+			if (codeFiles.Count == 0) return;
 
 			// compile!
 			CompilerResults results = provider.CompileAssemblyFromFile(parameters, codeFiles.ToArray());
