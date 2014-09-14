@@ -10,6 +10,20 @@ namespace Platinum
 		#region Statics
 		public static Dictionary<string, EntityDef> defs = new Dictionary<string, EntityDef>();
 
+		/*public static EntityDef this[string name]
+		{
+			get
+			{
+				if (!defs.ContainsKey(name)) return null;
+				return defs[name];
+			}
+
+			set
+			{
+				if (value == null && defs.ContainsKey(name)) defs.Remove(name);
+			}
+		}*/
+
 		public static void LoadEntity(string name)
 		{
 			if (defs.ContainsKey(name)) return; // don't try double-loading!

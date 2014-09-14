@@ -9,6 +9,11 @@ using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.DebugView;
+using FarseerPhysics;
+using FarseerPhysics.Factories;
+
 namespace Platinum
 {
 	public class Core : Game
@@ -18,6 +23,10 @@ namespace Platinum
 		public static SpriteBatch spriteBatch;
 
 		public GraphicsDeviceManager graphics;
+
+		public static SpriteFont fontDebug;
+
+		DebugViewXNA debugView;
 
 		public Core()
 		{
@@ -50,6 +59,16 @@ namespace Platinum
 		{
 			spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
 
+			GameState.physWorld = new World(new Vector2(0, 0));
+			GameState.physWorld.Enabled = true;
+
+			fontDebug = Content.Load<SpriteFont>(/*"Font"*/"DebugFont");
+
+			debugView = new DebugViewXNA(GameState.physWorld);
+			debugView.LoadContent(this.GraphicsDevice, this.Content);
+			debugView.AppendFlags(DebugViewFlags.Shape);
+			debugView.AppendFlags(DebugViewFlags.PolygonPoints);
+
 			PackageManager.FindPackages();
 
 			Package global = PackageManager.LoadPackage("Global", true);
@@ -66,18 +85,24 @@ namespace Platinum
 					}
 				}
 			}
+
 		}
 
 		protected override void Update(GameTime gameTime)
 		{
 			GameDef.gameService.PreUpdate();
 
+			GameState.physWorld.Step(1f / 60f);
+
 			// entities
-			foreach (Entity e in GameState.entities)
-			{
-				e.position += e.velocity;
-				e.Update();
-			}
+			List<Entity> entities = new List<Entity>(GameState.entities);
+
+			foreach (Entity e in entities) e.UpdatePhysics();
+
+			Collision.PreUpdate();
+			// do collision
+
+			foreach (Entity e in entities) e.Update();
 
 			foreach (Entity e in GameState.entityDel)
 			{
@@ -109,6 +134,15 @@ namespace Platinum
 			}
 
 			GameDef.gameService.PostDraw(spriteBatch);
+
+			spriteBatch.End();
+
+			spriteBatch.Begin();
+
+			Matrix proj = Matrix.CreateOrthographicOffCenter(0f, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0f, 0f, 1f);
+			Vector2 vcenter = new Vector2(GraphicsDevice.Viewport.Width / 2f, GraphicsDevice.Viewport.Height / 2f);
+			Matrix view = Matrix.CreateTranslation(new Vector3((GameState.cameraPos) - (vcenter), 0f)) * Matrix.CreateTranslation(new Vector3((vcenter), 0f));
+			debugView.RenderDebugData(ref proj, ref view);
 
 			spriteBatch.End();
 

@@ -166,6 +166,8 @@
     <Compile Include="Farseer Physics Engine 3.5\Controllers\VelocityLimitController.cs" />
     <Compile Include="Farseer Physics Engine 3.5\ConvertUnits.cs" />
     <Compile Include="Farseer Physics Engine 3.5\DebugViewBase.cs" />
+    <Compile Include="Farseer Physics Engine 3.5\DebugViewXNA\DebugViewXNA.cs" />
+    <Compile Include="Farseer Physics Engine 3.5\DebugViewXNA\PrimitiveBatch.cs" />
     <Compile Include="Farseer Physics Engine 3.5\Dynamics\Body.cs" />
     <Compile Include="Farseer Physics Engine 3.5\Dynamics\BreakableBody.cs" />
     <Compile Include="Farseer Physics Engine 3.5\Dynamics\ContactManager.cs" />
@@ -214,9 +216,12 @@
     <Compile Include="Platinum\Basics\EventPassable.cs" />
     <Compile Include="Platinum\Basics\IEventPassable.cs" />
     <Compile Include="Platinum\Basics\Program.cs" />
+    <Compile Include="Platinum\Data Types\BitField.cs" />
     <Compile Include="Platinum\Data Types\EventParams.cs" />
     <Compile Include="Platinum\Data Types\ExtTexture.cs" />
     <Compile Include="Platinum\Data Types\VecRect.cs" />
+    <Compile Include="Platinum\Game\Collider.cs" />
+    <Compile Include="Platinum\Game\Collision.cs" />
     <Compile Include="Platinum\Game\Entity.cs" />
     <Compile Include="Platinum\Game\EntityDef.cs" />
     <Compile Include="Platinum\Game\GameDef.cs" />

@@ -195,7 +195,7 @@ namespace Platinum
 			if (fileName.EndsWith(".png")) fileName = fileName.Substring(0, fileName.Length - ".png".Length);
 
 			// defaults
-			ext.pixelScale = 1;
+			ext.pixelScale = GameDef.defaultPixelScale;
 			ext.baseScale = 1;
 
 			if (fileName.EndsWith("]") && fileName.IndexOf('[') > -1)
