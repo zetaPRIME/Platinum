@@ -44,7 +44,15 @@ namespace Platinum
 			}
 
 			// step frames
-			logPrevFrame = logCurFrame; logCurFrame = new List<CollisionPair>();
+			List<CollisionPair> logSwap = logPrevFrame;
+			logPrevFrame = logCurFrame;
+			logCurFrame = logSwap;
+			logCurFrame.Clear();
+
+			List<CollisionPairEntity> logSwapEntity = logPrevFrameEntity;
+			logPrevFrameEntity = logCurFrameEntity;
+			logCurFrameEntity = logSwapEntity;
+			logCurFrameEntity.Clear();
 		}
 
 		//
@@ -69,12 +77,77 @@ namespace Platinum
 		}
 		#endregion
 
-		public static void TestEntity(Entity e)
+		public static void TestAll()
 		{
-			//foreach
+			foreach (Entity e1 in collidable)
+			{
+				if (e1.collisionPassive) continue;
+
+				foreach (Entity e2 in collidable)
+				{
+					if (e1 == e2) continue;
+					if (!e1.WorldBounds.Intersects(e2.WorldBounds)) continue;
+					if (!e1.CanCollideWith(e2) || !e2.CanCollideWith(e1)) continue;
+
+					foreach (Collider c1 in e1.GetCollidersFor(e2.WorldBounds))
+					{
+						foreach (Collider c2 in e2.GetCollidersFor(e1.WorldBounds))
+						{
+							bool first = true;
+							if (c1.CollidesWith(c2))
+							{
+								// log!
+								logCurFrame.Add(new CollisionPair(c1, c2));
+								if (first) logCurFrameEntity.Add(new CollisionPairEntity(e1, e2));
+
+								// event
+								bool firstCont = CollidingLastFrame(c1, c2);
+								e1.CollisionEventCollider(c1, c2, firstCont);
+								e2.CollisionEventCollider(c2, c1, firstCont);
+								if (first)
+								{
+									firstCont = CollidingLastFrame(e1, e2);
+									e1.CollisionEventEntity(e2, firstCont);
+									e2.CollisionEventEntity(e1, firstCont);
+								}
+
+								first = false;
+							}
+						}
+					}
+				}
+			}
 		}
 
-		public static float Raycast(Vector2 start, Vector2 end, BitField layers, params Entity[] ignore)
+		public static void TestEntity(Entity et, bool logCollision = false)
+		{
+			foreach (Entity e in collidable)
+			{
+				if (e == et) continue;
+				if (!et.WorldBounds.Intersects(e.WorldBounds)) continue;
+
+				foreach (Collider ct in et.GetCollidersFor(e.WorldBounds))
+				{
+					foreach (Collider col in e.GetCollidersFor(et.WorldBounds))
+					{
+						if (ct.CollidesWith(col))
+						{
+							if (logCollision)
+							{
+								logCurFrame.Add(new CollisionPair(ct, col));
+								CollisionPairEntity cpe = new CollisionPairEntity(et, e);
+								if (!logCurFrameEntity.Contains(cpe)) logCurFrameEntity.Add(cpe);
+							}
+
+
+						}
+					}
+				}
+				
+			}
+		}
+
+		public static float Raycast(Vector2 start, Vector2 end, byte layers = 255, bool solidOnly = true, params Entity[] ignore)
 		{
 			VecRect testRect = new VecRect(new Vector2(Math.Min(start.X, end.X), Math.Min(start.Y, end.Y)), new Vector2(Math.Max(start.X, end.X), Math.Max(start.Y, end.Y)));
 
@@ -88,6 +161,7 @@ namespace Platinum
 
 				foreach (Collider col in e.GetCollidersFor(testRect))
 				{
+					if (solidOnly && !col.solid) continue;
 					foreach (Fixture f in col.physBody.FixtureList)
 					{
 						RayCastInput inp = new RayCastInput();
@@ -109,7 +183,7 @@ namespace Platinum
 			return dist;
 		}
 
-		public static bool TextFixture(Fixture a, Fixture b)
+		public static bool TestFixture(Fixture a, Fixture b)
 		{
 			if (a == null || b == null) return false;
 

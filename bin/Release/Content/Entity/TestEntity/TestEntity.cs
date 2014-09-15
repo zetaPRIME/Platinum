@@ -21,12 +21,14 @@ namespace ExampleBase
 			{
 				bounds = new VecRect(Vector2.One * -32, Vector2.One * 32);
 				
-				position.X = 320f;
+				//position.X = 320f;
 
 				Collider col = new Collider();
 				colliders.Add(col);
 
 				col.physBody = BodyFactory.CreateCircle(GameState.physWorld, 32, 1f);
+
+				//collisionPassive = true;
 
 				init = true;
 			}
@@ -41,14 +43,21 @@ namespace ExampleBase
 
 		public override void Draw(SpriteBatch sb)
 		{
+			if (!OnScreen) return;
+
 			//velocity = Vector2.One;
 
 			ExtTexture tex = PackageManager.globalPackage.GetTexture("TestImage");
 
-			sb.Draw(tex, Position, null, Color.White, 0f, tex.center, 1f, SpriteEffects.None);
+			sb.Draw(tex, ScreenPosition, null, Color.White, 0f, tex.center, 1f, SpriteEffects.None);
 
-			float cast = Collision.Raycast(new Vector2(320, 0), new Vector2(320, 480), 255);
-			sb.DrawString(Core.fontDebug, "raycast " + cast, Vector2.One * 16, Color.White);
+			//float cast = Collision.Raycast(new Vector2(320, 0), new Vector2(320, 480), 255);
+			//sb.DrawString(Core.fontDebug, "raycast " + cast, Vector2.One * 16, Color.White);
+		}
+
+		public override bool CanCollideWith(Entity e)
+		{
+			return false;
 		}
 	}
 }

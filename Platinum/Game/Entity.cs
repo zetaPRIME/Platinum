@@ -22,6 +22,7 @@ namespace Platinum
 
 		//public Body physBody = null;
 		public List<Collider> colliders = new List<Collider>();
+		public bool collisionPassive = false;
 
 		public Entity parent = null;
 
@@ -64,6 +65,9 @@ namespace Platinum
 			get { return bounds + Position; }
 		}
 
+		public Vector2 ScreenPosition { get { return (Position - GameState.cameraPos).Pixelize(); } }
+		public bool OnScreen { get { return WorldBounds.Intersects(GameState.cameraBox); } }
+
 		public virtual void Update() { }
 		public virtual void Draw(SpriteBatch sb) { }
 
@@ -84,9 +88,11 @@ namespace Platinum
 			}
 		}
 
-		public virtual List<Collider> GetCollidersFor(VecRect rect)
-		{
-			return colliders;
-		}
+		public virtual List<Collider> GetCollidersFor(VecRect rect) { return colliders; }
+
+		public virtual bool CanCollideWith(Entity e) { return true; }
+
+		public virtual void CollisionEventCollider(Collider thisCol, Collider col, bool firstContact) { }
+		public virtual void CollisionEventEntity(Entity other, bool firstContact) { }
 	}
 }

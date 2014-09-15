@@ -227,6 +227,7 @@
     <Compile Include="Platinum\Game\GameDef.cs" />
     <Compile Include="Platinum\Game\GameService.cs" />
     <Compile Include="Platinum\Game\GameState.cs" />
+    <Compile Include="Platinum\Utilities\Extensions_Vector.cs" />
     <Compile Include="Platinum\Utilities\Extensions_Graphics.cs" />
     <Compile Include="Platinum\Utilities\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

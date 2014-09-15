@@ -47,7 +47,7 @@ namespace Platinum
 
 		public bool Intersects(VecRect other)
 		{
-			return !(other.left > right || other.right < left || other.top > bottom || other.bottom < top); // wow, that's so obvious
+			return !(other.topLeft.X > bottomRight.X || other.bottomRight.X < topLeft.X || other.topLeft.Y > bottomRight.Y || other.bottomRight.Y < topLeft.Y); // wow, that's so obvious
 
 			// old
 			/* if (Contains(other.topLeft) || Contains(other.bottomRight) || Contains(other.topRight) || Contains(other.bottomLeft)

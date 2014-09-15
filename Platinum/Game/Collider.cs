@@ -30,6 +30,7 @@ namespace Platinum
 		public float rotOffset = 0f;
 
 		public BitField layers = 255;
+		public bool solid = false;
 
 		public void Update()
 		{
@@ -48,7 +49,7 @@ namespace Platinum
 			{
 				foreach (Fixture of in other.physBody.FixtureList)
 				{
-					if (Collision.TextFixture(f, of)) return true;
+					if (Collision.TestFixture(f, of)) return true;
 				}
 			}
 
