@@ -27,7 +27,7 @@ namespace ExampleBase
 				colliders.Add(col);
 
 				col.physBody = BodyFactory.CreateCircle(GameState.physWorld, 32, 1f);
-
+				
 				//collisionPassive = true;
 
 				init = true;

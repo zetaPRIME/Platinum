@@ -92,12 +92,14 @@ namespace Platinum
 		{
 			GameDef.gameService.PreUpdate();
 
-			GameState.physWorld.Step(1f / 60f);
+			//GameState.physWorld.Step(1f / 60f);
 
 			// entities
 			List<Entity> entities = new List<Entity>(GameState.entities);
 
 			foreach (Entity e in entities) e.UpdatePhysics();
+
+			GameState.physWorld.ProcessChanges();
 
 			Collision.PreUpdate();
 			Collision.TestAll();
@@ -144,7 +146,7 @@ namespace Platinum
 			Matrix view = Matrix.CreateTranslation(new Vector3((GameState.cameraPos) - (vcenter), 0f)) * Matrix.CreateTranslation(new Vector3((vcenter), 0f));
 			debugView.RenderDebugData(ref proj, ref view);
 
-			spriteBatch.End();
+			spriteBatch.End();/**/
 			spriteBatch.Begin();
 
 			spriteBatch.DrawString(fontDebug, "Debug menu (F3 to close)\nEntities: " + GameState.entities.Count + " (" + Collision.collidable.Count + " collidable)", Vector2.One * 8f, Color.White);

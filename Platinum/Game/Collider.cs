@@ -23,6 +23,8 @@ namespace Platinum
 
 				value.IsSensor = true;
 				value.IsStatic = true;
+				value.CollidesWith = Category.None;
+				value.Enabled = false;
 			}
 		}
 
@@ -34,7 +36,9 @@ namespace Platinum
 
 		public void Update()
 		{
-			physBody.SetTransform(parent.Position + offset, parent.Rotation + rotOffset);
+			/*Vector2 newPos = parent.Position + offset;
+			physBody.SetTransformIgnoreContacts(ref newPos, parent.Rotation + rotOffset);*/
+			physBody.SetTransformOnly(parent.Position + offset, parent.Rotation + rotOffset);
 		}
 		
 		public bool CollidesWith(Collider other)

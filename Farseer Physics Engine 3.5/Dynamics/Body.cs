@@ -1358,5 +1358,15 @@ namespace FarseerPhysics.Dynamics
 
             return body;
         }
+
+
+		// ADDED IN FOR HACKY SOLUTION
+		/// <summary>
+		/// Sets the transform whilst doing NOTHING ELSE
+		/// </summary>
+		public void SetTransformOnly(Vector2 position, float rotation)
+		{
+			_xf.p = position; _xf.q = new Rot(rotation);
+		}
     }
 }
