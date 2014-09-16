@@ -9,11 +9,6 @@ using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.DebugView;
-using FarseerPhysics;
-using FarseerPhysics.Factories;
-
 namespace Platinum
 {
 	public class Core : Game
@@ -25,8 +20,6 @@ namespace Platinum
 		public GraphicsDeviceManager graphics;
 
 		public static SpriteFont fontDebug;
-
-		DebugViewXNA debugView;
 
 		public Core()
 		{
@@ -59,15 +52,7 @@ namespace Platinum
 		{
 			spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
 
-			GameState.physWorld = new World(new Vector2(0, 0));
-			GameState.physWorld.Enabled = true;
-
 			fontDebug = Content.Load<SpriteFont>(/*"Font"*/"DebugFont");
-
-			debugView = new DebugViewXNA(GameState.physWorld);
-			debugView.LoadContent(this.GraphicsDevice, this.Content);
-			debugView.AppendFlags(DebugViewFlags.Shape);
-			debugView.AppendFlags(DebugViewFlags.PolygonPoints);
 
 			PackageManager.FindPackages();
 
@@ -92,14 +77,10 @@ namespace Platinum
 		{
 			GameDef.gameService.PreUpdate();
 
-			//GameState.physWorld.Step(1f / 60f);
-
 			// entities
 			List<Entity> entities = new List<Entity>(GameState.entities);
 
 			foreach (Entity e in entities) e.UpdatePhysics();
-
-			GameState.physWorld.ProcessChanges();
 
 			Collision.PreUpdate();
 			Collision.TestAll();
@@ -139,17 +120,10 @@ namespace Platinum
 
 			spriteBatch.End();
 
+			// debug display
 			spriteBatch.Begin();
 
-			Matrix proj = Matrix.CreateOrthographicOffCenter(0f, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0f, 0f, 1f);
-			Vector2 vcenter = new Vector2(GraphicsDevice.Viewport.Width / 2f, GraphicsDevice.Viewport.Height / 2f);
-			Matrix view = Matrix.CreateTranslation(new Vector3((GameState.cameraPos) - (vcenter), 0f)) * Matrix.CreateTranslation(new Vector3((vcenter), 0f));
-			debugView.RenderDebugData(ref proj, ref view);
-
-			spriteBatch.End();/**/
-			spriteBatch.Begin();
-
-			spriteBatch.DrawString(fontDebug, "Debug menu (F3 to close)\nEntities: " + GameState.entities.Count + " (" + Collision.collidable.Count + " collidable)", Vector2.One * 8f, Color.White);
+			spriteBatch.DrawString(fontDebug, "Debug display (F3)\nEntities: " + GameState.entities.Count + " (" + Collision.collidable.Count + " collidable)", Vector2.One * 8f, Color.White);
 
 			spriteBatch.End();
 

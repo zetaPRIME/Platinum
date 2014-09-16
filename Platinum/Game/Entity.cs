@@ -6,9 +6,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using FarseerPhysics;
-using FarseerPhysics.Dynamics;
-
 namespace Platinum
 {
 	public class Entity : EventPassable

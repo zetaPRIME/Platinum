@@ -7,8 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using Platinum;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 
 namespace ExampleBase
 {
@@ -17,8 +15,6 @@ namespace ExampleBase
 		float blah = 0;
 
 		bool first = true;
-
-		Body tbody;
 
 		public override void PostDraw(SpriteBatch sb)
 		{
@@ -51,11 +47,6 @@ namespace ExampleBase
 				Entity e2 = EntityDef.NewEntity("TestEntity");
 				e2.Parent = e;
 				e2.position = new Vector2(32, 0);
-
-				tbody = BodyFactory.CreateRectangle(GameState.physWorld, 320, 16, 1f);
-				tbody.Position = new Vector2(320, 320);
-				//tbody.IsSensor = true;
-				tbody.SleepingAllowed = false;
 			}
 			first = false;
 
@@ -67,7 +58,6 @@ namespace ExampleBase
 
 			e.collisionPassive = true;*/
 
-			tbody.Rotation += 0.025f;
 		}
 	}
 }

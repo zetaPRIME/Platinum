@@ -6,10 +6,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Collision;
-
 namespace Platinum
 {
 	public static class Collision
@@ -162,44 +158,12 @@ namespace Platinum
 				foreach (Collider col in e.GetCollidersFor(testRect))
 				{
 					if (solidOnly && !col.solid) continue;
-					foreach (Fixture f in col.physBody.FixtureList)
-					{
-						RayCastInput inp = new RayCastInput();
-						inp.Point1 = start; inp.Point2 = end;
-						inp.MaxFraction = 1f;
-
-						for (int i = 0; i < f.Shape.ChildCount; i++)
-						{
-							RayCastOutput output;
-							if (!f.RayCast(out output, ref inp, i)) continue;
-							float fdist = rayDist * output.Fraction;
-							if (fdist < dist) dist = fdist;
-						}
-					}
+					//
 				}
 			}
 
 			if (dist == float.MaxValue) return -1;
 			return dist;
-		}
-
-		public static bool TestFixture(Fixture a, Fixture b)
-		{
-			if (a == null || b == null) return false;
-
-			for (int i = 0; i < a.Shape.ChildCount; i++)
-			{
-				for (int j = 0; j < b.Shape.ChildCount; j++)
-				{
-					Transform ta, tb;
-					a.Body.GetTransform(out ta);
-					b.Body.GetTransform(out tb);
-					
-					if (FarseerPhysics.Collision.Collision.TestOverlap(a.Shape, i, b.Shape, j, ref ta, ref tb)) return true;
-				}
-			}
-
-			return false;
 		}
 	}
 }

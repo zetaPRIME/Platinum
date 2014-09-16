@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using Platinum;
-using FarseerPhysics.Factories;
 
 namespace ExampleBase
 {
@@ -28,8 +27,6 @@ namespace ExampleBase
 				Collider col = new Collider();
 				colliders.Add(col);
 
-				col.physBody = BodyFactory.CreateCircle(GameState.physWorld, 32, 1f);
-				
 				//collisionPassive = true;
 
 				init = true;
