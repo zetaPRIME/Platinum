@@ -45,6 +45,12 @@ namespace ExampleBase
 					e.collisionPassive = true;
 				}
 
+				e = EntityDef.NewEntity("TestEntity");
+				e.position = new Vector2(128, 128);
+
+				Entity e2 = EntityDef.NewEntity("TestEntity");
+				e2.Parent = e;
+				e2.position = new Vector2(32, 0);
 
 				tbody = BodyFactory.CreateRectangle(GameState.physWorld, 320, 16, 1f);
 				tbody.Position = new Vector2(320, 320);
@@ -53,13 +59,13 @@ namespace ExampleBase
 			}
 			first = false;
 
-			Random rand2 = new Random();
+			/*Random rand2 = new Random();
 			e = EntityDef.NewEntity("TestEntity");
 			e.position = new Vector2(rand2.Next(640), rand2.Next(480));
 			const float range2 = 4f * 2f;
 			e.velocity = new Vector2(((float)rand2.NextDouble() - 0.5f) * range2, ((float)rand2.NextDouble() - 0.5f) * range2);
 
-			e.collisionPassive = true;
+			e.collisionPassive = true;*/
 
 			tbody.Rotation += 0.025f;
 		}

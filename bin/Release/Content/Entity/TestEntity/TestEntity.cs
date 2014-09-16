@@ -15,6 +15,8 @@ namespace ExampleBase
 	{
 		bool init = false;
 
+		int frame = 0;
+
 		public override void Update()
 		{
 			if (!init)
@@ -37,8 +39,11 @@ namespace ExampleBase
 			//if (GameState.physWorld.RayCast(Position, Position + new Vector2(0, 32f)).Count > 0) velocity = new Vector2(0, -3f);
 			//if (physBody.ContactList != null) velocity = new Vector2(0, -3f);
 
-			velocity += new Vector2(0, 0.025f);
-			rotation += 0.01f;
+			//velocity += new Vector2(0, 0.025f);
+			rotation += 0.032f;
+
+			if (frame == 120) Parent = null;
+			frame++;
 		}
 
 		public override void Draw(SpriteBatch sb)
@@ -49,7 +54,7 @@ namespace ExampleBase
 
 			ExtTexture tex = PackageManager.globalPackage.GetTexture("TestImage");
 
-			sb.Draw(tex, ScreenPosition, null, Color.White, 0f, tex.center, 1f, SpriteEffects.None);
+			sb.Draw(tex, ScreenPosition, null, Color.White, Rotation, tex.center, 1f, SpriteEffects.None);
 
 			//float cast = Collision.Raycast(new Vector2(320, 0), new Vector2(320, 480), 255);
 			//sb.DrawString(Core.fontDebug, "raycast " + cast, Vector2.One * 16, Color.White);

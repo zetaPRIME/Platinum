@@ -30,6 +30,26 @@ namespace Platinum
 		}
 
 		public static VecRect Zero { get { return new VecRect(Vector2.Zero, Vector2.Zero); } }
+
+		public static VecRect FromPoints(params Vector2[] points)
+		{
+			if (points.Length == 0) return VecRect.Zero;
+			VecRect v = new VecRect(points[0], points[0]);
+
+			for (int i = 1; i < points.Length; i++) v = v.Expand(points[i]);
+
+			return v;
+		}
+
+		public static VecRect Combine(params VecRect[] rects)
+		{
+			if (rects.Length == 0) return VecRect.Zero;
+			VecRect v = rects[0];
+
+			for (int i = 1; i < rects.Length; i++) v = v.Expand(rects[i]);
+
+			return v;
+		}
 		#endregion
 
 		public Vector2 Size
@@ -60,6 +80,16 @@ namespace Platinum
 		{
 			if (vec.X >= topLeft.X && vec.X <= bottomRight.X && vec.Y >= topLeft.Y && vec.Y <= bottomRight.Y) return true;
 			return false;
+		}
+
+		public VecRect Expand(VecRect with)
+		{
+			return new VecRect(new Vector2(Math.Min(topLeft.X, with.topLeft.X), Math.Min(topLeft.Y, with.topLeft.Y)), new Vector2(Math.Max(bottomRight.X, with.bottomRight.X), Math.Max(bottomRight.Y, with.bottomRight.Y)));
+		}
+
+		public VecRect Expand(Vector2 vec)
+		{
+			return new VecRect(new Vector2(Math.Min(topLeft.X, vec.X), Math.Min(topLeft.Y, vec.Y)), new Vector2(Math.Max(bottomRight.X, vec.X), Math.Max(bottomRight.Y, vec.Y)));
 		}
 	}
 }

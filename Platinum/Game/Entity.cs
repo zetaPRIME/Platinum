@@ -24,7 +24,27 @@ namespace Platinum
 		public List<Collider> colliders = new List<Collider>();
 		public bool collisionPassive = false;
 
-		public Entity parent = null;
+		internal Entity parent = null;
+		public Entity Parent
+		{
+			get { return parent; }
+			set
+			{
+				Vector2 pos = Position;
+				float rot = Rotation;
+				if (parent != null) parent.children.Remove(this);
+				parent = value;
+				if (parent != null) parent.children.Add(this);
+				Position = pos;
+				Rotation = rot;
+			}
+		}
+
+		internal protected List<Entity> children = new List<Entity>();
+		public List<Entity> Children
+		{
+			get { return new List<Entity>(children); } // new copy
+		}
 
 		public EntityDef def;
 
@@ -32,15 +52,15 @@ namespace Platinum
 		{
 			get
 			{
-				Vector2 par = Vector2.Zero;
-				if (parent != null) par = parent.Position;
-				return par + position;
+				Matrix pmt = Matrix.Identity;
+				if (parent != null) pmt = parent.Transform;
+				return Vector2.Transform(position, pmt);
 			}
 			set
 			{
-				Vector2 par = Vector2.Zero;
-				if (parent != null) par = parent.Position;
-				position = value - par;
+				Matrix pmt = Matrix.Identity;
+				if (parent != null) pmt = parent.Transform;
+				position = Vector2.Transform(value, Matrix.Invert(pmt));
 			}
 		}
 
@@ -57,6 +77,16 @@ namespace Platinum
 				float par = 0f;
 				if (parent != null) par = parent.Rotation;
 				rotation = value - par;
+			}
+		}
+
+		public Matrix Transform
+		{
+			get
+			{
+				Matrix pmt = Matrix.Identity;
+				if (parent != null) pmt = parent.Transform;
+				return pmt * Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(new Vector3(position, 0));
 			}
 		}
 
