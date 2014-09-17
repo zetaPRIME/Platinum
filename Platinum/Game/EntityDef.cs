@@ -73,6 +73,8 @@ namespace Platinum
 		}
 		#endregion
 
+		public bool BuiltIn { get; internal set; }
+
 		public Type codeType;
 		public Package source;
 	}

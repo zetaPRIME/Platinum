@@ -32,18 +32,25 @@ namespace ExampleBase
 				init = true;
 			}
 
-			//GameState.physWorld.Step(1f);
-			//if (GameState.physWorld.RayCast(Position, Position + new Vector2(0, 32f)).Count > 0) velocity = new Vector2(0, -3f);
-			//if (physBody.ContactList != null) velocity = new Vector2(0, -3f);
+			PlayerInput p = Input.players[0];
 
-			//velocity += new Vector2(0, 0.025f);
-			rotation += 0.032f;
+			float rspeed = 0.032f;
+			if (p.Held(Button.R)) rspeed *= 2;
+			if (p.Held(Button.L)) rspeed *= -1;
+			rotation += rspeed;
 
-			//if (Input.players[0].Released(Button.A)) Parent = null;
+			if (Parent == null)
+			{
+				
 
-			if (Input.players[0].Pressed(Button.Up)) position.Y -= 16f;
-			if (Input.players[0].Pressed(Button.Down)) position.Y += 16f;
-			if (Input.players[0].Pressed(Button.B)) velocity.X = 3f;
+				float speed = 3f;
+				if (p.Held(Button.X) || p.Held(Button.Y)) speed = 6f;
+				velocity = Vector2.Zero;
+				if (p.Held(Button.Up)) velocity.Y = -speed;
+				if (p.Held(Button.Down)) velocity.Y = speed;
+				if (p.Held(Button.Left)) velocity.X = -speed;
+				if (p.Held(Button.Right)) velocity.X = speed;
+			}
 			
 			frame++;
 		}

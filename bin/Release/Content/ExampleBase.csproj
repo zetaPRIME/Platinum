@@ -46,23 +46,19 @@
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\..\..\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Microsoft.Xna.Framework.dll</HintPath>
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\..\..\Lidgren.Network.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Microsoft.Xna.Framework.Game.dll</HintPath>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\..\..\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Microsoft.Xna.Framework.Graphics.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Microsoft.Xna.Framework.Xact.dll</HintPath>
+    <Reference Include="OpenTK">
+      <HintPath>..\..\..\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="Tao.Sdl">
+      <HintPath>..\..\..\Tao.Sdl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\TestEntity\TestEntity.cs" />

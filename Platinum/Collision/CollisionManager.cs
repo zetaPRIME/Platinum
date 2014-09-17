@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Platinum
 {
-	public static class Collision
+	public static class CollisionManager
 	{
 		public struct CollisionPair
 		{
@@ -33,11 +33,7 @@ namespace Platinum
 
 		public static void PreUpdate()
 		{
-			collidable.Clear();
-			foreach (Entity e in GameState.entities)
-			{
-				if (e.colliders.Count > 0) collidable.Add(e);
-			}
+			collidable = GameState.entities.FindAll(e => e.colliders.Count != 0);
 
 			// step frames
 			List<CollisionPair> logSwap = logPrevFrame;

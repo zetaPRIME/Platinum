@@ -11,11 +11,13 @@ namespace Platinum
 	public static class GameState
 	{
 		public static List<Entity> entities = new List<Entity>();
-		public static List<Entity> entityDel = new List<Entity>();
 
 		public static Vector2 worldSize = new Vector2(640, 480);
 
 		public static Vector2 cameraPos = Vector2.Zero;
 		public static VecRect cameraBox { get { return new VecRect(Vector2.Zero, new Vector2(Core.instance.GraphicsDevice.Viewport.Width, Core.instance.GraphicsDevice.Viewport.Height)) + cameraPos; } }
+
+		public static Entity FindEntity(string name) { return entities.Find(e => e.Name == name); }
+		public static List<Entity> FindEntityByTag(string tag) { return entities.FindAll(e => e.HasTag(tag)); }
 	}
 }

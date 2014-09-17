@@ -92,6 +92,7 @@
     <Compile Include="Platinum\Asset Management\PackageManager.cs" />
     <Compile Include="Platinum\Asset Management\RootPackage.cs" />
     <Compile Include="Platinum\Basics\Core.cs" />
+    <Compile Include="Platinum\Basics\Core_Game.cs" />
     <Compile Include="Platinum\Basics\EventPassable.cs" />
     <Compile Include="Platinum\Basics\IEventPassable.cs" />
     <Compile Include="Platinum\Basics\Program.cs" />
@@ -101,7 +102,7 @@
     <Compile Include="Platinum\Data Types\ExtTexture.cs" />
     <Compile Include="Platinum\Data Types\VecRect.cs" />
     <Compile Include="Platinum\Collision\Collider.cs" />
-    <Compile Include="Platinum\Collision\Collision.cs" />
+    <Compile Include="Platinum\Collision\CollisionManager.cs" />
     <Compile Include="Platinum\Game\Entity.cs" />
     <Compile Include="Platinum\Game\EntityDef.cs" />
     <Compile Include="Platinum\Game\GameDef.cs" />

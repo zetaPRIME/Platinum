@@ -12,12 +12,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Platinum
 {
-	public class Core : Game
+	public enum EngineMode
+	{
+		Game, Editor, Config, Exception
+	}
+
+	public partial class Core : Game
 	{
 		public static Core instance;
+		public static EngineMode mode = EngineMode.Game;
 
 		public static SpriteBatch spriteBatch;
-
 		public GraphicsDeviceManager graphics;
 
 		public static SpriteFont fontDebug;
@@ -98,31 +103,8 @@ namespace Platinum
 		protected override void Update(GameTime gameTime)
 		{
 			Input.Update();
-			#region Debug keys
-			if (Input.KeyPressed(Keys.F3)) debugDisplay = !debugDisplay;
-			#endregion
-
-			GameDef.gameService.PreUpdate();
-
-			// entities
-			List<Entity> entities = new List<Entity>(GameState.entities);
-
-			foreach (Entity e in entities) e.UpdatePhysics();
-
-			Collision.PreUpdate();
-			Collision.TestAll();
-
-			foreach (Entity e in entities) e.Update();
-
-			foreach (Entity e in GameState.entityDel)
-			{
-				e.OnKill();
-				GameState.entities.Remove(e);
-			}
-
-			// todo: particles
-
-			GameDef.gameService.PostUpdate();
+			
+			if (mode == EngineMode.Game) Update_Game(gameTime);
 
 			base.Update(gameTime);
 		}
@@ -131,44 +113,7 @@ namespace Platinum
 		{
 			spriteBatch.GraphicsDevice.SetRenderTarget(null);
 
-			spriteBatch.GraphicsDevice.Clear(new Color(0.5f, 0f, 1f));
-			spriteBatch.Begin();
-
-			GameDef.gameService.PreDraw(spriteBatch);
-
-			foreach (Entity e in GameState.entities)
-			{
-				e.Draw(spriteBatch);
-			}
-
-			GameDef.gameService.PostDraw(spriteBatch);
-
-			spriteBatch.End();
-
-			#region debug display
-			if (debugDisplay)
-			{
-				spriteBatch.Begin();
-
-				string debugText = "Debug display (F3)";
-				debugText += "\nEntities: " + GameState.entities.Count + " (" + Collision.collidable.Count + " collidable)";
-				debugText += "\nInput: " + (UInt32)Input.players[0].down;
-
-				/*debugText += "\n";
-				IntPtr dev = Tao.Sdl.Sdl.SDL_JoystickOpen(0);
-				debugText += Joystick.GrabJoysticks()[0]. + ": ";
-				debugText += Tao.Sdl.Sdl.SDL_JoystickNumBalls(dev) + ": ";
-				for (int i = -8; i < 8; i++)
-				{
-					if (Tao.Sdl.Sdl.SDL_JoystickGetButton(dev, i) > 0) debugText += "" + i + ", ";
-				}
-				Tao.Sdl.Sdl.SDL_JoystickClose(dev);*/
-
-				spriteBatch.DrawString(fontDebug, debugText, Vector2.One * 8f, Color.White);
-
-				spriteBatch.End();
-			}
-			#endregion
+			if (mode == EngineMode.Game) Draw_Game(gameTime);
 
 			base.Draw(gameTime);
 		}

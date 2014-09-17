@@ -10,6 +10,10 @@ namespace Platinum
 {
 	public class Entity : EventPassable
 	{
+		public string Name { get; protected set; }
+		readonly List<string> tags = new List<string>();
+		public bool HasTag(string tag) { return tags.Contains(tag); }
+
 		public Vector2 position = Vector2.Zero;
 		public Vector2 velocity = Vector2.Zero;
 		public float rotation = 0f;
@@ -17,9 +21,13 @@ namespace Platinum
 
 		public VecRect bounds = VecRect.Zero;
 
-		//public Body physBody = null;
 		public List<Collider> colliders = new List<Collider>();
 		public bool collisionPassive = false;
+
+		public int drawLayer = 0;
+		public virtual bool DrawOffScreen { get { return false; } }
+
+		public virtual bool Asleep { get { return Parent != null && Parent.Asleep; } set { /* just here so it can be overridden */ } }
 
 		internal Entity parent = null;
 		public Entity Parent
@@ -99,9 +107,16 @@ namespace Platinum
 		public virtual void Draw(SpriteBatch sb) { }
 
 		public virtual void OnKill() { }
-		public void Kill()
+		public void Kill(bool silent = false)
 		{
-			GameState.entityDel.Add(this);
+			if (!silent) OnKill();
+
+			// deparent and free children
+			Parent = null;
+			foreach (Entity e in Children) e.Parent = null; // todo: conditions where every child should also be deleted (though meanwhile OnKill can manually do that)
+
+			// remove from play
+			GameState.entities.Remove(this);
 		}
 
 		public void UpdatePhysics()
