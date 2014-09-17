@@ -11,9 +11,20 @@ namespace Platinum
 	{
 		public static List<PlayerInput> players = new List<PlayerInput>();
 
+		public static KeyboardState keyStateNow;
+		public static KeyboardState keyStateLast;
+
 		public static void Update()
 		{
+			keyStateLast = keyStateNow;
+			keyStateNow = Keyboard.GetState();
+
 			foreach (PlayerInput pi in players) pi.Update();
+		}
+
+		public bool KeyPressed(Keys key)
+		{
+			return keyStateNow.IsKeyDown(key) && (keyStateLast == null || keyStateLast.IsKeyUp(key));
 		}
 	}
 
