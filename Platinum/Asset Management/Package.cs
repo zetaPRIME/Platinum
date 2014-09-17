@@ -257,14 +257,18 @@ namespace Platinum
 				"System.dll",
 				"System.Core.dll",
 				"System.Drawing.dll",
-				"System.Windows.Forms.dll",
+				//"System.Windows.Forms.dll",
 				"System.Numerics.dll",
 				"System.Xml.dll",
 				"Ionic.Zip.Reduced.dll",
-				"Microsoft.Xna.Framework.dll",
+				/*"Microsoft.Xna.Framework.dll",
 				"Microsoft.Xna.Framework.Xact.dll",
 				"Microsoft.Xna.Framework.Game.dll",
-				"Microsoft.Xna.Framework.Graphics.dll"
+				"Microsoft.Xna.Framework.Graphics.dll"*/
+				"MonoGame.Framework.dll",
+				"Lidgren.Network.dll",
+				"OpenTK.dll",
+				"Tao.Sdl.dll"
 			});
 
 			// add Platinum itself
