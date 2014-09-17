@@ -22,6 +22,9 @@ namespace Platinum
 
 		public static SpriteFont fontDebug;
 
+		// flags
+		public static bool debugDisplay = false;
+
 		public Core()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -41,8 +44,6 @@ namespace Platinum
 
 			graphics.ApplyChanges();
 
-			//spriteBatch = new SpriteBatch(this.GraphicsDevice);
-
 			this.IsMouseVisible = true;
 			Window.AllowUserResizing = true;
 
@@ -53,7 +54,7 @@ namespace Platinum
 		{
 			spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
 
-			fontDebug = Content.Load<SpriteFont>(/*"Font"*/"DebugFont");
+			fontDebug = Content.Load<SpriteFont>("DebugFont");
 
 			Input.players.Add(new PlayerInput());
 			Input.players[0].LoadDefaults(0);
@@ -81,6 +82,9 @@ namespace Platinum
 		protected override void Update(GameTime gameTime)
 		{
 			Input.Update();
+			#region Debug keys
+			if (Input.KeyPressed(Keys.F3)) debugDisplay = !debugDisplay;
+			#endregion
 
 			GameDef.gameService.PreUpdate();
 
@@ -100,7 +104,7 @@ namespace Platinum
 				GameState.entities.Remove(e);
 			}
 
-			// particles
+			// todo: particles
 
 			GameDef.gameService.PostUpdate();
 
@@ -109,8 +113,6 @@ namespace Platinum
 
 		protected override void Draw(GameTime gameTime)
 		{
-			//if (spriteBatch == null) return; // why would it even get here? seriously
-
 			spriteBatch.GraphicsDevice.SetRenderTarget(null);
 
 			spriteBatch.GraphicsDevice.Clear(new Color(0.5f, 0f, 1f));
@@ -127,12 +129,16 @@ namespace Platinum
 
 			spriteBatch.End();
 
-			// debug display
-			spriteBatch.Begin();
+			#region debug display
+			if (debugDisplay)
+			{
+				spriteBatch.Begin();
 
-			spriteBatch.DrawString(fontDebug, "Debug display (F3)\nEntities: " + GameState.entities.Count + " (" + Collision.collidable.Count + " collidable)", Vector2.One * 8f, Color.White);
+				spriteBatch.DrawString(fontDebug, "Debug display (F3)\nEntities: " + GameState.entities.Count + " (" + Collision.collidable.Count + " collidable)", Vector2.One * 8f, Color.White);
 
-			spriteBatch.End();
+				spriteBatch.End();
+			}
+			#endregion
 
 			base.Draw(gameTime);
 		}

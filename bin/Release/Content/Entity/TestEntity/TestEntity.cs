@@ -39,7 +39,11 @@ namespace ExampleBase
 			//velocity += new Vector2(0, 0.025f);
 			rotation += 0.032f;
 
-			if (frame == 120) Parent = null;
+			//if (Input.players[0].Released(Button.A)) Parent = null;
+
+			if (Input.players[0].Pressed(Button.Up)) position.Y -= 16f;
+			if (Input.players[0].Pressed(Button.Down)) position.Y += 16f;
+			if (Input.players[0].Pressed(Button.B)) velocity.X = 3f;
 			frame++;
 		}
 

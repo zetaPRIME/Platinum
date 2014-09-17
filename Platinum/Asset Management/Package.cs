@@ -293,6 +293,24 @@ namespace Platinum
 			// compile!
 			CompilerResults results = provider.CompileAssemblyFromSource(parameters, codeFiles.ToArray());
 
+			// report issues
+			if (results.Errors.Count > 0)
+			{
+				bool actuallyThrow = false;
+				string allErrors = "Compiler error in package " + path +":";
+
+				foreach (CompilerError err in results.Errors) {
+					if (err.IsWarning) continue;
+					allErrors += "\n\n";
+					allErrors += "In file " + err.FileName + ", line " + err.Line + " column " + err.Column + ":\n";
+					allErrors += "(" + err.ErrorNumber + ") " + err.ErrorText;
+
+					actuallyThrow = true;
+				}
+
+				if (actuallyThrow) throw new Exception(allErrors);
+			}
+
 			// finally, load in and apply
 			assembly = results.CompiledAssembly;
 

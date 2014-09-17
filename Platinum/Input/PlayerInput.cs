@@ -105,5 +105,9 @@ namespace Platinum
 				mapPad.Add(Buttons.Back, Button.Select);
 			}
 		}
+
+		public bool Held(Button button) { return down[(int)button]; }
+		public bool Pressed(Button button) { return press[(int)button]; }
+		public bool Released(Button button) { return release[(int)button]; }
 	}
 }
