@@ -56,8 +56,24 @@ namespace Platinum
 
 			fontDebug = Content.Load<SpriteFont>("DebugFont");
 
+			Input.Init();
+
+			Console.WriteLine("A ID: " + Input.padSettings[0].Button_A.ID);
+			Console.WriteLine("B ID: " + Input.padSettings[0].Button_B.ID);
+
 			Input.players.Add(new PlayerInput());
 			Input.players[0].LoadDefaults(0);
+			Console.WriteLine("" + GamePad.GetCapabilities(PlayerIndex.Two).IsConnected);
+
+			PadConfig pc = Input.padSettings[0];
+			pc.Button_A.ID = 1;
+			pc.Button_B.ID = 5;
+			pc.Button_X.ID = 0;
+			pc.Button_Y.ID = 4;
+			pc.Button_Start.ID = 3;
+			pc.Button_Back.ID = 2;
+			pc.Button_LB.ID = 6;
+			pc.Button_RB.ID = 7;
 
 			// start loading in content
 			PackageManager.FindPackages();
@@ -134,7 +150,21 @@ namespace Platinum
 			{
 				spriteBatch.Begin();
 
-				spriteBatch.DrawString(fontDebug, "Debug display (F3)\nEntities: " + GameState.entities.Count + " (" + Collision.collidable.Count + " collidable)", Vector2.One * 8f, Color.White);
+				string debugText = "Debug display (F3)";
+				debugText += "\nEntities: " + GameState.entities.Count + " (" + Collision.collidable.Count + " collidable)";
+				debugText += "\nInput: " + (UInt32)Input.players[0].down;
+
+				/*debugText += "\n";
+				IntPtr dev = Tao.Sdl.Sdl.SDL_JoystickOpen(0);
+				debugText += Joystick.GrabJoysticks()[0]. + ": ";
+				debugText += Tao.Sdl.Sdl.SDL_JoystickNumBalls(dev) + ": ";
+				for (int i = -8; i < 8; i++)
+				{
+					if (Tao.Sdl.Sdl.SDL_JoystickGetButton(dev, i) > 0) debugText += "" + i + ", ";
+				}
+				Tao.Sdl.Sdl.SDL_JoystickClose(dev);*/
+
+				spriteBatch.DrawString(fontDebug, debugText, Vector2.One * 8f, Color.White);
 
 				spriteBatch.End();
 			}

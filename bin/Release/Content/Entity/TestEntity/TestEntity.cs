@@ -44,6 +44,7 @@ namespace ExampleBase
 			if (Input.players[0].Pressed(Button.Up)) position.Y -= 16f;
 			if (Input.players[0].Pressed(Button.Down)) position.Y += 16f;
 			if (Input.players[0].Pressed(Button.B)) velocity.X = 3f;
+			
 			frame++;
 		}
 
