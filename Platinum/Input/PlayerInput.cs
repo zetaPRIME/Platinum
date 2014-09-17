@@ -29,7 +29,7 @@ namespace Platinum
 			down = 0;
 
 			// determine by stuff
-			KeyboardState keys = Keyboard.GetState();
+			KeyboardState keys = Input.keyStateNow;
 			foreach (KeyValuePair<Keys, Button> kvp in mapKeys)
 			{
 				if (keys.IsKeyDown(kvp.Key)) down[(int)kvp.Value] = true;
