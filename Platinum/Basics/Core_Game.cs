@@ -23,14 +23,13 @@ namespace Platinum
 			GameDef.gameService.PreUpdate();
 
 			// entities
-			List<Entity> entities = new List<Entity>(GameState.entities);
+			List<Entity> shouldUpdate = GameState.entities.FindAll(e => !e.Asleep);
 
-			foreach (Entity e in entities) e.UpdatePhysics();
+			foreach (Entity e in shouldUpdate) e.UpdatePhysics();
 
 			CollisionManager.PreUpdate();
 			CollisionManager.TestAll();
 
-			List<Entity> shouldUpdate = GameState.entities.FindAll(e => !e.Asleep);
 			foreach (Entity e in shouldUpdate) e.Update();
 
 			// todo: particles
