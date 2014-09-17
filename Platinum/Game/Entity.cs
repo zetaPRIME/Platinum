@@ -106,14 +106,17 @@ namespace Platinum
 
 		public void UpdatePhysics()
 		{
-			position += velocity;
-
-			foreach (Collider col in colliders)
+			if (!MoveUpdate())
 			{
-				col.parent = this;
-				col.Update();
+				position += velocity;
+
+				foreach (Collider col in colliders)
+				{
+					col.Update();
+				}
 			}
 		}
+		public virtual bool MoveUpdate() { return false; } // return true to override
 
 		public virtual List<Collider> GetCollidersFor(VecRect rect) { return colliders; }
 

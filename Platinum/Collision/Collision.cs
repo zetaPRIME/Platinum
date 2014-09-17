@@ -157,7 +157,7 @@ namespace Platinum
 
 				foreach (Collider col in e.GetCollidersFor(testRect))
 				{
-					if (solidOnly && !col.solid) continue;
+					//if (solidOnly && !col.solid) continue;
 					//
 				}
 			}

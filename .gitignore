@@ -1,6 +1,7 @@
 bin/**
 !bin/Release/
 bin/Release/**
+!bin/Release/*.dll
 !bin/Release/Content/
 !bin/Release/Content/**
 bin/Release/Content/bin/

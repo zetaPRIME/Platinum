@@ -100,17 +100,23 @@
     <Compile Include="Platinum\Data Types\EventParams.cs" />
     <Compile Include="Platinum\Data Types\ExtTexture.cs" />
     <Compile Include="Platinum\Data Types\VecRect.cs" />
-    <Compile Include="Platinum\Game\Collider.cs" />
-    <Compile Include="Platinum\Game\Collision.cs" />
+    <Compile Include="Platinum\Collision\Collider.cs" />
+    <Compile Include="Platinum\Collision\Collision.cs" />
     <Compile Include="Platinum\Game\Entity.cs" />
     <Compile Include="Platinum\Game\EntityDef.cs" />
     <Compile Include="Platinum\Game\GameDef.cs" />
     <Compile Include="Platinum\Game\GameService.cs" />
     <Compile Include="Platinum\Game\GameState.cs" />
+    <Compile Include="Platinum\Input\Input.cs" />
+    <Compile Include="Platinum\Input\PlayerInput.cs" />
     <Compile Include="Platinum\Utilities\Extensions_Vector.cs" />
     <Compile Include="Platinum\Utilities\Extensions_Graphics.cs" />
     <Compile Include="Platinum\Utilities\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XNADirectInput\DirectInputButtons.cs" />
+    <Compile Include="XNADirectInput\DirectInputDPad.cs" />
+    <Compile Include="XNADirectInput\DirectInputGamepad.cs" />
+    <Compile Include="XNADirectInput\DirectInputThumbSticks.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

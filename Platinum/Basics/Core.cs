@@ -54,6 +54,10 @@ namespace Platinum
 
 			fontDebug = Content.Load<SpriteFont>(/*"Font"*/"DebugFont");
 
+			Input.players.Add(new PlayerInput());
+			Input.players[0].LoadDefaults(0);
+
+			// start loading in content
 			PackageManager.FindPackages();
 
 			Package global = PackageManager.LoadPackage("Global", true);
@@ -75,6 +79,8 @@ namespace Platinum
 
 		protected override void Update(GameTime gameTime)
 		{
+			Input.Update();
+
 			GameDef.gameService.PreUpdate();
 
 			// entities
