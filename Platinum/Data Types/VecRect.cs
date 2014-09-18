@@ -94,5 +94,10 @@ namespace Platinum
 		{
 			return new VecRect(new Vector2(Math.Min(topLeft.X, vec.X), Math.Min(topLeft.Y, vec.Y)), new Vector2(Math.Max(bottomRight.X, vec.X), Math.Max(bottomRight.Y, vec.Y)));
 		}
+
+		public VecRect ExpandOut(float margin)
+		{
+			return new VecRect(topLeft - Vector2.One * margin, bottomRight + Vector2.One * margin);
+		}
 	}
 }

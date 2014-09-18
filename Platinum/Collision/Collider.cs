@@ -65,18 +65,9 @@ namespace Platinum
 		{
 			CollisionManager.quadTree.Remove(this);
 		}
-		
-		public bool CollidesWith(Collider other)
-		{
-			if ((layers & other.layers) == 0) return false;
 
-			return false;
-		}
-
-		public bool RaycastAgainst()
-		{
-			return false;
-		}
+		public List<Collider> TestOverlaps() { return CollisionManager.TestColliderOverlaps(this); }
+		public void TestIndividual(float buffer, Func<ColliderShape, ColliderShape, Vector2, CollisionState> testAction) { CollisionManager.TestColliderIndividual(this, buffer, testAction); }
 
 		public Rectangle Rect { get { return Bounds.AsRectangle; } }
 		public bool HasMoved { get { return dirty; } }
