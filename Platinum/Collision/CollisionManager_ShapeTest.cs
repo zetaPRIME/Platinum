@@ -29,7 +29,7 @@ namespace Platinum
 			float overlap = float.MaxValue;
 			Vector2 ovec = Vector2.Zero;
 
-			if (s1.NumPoints > s2.NumPoints) { ColliderShapePolygon sw = s1; s1 = s2; s2 = sw; } // make sure s1 has least faces
+			if (!calculateMTV && s1.NumPoints > s2.NumPoints) { ColliderShapePolygon sw = s1; s1 = s2; s2 = sw; } // make sure s1 has least faces
 
 			List<LineSegment> s1f = s1.Faces;
 			int numFaces = s1f.Count;
