@@ -57,6 +57,25 @@ namespace Platinum
 			{
 				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
+				foreach (Entity e in drawList)
+				{
+					foreach (Collider c in e.colliders)
+					{
+						foreach (ColliderShape s in c.shapes)
+						{
+							if (!(s is ColliderShapePolygon)) continue;
+							ColliderShapePolygon sp = s as ColliderShapePolygon;
+
+							if (sp.Points == null) continue;
+							foreach (LineSegment line in sp.Faces) spriteBatch.Draw(txPixel, line.start, null, Color.White, (float)Math.Atan2(line.Direction.Y, line.Direction.X), new Vector2(0f, 0.5f), new Vector2(line.Length, 1f), SpriteEffects.None, 0f);
+						}
+					}
+				}
+
+				spriteBatch.End();
+
+				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
 				string debugText = "Debug display (F3)";
 				debugText += "\nEntities: " + GameState.entities.Count;// +" (" + CollisionManager.collidable.Count + " collidable)";
 				debugText += "\nInput: " + (UInt32)Input.players[0].down;

@@ -9,6 +9,7 @@ using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Reflection;
 
 namespace Platinum
 {
@@ -26,6 +27,7 @@ namespace Platinum
 		public GraphicsDeviceManager graphics;
 
 		public static SpriteFont fontDebug;
+		public static Texture2D txPixel;
 
 		// flags
 		public static bool debugDisplay = false;
@@ -50,7 +52,7 @@ namespace Platinum
 			graphics.ApplyChanges();
 
 			this.IsMouseVisible = true;
-			Window.AllowUserResizing = true;
+			Window.AllowUserResizing = !(mode == EngineMode.Game || mode == EngineMode.Exception);
 
 			base.Initialize();
 		}
@@ -60,6 +62,8 @@ namespace Platinum
 			spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
 
 			fontDebug = Content.Load<SpriteFont>("DebugFont");
+			txPixel = new Texture2D(graphics.GraphicsDevice, 1, 1);
+			txPixel.SetData<Color>(new Color[] { Color.White });
 
 			Input.Init();
 
@@ -98,10 +102,20 @@ namespace Platinum
 				}
 			}
 
+			CollisionManager.ConfirmTree();
 		}
 
+		bool init = false;
 		protected override void Update(GameTime gameTime)
 		{
+			if (!init)
+			{
+				GameState.SetGameSize(640, 480);
+
+				init = true;
+			}
+			Console.WriteLine("Resolution is " + Window.ClientBounds.Width + "x" + Window.ClientBounds.Height);
+
 			Input.Update();
 			
 			if (mode == EngineMode.Game) Update_Game(gameTime);

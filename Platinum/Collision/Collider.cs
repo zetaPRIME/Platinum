@@ -58,7 +58,7 @@ namespace Platinum
 		{
 			dirty = true;
 
-			if (CollisionManager.quadTree.Move(this)) CollisionManager.quadTree.Add(this);
+			if (!CollisionManager.quadTree.Move(this)) CollisionManager.quadTree.Add(this);
 		}
 
 		public void KillFromTree()

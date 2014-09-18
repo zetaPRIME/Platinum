@@ -5,6 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Reflection;
 
 namespace Platinum
 {
@@ -19,5 +20,14 @@ namespace Platinum
 
 		public static Entity FindEntity(string name) { return entities.Find(e => e.Name == name); }
 		public static List<Entity> FindEntityByTag(string tag) { return entities.FindAll(e => e.HasTag(tag)); }
+
+		public static void SetGameSize(int width, int height)
+		{
+			Type otkgw = typeof(OpenTKGameWindow);
+			FieldInfo wfield = otkgw.GetField("window", BindingFlags.NonPublic | BindingFlags.Instance);
+			OpenTK.GameWindow wnd = (OpenTK.GameWindow)wfield.GetValue(Core.instance.Window);
+
+			wnd.Width = width; wnd.Height = height;
+		}
 	}
 }

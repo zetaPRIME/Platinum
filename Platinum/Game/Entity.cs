@@ -128,14 +128,14 @@ namespace Platinum
 
 		public void UpdatePhysics()
 		{
-			transformCache = Transform;
-
 			if (!MoveUpdate())
 			{
 				position += velocity;
 
 				if (hasMoved) UpdateColliders();
 			}
+
+			transformCache = Transform;
 		}
 		public virtual bool MoveUpdate() { return false; } // return true to override
 

@@ -55,7 +55,7 @@ namespace Platinum
 				Vector2[] pts = Points;
 				for (int i = 0; i < pts.Length; i++)
 				{
-					lst.Add(new LineSegment(pts[i], pts[(i + 1) & pts.Length]));
+					lst.Add(new LineSegment(pts[i], pts[(i + 1) % pts.Length]));
 				}
 				return lst;
 			}
@@ -79,7 +79,7 @@ namespace Platinum
 
 			for (int i = 1; i < pts.Length; i++) r = r.Extend(Vector2.Dot(normal, pts[i]));
 
-			return r;
+			return r.Pad(CollisionManager.SATPadding);
 		}
 	}
 }

@@ -16,6 +16,8 @@ namespace ExampleBase
 
 		int frame = 0;
 
+		float dscale = 1.0f;
+
 		public override void Update()
 		{
 			if (!init)
@@ -26,6 +28,12 @@ namespace ExampleBase
 
 				Collider col = new Collider();
 				colliders.Add(col);
+				col.parent = this;
+				ColliderShapePolygon cs = new ColliderShapePolygon(col);
+				col.shapes.Add(cs);
+				cs.points = new Vector2[] { new Vector2(0, -16), new Vector2(16, 16), new Vector2(-16, 16) };
+
+				col.collidesWith = UInt32.MaxValue;
 
 				//collisionPassive = true;
 
@@ -41,8 +49,6 @@ namespace ExampleBase
 
 			if (Parent == null)
 			{
-				
-
 				float speed = 3f;
 				if (p.Held(Button.X) || p.Held(Button.Y)) speed = 6f;
 				velocity = Vector2.Zero;
@@ -50,6 +56,18 @@ namespace ExampleBase
 				if (p.Held(Button.Down)) velocity.Y = speed;
 				if (p.Held(Button.Left)) velocity.X = -speed;
 				if (p.Held(Button.Right)) velocity.X = speed;
+			}
+
+			Vector2 correction = Vector2.Zero;
+
+			dscale = 1f;
+			List<Collider> collis = CollisionManager.TestCollider(colliders[0], true, out correction);
+			if (collis.Count != 0)
+			{
+				dscale = 1.2f;
+
+				//Position += Vector2.Reflect(velocity, correction);
+				Position += correction;
 			}
 			
 			frame++;
@@ -63,7 +81,7 @@ namespace ExampleBase
 
 			ExtTexture tex = PackageManager.globalPackage.GetTexture("TestImage");
 
-			sb.Draw(tex, ScreenPosition, null, Color.White, Rotation, tex.center, 1f, SpriteEffects.None);
+			sb.Draw(tex, ScreenPosition, null, Color.White, Rotation, tex.center, dscale, SpriteEffects.None);
 
 			//float cast = Collision.Raycast(new Vector2(320, 0), new Vector2(320, 480), 255);
 			//sb.DrawString(Core.fontDebug, "raycast " + cast, Vector2.One * 16, Color.White);

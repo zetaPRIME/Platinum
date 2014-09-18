@@ -16,6 +16,10 @@ namespace Platinum
 		{
 			return !(min > other.max || other.min > max);
 		}
+		public float GetOverlap(Range other)
+		{
+			return Math.Min(other.max - min, max - other.min);
+		}
 
 		public Range Extend(float value)
 		{
@@ -24,5 +28,11 @@ namespace Platinum
 			else if (value > nmax) nmax = value;
 			return new Range(nmin, nmax);
 		}
+
+		public Range Pad(float value) { return new Range(min - value, max + value); }
+
+		public static Range operator +(Range r, float f) { return new Range(r.min + f, r.max + f); }
+		public static Range operator -(Range r, float f) { return r + (-f); }
+		
 	}
 }
