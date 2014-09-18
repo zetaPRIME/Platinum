@@ -94,6 +94,8 @@ namespace Platinum
 				return pmt * Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(new Vector3(position, 0));
 			}
 		}
+		Matrix transformCache;
+		public bool hasMoved { get { return transformCache != Transform; } }
 
 		public VecRect WorldBounds
 		{
@@ -107,33 +109,40 @@ namespace Platinum
 		public virtual void Draw(SpriteBatch sb) { }
 
 		public virtual void OnKill() { }
+		public virtual void OnKillAny() { }
 		public void Kill(bool silent = false)
 		{
 			if (!silent) OnKill();
+			OnKillAny();
+
+			// remove colliders from quadtree
+			foreach (Collider col in colliders) col.KillFromTree();
 
 			// deparent and free children
 			Parent = null;
 			foreach (Entity e in Children) e.Parent = null; // todo: conditions where every child should also be deleted (though meanwhile OnKill can manually do that)
 
 			// remove from play
-			GameState.entities.Remove(this);
+			if (GameState.entities.Contains(this)) GameState.entities.Remove(this);
 		}
 
 		public void UpdatePhysics()
 		{
+			transformCache = Transform;
+
 			if (!MoveUpdate())
 			{
 				position += velocity;
 
-				foreach (Collider col in colliders)
-				{
-					col.Update();
-				}
+				if (hasMoved) UpdateColliders();
 			}
 		}
 		public virtual bool MoveUpdate() { return false; } // return true to override
 
-		public virtual List<Collider> GetCollidersFor(VecRect rect) { return colliders; }
+		public virtual void UpdateColliders()
+		{
+			foreach (Collider col in colliders) col.Update();
+		}
 
 		public virtual bool CanCollideWith(Entity e) { return true; }
 

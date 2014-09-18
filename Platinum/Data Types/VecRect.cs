@@ -30,6 +30,7 @@ namespace Platinum
 		}
 
 		public static VecRect Zero { get { return new VecRect(Vector2.Zero, Vector2.Zero); } }
+		public static VecRect Radius { get { return new VecRect(-Vector2.One, Vector2.One); } }
 
 		public static VecRect FromPoints(params Vector2[] points)
 		{
@@ -64,6 +65,8 @@ namespace Platinum
 		public float right { get { return bottomRight.X; } }
 		public float top { get { return topLeft.Y; } }
 		public float bottom { get { return bottomRight.Y; } }
+
+		public Rectangle AsRectangle { get { return new Rectangle((int)left, (int)top, (int)(right - left), (int)(bottom - top)); } }
 
 		public bool Intersects(VecRect other)
 		{

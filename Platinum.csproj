@@ -96,10 +96,15 @@
     <Compile Include="Platinum\Basics\EventPassable.cs" />
     <Compile Include="Platinum\Basics\IEventPassable.cs" />
     <Compile Include="Platinum\Basics\Program.cs" />
+    <Compile Include="Platinum\Collision\ColliderShape.cs" />
+    <Compile Include="Platinum\Collision\ColliderShapePolygon.cs" />
+    <Compile Include="Platinum\Collision\CollisionManager_ShapeTest.cs" />
     <Compile Include="Platinum\Data Types\BitField.cs" />
     <Compile Include="Platinum\Data Types\BitField32.cs" />
     <Compile Include="Platinum\Data Types\EventParams.cs" />
     <Compile Include="Platinum\Data Types\ExtTexture.cs" />
+    <Compile Include="Platinum\Data Types\LineSegment.cs" />
+    <Compile Include="Platinum\Data Types\Range.cs" />
     <Compile Include="Platinum\Data Types\VecRect.cs" />
     <Compile Include="Platinum\Collision\Collider.cs" />
     <Compile Include="Platinum\Collision\CollisionManager.cs" />
@@ -114,6 +119,7 @@
     <Compile Include="Platinum\Utilities\Extensions_Graphics.cs" />
     <Compile Include="Platinum\Utilities\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuadTree\QuadTree.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -223,6 +223,13 @@ namespace Platinum
 						float x = float.Parse(np.Substring(2));
 						ext.baseScale = x;
 					}
+					else if (p.StartsWith("ss"))
+					{
+						string[] dim = p.Substring(2).Split('x');
+						if (dim.Length != 2) continue;
+						ext.animFramesX = int.Parse(dim[0]);
+						ext.animFramesY = int.Parse(dim[1]);
+					}
 				}
 			}
 

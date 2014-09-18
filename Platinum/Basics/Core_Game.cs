@@ -28,7 +28,7 @@ namespace Platinum
 			foreach (Entity e in shouldUpdate) e.UpdatePhysics();
 
 			CollisionManager.PreUpdate();
-			CollisionManager.TestAll();
+			//CollisionManager.TestAll();
 
 			foreach (Entity e in shouldUpdate) e.Update();
 
@@ -58,7 +58,7 @@ namespace Platinum
 				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
 				string debugText = "Debug display (F3)";
-				debugText += "\nEntities: " + GameState.entities.Count + " (" + CollisionManager.collidable.Count + " collidable)";
+				debugText += "\nEntities: " + GameState.entities.Count;// +" (" + CollisionManager.collidable.Count + " collidable)";
 				debugText += "\nInput: " + (UInt32)Input.players[0].down;
 
 				/*debugText += "\n";

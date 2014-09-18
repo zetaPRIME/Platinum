@@ -6,160 +6,71 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using C3.XNA;
+
 namespace Platinum
 {
-	public static class CollisionManager
+	public static partial class CollisionManager
 	{
-		public struct CollisionPair
-		{
-			Collider c1, c2;
-
-			public CollisionPair(Collider p1, Collider p2) { c1 = p1; c2 = p2; }
-		}
-		public struct CollisionPairEntity
-		{
-			Entity c1, c2;
-
-			public CollisionPairEntity(Entity p1, Entity p2) { c1 = p1; c2 = p2; }
-		}
-
-		public static List<Entity> collidable = new List<Entity>();
-
-		static List<CollisionPair> logPrevFrame = new List<CollisionPair>();
-		static List<CollisionPair> logCurFrame = new List<CollisionPair>();
-
-		static List<CollisionPairEntity> logPrevFrameEntity = new List<CollisionPairEntity>();
-		static List<CollisionPairEntity> logCurFrameEntity = new List<CollisionPairEntity>();
+		public static QuadTree<Collider> quadTree;// = //new QuadTree<Collider>(
 
 		public static void PreUpdate()
 		{
-			collidable = GameState.entities.FindAll(e => e.colliders.Count != 0);
+			Rectangle wRect = worldRect();
+			if (quadTree == null || quadTree.QuadRect != wRect)
+			{
+				quadTree = new QuadTree<Collider>(wRect);
+				foreach (Entity e in GameState.entities) e.UpdateColliders();
+				Console.WriteLine("Generating new QuadTree");
+			}
+		}
 
-			// step frames
-			List<CollisionPair> logSwap = logPrevFrame;
-			logPrevFrame = logCurFrame;
-			logCurFrame = logSwap;
-			logCurFrame.Clear();
-
-			List<CollisionPairEntity> logSwapEntity = logPrevFrameEntity;
-			logPrevFrameEntity = logCurFrameEntity;
-			logCurFrameEntity = logSwapEntity;
-			logCurFrameEntity.Clear();
+		static Rectangle worldRect()
+		{
+			return new Rectangle(0, 0, (int)GameState.worldSize.X, (int)GameState.worldSize.Y);
 		}
 
 		//
 
-		#region log checks
-		public static bool CollidingNow(Collider c1, Collider c2)
+		public static List<Collider> TestCollider(Collider c)
 		{
-			return (logCurFrame.Contains(new CollisionPair(c1, c2)) || logCurFrame.Contains(new CollisionPair(c2, c1)));
-		}
-		public static bool CollidingLastFrame(Collider c1, Collider c2)
-		{
-			return (logPrevFrame.Contains(new CollisionPair(c1, c2)) || logPrevFrame.Contains(new CollisionPair(c2, c1)));
-		}
+			List<Collider> res = new List<Collider>();
 
-		public static bool CollidingNow(Entity c1, Entity c2)
-		{
-			return (logCurFrameEntity.Contains(new CollisionPairEntity(c1, c2)) || logCurFrameEntity.Contains(new CollisionPairEntity(c2, c1)));
-		}
-		public static bool CollidingLastFrame(Entity c1, Entity c2)
-		{
-			return (logPrevFrameEntity.Contains(new CollisionPairEntity(c1, c2)) || logPrevFrameEntity.Contains(new CollisionPairEntity(c2, c1)));
-		}
-		#endregion
+			List<Collider> potential = quadTree.GetObjects(c.Rect)
+				.FindAll(c2 => (c.layers & c2.layers) != 0) // if they share any layers
+				.FindAll(c2 => (c.collidesWith & c2.categories) != 0); // if the collider being tested is looking for any of c2's categories
 
-		public static void TestAll()
-		{
-			foreach (Entity e1 in collidable)
+			foreach (Collider c2 in potential)
 			{
-				if (e1.collisionPassive) continue;
+				bool hitFound = false;
 
-				foreach (Entity e2 in collidable)
+				foreach (ColliderShape cs1 in c.shapes)
 				{
-					if (e1 == e2) continue;
-					if (!e1.WorldBounds.Intersects(e2.WorldBounds)) continue;
-					if (!e1.CanCollideWith(e2) || !e2.CanCollideWith(e1)) continue;
-
-					foreach (Collider c1 in e1.GetCollidersFor(e2.WorldBounds))
+					foreach (ColliderShape cs2 in c2.shapes)
 					{
-						foreach (Collider c2 in e2.GetCollidersFor(e1.WorldBounds))
-						{
-							bool first = true;
-							if (c1.CollidesWith(c2))
-							{
-								// log!
-								logCurFrame.Add(new CollisionPair(c1, c2));
-								if (first) logCurFrameEntity.Add(new CollisionPairEntity(e1, e2));
-
-								// event
-								bool firstCont = CollidingLastFrame(c1, c2);
-								e1.CollisionEventCollider(c1, c2, firstCont);
-								e2.CollisionEventCollider(c2, c1, firstCont);
-								if (first)
-								{
-									firstCont = CollidingLastFrame(e1, e2);
-									e1.CollisionEventEntity(e2, firstCont);
-									e2.CollisionEventEntity(e1, firstCont);
-								}
-
-								first = false;
-							}
-						}
+						hitFound = TestCollision(cs1, cs2);
+						if (hitFound) break;
 					}
+					if (hitFound) break;
 				}
+
+				if (hitFound) res.Add(c2);
 			}
+
+			return res;
 		}
 
-		public static void TestEntity(Entity et, bool logCollision = false)
+		public static float Raycast(LineSegment line, byte layers = 255, UInt32 lookFor = UInt32.MaxValue, params Entity[] ignore)
 		{
-			foreach (Entity e in collidable)
-			{
-				if (e == et) continue;
-				if (!et.WorldBounds.Intersects(e.WorldBounds)) continue;
-
-				foreach (Collider ct in et.GetCollidersFor(e.WorldBounds))
-				{
-					foreach (Collider col in e.GetCollidersFor(et.WorldBounds))
-					{
-						if (ct.CollidesWith(col))
-						{
-							if (logCollision)
-							{
-								logCurFrame.Add(new CollisionPair(ct, col));
-								CollisionPairEntity cpe = new CollisionPairEntity(et, e);
-								if (!logCurFrameEntity.Contains(cpe)) logCurFrameEntity.Add(cpe);
-							}
-
-
-						}
-					}
-				}
-				
-			}
-		}
-
-		public static float Raycast(Vector2 start, Vector2 end, byte layers = 255, bool solidOnly = true, params Entity[] ignore)
-		{
-			VecRect testRect = new VecRect(new Vector2(Math.Min(start.X, end.X), Math.Min(start.Y, end.Y)), new Vector2(Math.Max(start.X, end.X), Math.Max(start.Y, end.Y)));
-
-			float rayDist = (start - end).Length();
+			float rayDist = line.Length;
 			float dist = float.MaxValue;
 
-			foreach (Entity e in collidable)
-			{
-				if (ignore.Contains(e)) continue;
-				if (!testRect.Intersects(e.WorldBounds)) continue;
-
-				foreach (Collider col in e.GetCollidersFor(testRect))
-				{
-					//if (solidOnly && !col.solid) continue;
-					//
-				}
-			}
+			//
 
 			if (dist == float.MaxValue) return -1;
 			return dist;
 		}
+
+		//
 	}
 }

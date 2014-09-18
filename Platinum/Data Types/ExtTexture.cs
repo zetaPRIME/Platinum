@@ -14,6 +14,10 @@ namespace Platinum
 		public float baseScale = 1;
 		public int pixelScale = 1;
 
+		public int animFramesX = 1;
+		public int animFramesY = 1;
+		public int animFrames { get { return animFramesY * animFramesX; } }
+
 		public Vector2 center
 		{
 			get { return new Vector2(texture.Width / 2f, texture.Height / 2f); }
