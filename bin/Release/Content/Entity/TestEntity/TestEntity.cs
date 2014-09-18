@@ -26,12 +26,9 @@ namespace ExampleBase
 				
 				//position.X = 320f;
 
-				Collider col = new Collider();
-				colliders.Add(col);
-				col.parent = this;
-				ColliderShapePolygon cs = new ColliderShapePolygon(col);
-				col.shapes.Add(cs);
-				cs.points = new Vector2[] { new Vector2(0, -16), new Vector2(16, 16), new Vector2(-16, 16) };
+				//Collider col = new Collider(this);
+				//new ColliderShapeCircle(col, Vector2.Zero, 16f);
+				Collider col = new ColliderShapeCircle(new Collider(this), Vector2.Zero, 16f).parent;
 
 				col.collidesWith = UInt32.MaxValue;
 
@@ -60,7 +57,8 @@ namespace ExampleBase
 
 			Vector2 correction = Vector2.Zero;
 
-			dscale = 1f;
+			/*dscale = 1f;
+			colliders[0].Update();
 			List<Collider> collis = CollisionManager.TestCollider(colliders[0], true, out correction);
 			if (collis.Count != 0)
 			{
@@ -68,9 +66,24 @@ namespace ExampleBase
 
 				//Position += Vector2.Reflect(velocity, correction);
 				Position += correction;
-			}
+			}*/
 			
 			frame++;
+		}
+
+		public override bool MoveUpdate()
+		{
+			position += velocity;
+			if (colliders.Count == 0) return true;
+
+			colliders[0].TestIndividual(velocity.Length(), (ts, os, mtv) =>
+			{
+				Position += mtv; colliders[0].Update();
+
+				return CollisionState.Continue;
+			});
+
+			return true;
 		}
 
 		public override void Draw(SpriteBatch sb)

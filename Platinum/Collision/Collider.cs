@@ -11,6 +11,9 @@ namespace Platinum
 {
 	public class Collider : IQuadStorable
 	{
+		public Collider() { }
+		public Collider(Entity parent) { this.parent = parent; parent.colliders.Add(this); }
+
 		public Entity parent;
 
 		public Vector2 position = Vector2.Zero;
@@ -45,6 +48,7 @@ namespace Platinum
 			get
 			{
 				if (!dirty) return boundsCache;
+				dirty = false;
 				if (shapes.Count == 0) { boundsCache = VecRect.Zero; return boundsCache; }
 
 				boundsCache = shapes[0].Bounds;
@@ -57,6 +61,7 @@ namespace Platinum
 		public void Update()
 		{
 			dirty = true;
+			foreach (ColliderShape cs in shapes) cs.Update();//cs.SetDirty();
 
 			if (!CollisionManager.quadTree.Move(this)) CollisionManager.quadTree.Add(this);
 		}
@@ -66,8 +71,8 @@ namespace Platinum
 			CollisionManager.quadTree.Remove(this);
 		}
 
-		public List<Collider> TestOverlaps() { return CollisionManager.TestColliderOverlaps(this); }
-		public void TestIndividual(float buffer, Func<ColliderShape, ColliderShape, Vector2, CollisionState> testAction) { CollisionManager.TestColliderIndividual(this, buffer, testAction); }
+		public List<Collider> TestOverlaps() { Update(); return CollisionManager.TestColliderOverlaps(this); }
+		public void TestIndividual(float buffer, Func<ColliderShape, ColliderShape, Vector2, CollisionState> testAction) { Update(); CollisionManager.TestColliderIndividual(this, buffer, testAction); }
 
 		public Rectangle Rect { get { return Bounds.AsRectangle; } }
 		public bool HasMoved { get { return dirty; } }

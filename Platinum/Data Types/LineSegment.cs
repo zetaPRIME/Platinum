@@ -18,9 +18,16 @@ namespace Platinum
 		}
 
 		public float Length { get { return (end - start).Length(); } }
+		public Vector2 Center { get { return (start + end) / 2f; } }
 		public VecRect Bounds { get { return VecRect.FromPoints(start, end); } }
 		public Vector2 Direction { get { Vector2 d = end - start; d.Normalize(); return d; } }
 		public Vector2 Normal { get { Vector2 d = Direction; return new Vector2(d.Y, -d.X); } }
+
+		public float DotTo(Vector2 point)
+		{
+			Vector2 offset = point - Center; offset.Normalize();
+			return Vector2.Dot(offset, Normal);
+		}
 
 		public static LineSegment operator *(LineSegment seg, Matrix mtx) { return new LineSegment(Vector2.Transform(seg.start, mtx), Vector2.Transform(seg.end, mtx)); }
 	}

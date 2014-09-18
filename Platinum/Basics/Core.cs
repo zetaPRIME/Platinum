@@ -114,7 +114,7 @@ namespace Platinum
 
 				init = true;
 			}
-			Console.WriteLine("Resolution is " + Window.ClientBounds.Width + "x" + Window.ClientBounds.Height);
+			//Console.WriteLine("Resolution is " + Window.ClientBounds.Width + "x" + Window.ClientBounds.Height);
 
 			Input.Update();
 			

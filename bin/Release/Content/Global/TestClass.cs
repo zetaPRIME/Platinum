@@ -52,16 +52,20 @@ namespace ExampleBase
 				GameState.entities.Add(e);
 				e.position = new Vector2(320, 240);
 
-				Collider nc = new Collider();
-				nc.parent = e; e.colliders.Add(nc);
-				ColliderShapePolygon ncs = new ColliderShapePolygon(nc);
-				nc.shapes.Add(ncs);
-				ncs.points = new Vector2[]{ new Vector2(-32, -32), new Vector2(32, -32), new Vector2(32, 32), new Vector2(-32, 32) };
+				Collider nc = new Collider(e);
+				new ColliderShapePolygon(nc, new Vector2(-128, -16), new Vector2(128, -16), new Vector2(128, 16), new Vector2(-128, 16));
+				new ColliderShapePolygon(nc, new Vector2(96, -16), new Vector2(128, -48), new Vector2(128, -16));
 
 				nc.categories = 1;
 				//nc.Update();
 			}
 			first = false;
+
+			if (true || Input.players[0].Held(Button.A)) return;
+			e = new Entity();
+			GameState.entities.Add(e);
+			e.position = new Vector2(500, 400);
+			new ColliderShapePolygon(new Collider(e), new Vector2(-16, -16), new Vector2(16, -16), new Vector2(16, 16), new Vector2(-16, 16));
 
 			/*Random rand2 = new Random();
 			e = EntityDef.NewEntity("TestEntity");

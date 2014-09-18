@@ -97,6 +97,7 @@
     <Compile Include="Platinum\Basics\IEventPassable.cs" />
     <Compile Include="Platinum\Basics\Program.cs" />
     <Compile Include="Platinum\Collision\ColliderShape.cs" />
+    <Compile Include="Platinum\Collision\ColliderShapeCircle.cs" />
     <Compile Include="Platinum\Collision\ColliderShapePolygon.cs" />
     <Compile Include="Platinum\Collision\CollisionManager_ShapeTest.cs" />
     <Compile Include="Platinum\Data Types\BitField.cs" />

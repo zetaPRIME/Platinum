@@ -57,19 +57,18 @@ namespace Platinum
 			{
 				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
-				foreach (Entity e in drawList)
+				const int maxDraw = 500;
+				int numDraw = 0;
+				List<Collider> colOnScreen = CollisionManager.quadTree.GetObjects(GameState.cameraBox.AsRectangle);
+				foreach (Collider c in colOnScreen)
 				{
-					foreach (Collider c in e.colliders)
+					foreach (ColliderShape s in c.shapes)
 					{
-						foreach (ColliderShape s in c.shapes)
-						{
-							if (!(s is ColliderShapePolygon)) continue;
-							ColliderShapePolygon sp = s as ColliderShapePolygon;
-
-							if (sp.Points == null) continue;
-							foreach (LineSegment line in sp.Faces) spriteBatch.Draw(txPixel, line.start, null, Color.White, (float)Math.Atan2(line.Direction.Y, line.Direction.X), new Vector2(0f, 0.5f), new Vector2(line.Length, 1f), SpriteEffects.None, 0f);
-						}
+						s.Draw(spriteBatch);
+						numDraw++;
+						if (numDraw == maxDraw) break;
 					}
+					if (numDraw == maxDraw) break;
 				}
 
 				spriteBatch.End();
@@ -78,6 +77,7 @@ namespace Platinum
 
 				string debugText = "Debug display (F3)";
 				debugText += "\nEntities: " + GameState.entities.Count;// +" (" + CollisionManager.collidable.Count + " collidable)";
+				debugText += "\nDrawing " + numDraw + " collider shapes (out of " + maxDraw + " max)";
 				debugText += "\nInput: " + (UInt32)Input.players[0].down;
 
 				/*debugText += "\n";

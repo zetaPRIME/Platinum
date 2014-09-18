@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Platinum
 {
 	public class ColliderShapePolygon : ColliderShape
 	{
-		public ColliderShapePolygon(Collider parent) { this.parent = parent; }
+		public ColliderShapePolygon(Collider parent) { this.parent = parent; parent.shapes.Add(this); dirty = true; }
+		public ColliderShapePolygon(Collider parent, params Vector2[] points) : this(parent) { this.points = points; }
 
 		public Vector2[] points;
 
@@ -23,26 +25,7 @@ namespace Platinum
 		{
 			get
 			{
-				if (!parent.dirty) return pointsCache;
-				Matrix matrix = parent.Transform; bool flip = parent.flip;
-
-				Vector2 orient = Vector2.One; if (flip) orient = new Vector2(-1, 1);
-
-				centroid = Vector2.Zero;
-
-				List<Vector2> np = new List<Vector2>();
-				Vector2 v;
-				for (int i = 0; i < points.Length; i++)
-				{
-					v = Vector2.Transform(points[i] * orient, matrix);
-					np.Add(v);
-
-					centroid += v;
-				}
-				centroid /= points.Length;
-				if (flip) np.Reverse();
-				pointsCache = np.ToArray();
-
+				if (dirty) Update();
 				return pointsCache;
 			}
 		}
@@ -65,8 +48,7 @@ namespace Platinum
 		{
 			get
 			{
-				if (!parent.dirty) return boundsCache;
-				boundsCache = VecRect.FromPoints(Points);
+				if (dirty) Update();
 				return boundsCache;
 			}
 		}
@@ -80,6 +62,41 @@ namespace Platinum
 			for (int i = 1; i < pts.Length; i++) r = r.Extend(Vector2.Dot(normal, pts[i]));
 
 			return r.Pad(CollisionManager.SATPadding);
+		}
+
+		public override void Update()
+		{
+			Matrix matrix = parent.Transform; bool flip = parent.flip;
+
+			Vector2 orient = Vector2.One; if (flip) orient = new Vector2(-1, 1);
+
+			centroid = Vector2.Zero;
+
+			List<Vector2> np = new List<Vector2>();
+			Vector2 v;
+			for (int i = 0; i < points.Length; i++)
+			{
+				v = Vector2.Transform(points[i] * orient, matrix);
+				np.Add(v);
+
+				centroid += v;
+			}
+			centroid /= points.Length;
+			if (flip) np.Reverse();
+			pointsCache = np.ToArray();
+
+			boundsCache = VecRect.FromPoints(pointsCache);
+			dirty = false;
+		}
+
+		public override void Draw(SpriteBatch sb)
+		{
+			Update();
+
+			if (points == null) return;
+			List<LineSegment> faces = Faces;
+			foreach (LineSegment line in faces) sb.Draw(Core.txPixel, line.start - GameState.cameraPos, null, Color.LightGreen, (float)Math.Atan2(line.Direction.Y, line.Direction.X), new Vector2(0f, 0.5f), new Vector2(line.Length, 1f), SpriteEffects.None, 0f);
+			foreach (LineSegment line in faces) sb.Draw(Core.txPixel, line.start - GameState.cameraPos, null, Color.Yellow, 0f, new Vector2(0.5f, 0.5f), 3f, SpriteEffects.None, 0f);
 		}
 	}
 }

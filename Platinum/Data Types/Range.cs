@@ -12,6 +12,10 @@ namespace Platinum
 		public Range(float min, float max) { this.min = min; this.max = max; }
 		public Range(float value) : this(value, value) { }
 
+		public bool Contains(float value)
+		{
+			return (value >= min && value <= max);
+		}
 		public bool Overlaps(Range other)
 		{
 			return !(min > other.max || other.min > max);

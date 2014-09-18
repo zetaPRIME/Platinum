@@ -88,6 +88,7 @@ namespace Platinum
 			foreach (Collider c2 in potential)
 			{
 				if (c2 == c) continue;
+				if (!c.Bounds.Intersects(c2.Bounds)) continue; // might as well shave off some computation since this thing can move in the middle of the loop
 				bool hitFound = false;
 				CollisionState state = CollisionState.Continue;
 
