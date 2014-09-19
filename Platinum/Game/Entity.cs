@@ -138,15 +138,9 @@ namespace Platinum
 			transformCache = Transform;
 		}
 		public virtual bool MoveUpdate() { return false; } // return true to override
-
 		public virtual void UpdateColliders()
 		{
 			foreach (Collider col in colliders) col.Update();
 		}
-
-		public virtual bool CanCollideWith(Entity e) { return true; }
-
-		public virtual void CollisionEventCollider(Collider thisCol, Collider col, bool firstContact) { }
-		public virtual void CollisionEventEntity(Entity other, bool firstContact) { }
 	}
 }

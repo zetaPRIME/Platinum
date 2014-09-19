@@ -12,7 +12,7 @@ namespace Platinum
 	{
 		public Collider parent { get; protected set; }
 
-		public float RaycastAgainst(LineSegment line) { return float.MaxValue; }
+		public virtual float RaycastAgainst(LineSegment line) { return float.MaxValue; }
 
 		public virtual VecRect Bounds { get { return VecRect.Zero; } }
 

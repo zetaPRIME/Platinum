@@ -147,14 +147,33 @@ namespace Platinum
 			return res;
 		}
 
-		public static float Raycast(LineSegment line, byte layers = 255, UInt32 lookFor = UInt32.MaxValue, params Entity[] ignore)
+		public static float Raycast(LineSegment line, out Collider colliderHit, byte layers = 255, UInt32 lookFor = UInt32.MaxValue, params Entity[] ignore)
 		{
 			float rayDist = line.Length;
 			float dist = float.MaxValue;
+			Collider cHit = null;
+			VecRect testRect = line.Bounds;
 
-			//
+			List<Collider> toTest = quadTree.GetObjects(testRect.AsRectangle);
+			foreach (Collider c in toTest)
+			{
+				if ((c.layers & layers) == 0) continue;
+				if ((c.categories & lookFor) == 0) continue;
+				if (ignore.Contains(c.parent)) continue;
 
-			if (dist == float.MaxValue) return -1;
+				foreach (ColliderShape cs in c.shapes)
+				{
+					float nd = cs.RaycastAgainst(line);
+					if (nd < dist)
+					{
+						dist = nd;
+						cHit = c;
+					}
+				}
+			}
+
+			if (dist == float.MaxValue) { colliderHit = null; return -1; }
+			colliderHit = cHit;
 			return dist;
 		}
 

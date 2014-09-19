@@ -28,7 +28,8 @@ namespace ExampleBase
 
 				//Collider col = new Collider(this);
 				//new ColliderShapeCircle(col, Vector2.Zero, 16f);
-				Collider col = new ColliderShapeCircle(new Collider(this), Vector2.Zero, 16f).parent;
+				//Collider col = new ColliderShapeCircle(new Collider(this), Vector2.Zero, 16f).parent;
+				Collider col = new ColliderShapePolygon(new Collider(this), new Vector2(-16, -16), new Vector2(16, -16), new Vector2(16, 16), new Vector2(-16, 16)).parent;
 
 				col.collidesWith = UInt32.MaxValue;
 
@@ -43,6 +44,7 @@ namespace ExampleBase
 			if (p.Held(Button.R)) rspeed *= 2;
 			if (p.Held(Button.L)) rspeed *= -1;
 			rotation += rspeed;
+			if (p.Held(Button.A)) rotation = 0f;
 
 			if (Parent == null)
 			{
@@ -73,15 +75,21 @@ namespace ExampleBase
 
 		public override bool MoveUpdate()
 		{
-			position += velocity;
+			//position += velocity;
 			if (colliders.Count == 0) return true;
 
-			colliders[0].TestIndividual(velocity.Length(), (ts, os, mtv) =>
-			{
-				Position += mtv; colliders[0].Update();
+			int cycles = 4;
 
-				return CollisionState.Continue;
-			});
+			for (int i = 0; i < cycles; i++)
+			{
+				position += velocity / cycles;
+				colliders[0].TestIndividual(velocity.Length(), (ts, os, mtv) =>
+				{
+					Position += mtv; colliders[0].Update();
+
+					return CollisionState.Continue;
+				});
+			}
 
 			return true;
 		}
@@ -98,11 +106,6 @@ namespace ExampleBase
 
 			//float cast = Collision.Raycast(new Vector2(320, 0), new Vector2(320, 480), 255);
 			//sb.DrawString(Core.fontDebug, "raycast " + cast, Vector2.One * 16, Color.White);
-		}
-
-		public override bool CanCollideWith(Entity e)
-		{
-			return false;
 		}
 	}
 }

@@ -32,7 +32,7 @@ namespace Platinum
 			if ((s2.Center - s1.Center).Length() > s1.Radius + s2.Radius) { mtv = Vector2.Zero; return false; }
 
 			Vector2 vec = (s1.Center - s2.Center);
-			float length = vec.Length() - (s1.Radius + s2.Radius);
+			float length = (s1.Radius + s2.Radius) - vec.Length();
 			vec.Normalize();
 
 			mtv = vec * length;

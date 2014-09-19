@@ -55,6 +55,7 @@ namespace ExampleBase
 				Collider nc = new Collider(e);
 				new ColliderShapePolygon(nc, new Vector2(-128, -16), new Vector2(128, -16), new Vector2(128, 16), new Vector2(-128, 16));
 				new ColliderShapePolygon(nc, new Vector2(96, -16), new Vector2(128, -48), new Vector2(128, -16));
+				new ColliderShapeCircle(nc, new Vector2(-128, 0), 16f);
 
 				nc.categories = 1;
 				//nc.Update();

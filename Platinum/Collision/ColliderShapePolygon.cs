@@ -98,5 +98,20 @@ namespace Platinum
 			foreach (LineSegment line in faces) sb.Draw(Core.txPixel, line.start - GameState.cameraPos, null, Color.LightGreen, (float)Math.Atan2(line.Direction.Y, line.Direction.X), new Vector2(0f, 0.5f), new Vector2(line.Length, 1f), SpriteEffects.None, 0f);
 			foreach (LineSegment line in faces) sb.Draw(Core.txPixel, line.start - GameState.cameraPos, null, Color.Yellow, 0f, new Vector2(0.5f, 0.5f), 3f, SpriteEffects.None, 0f);
 		}
+
+		public override float RaycastAgainst(LineSegment line)
+		{
+			List<LineSegment> faces = Faces;
+			float closest = float.MaxValue;
+			foreach (LineSegment face in faces)
+			{
+				if (face.DotTo(line.start) <= 0) continue; // don't count away-faces
+				float inter = line.Intersection(face);
+				if (inter < 0) continue;
+				if (inter < closest) closest = inter;
+			}
+
+			return closest;
+		}
 	}
 }
