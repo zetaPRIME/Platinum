@@ -50,9 +50,11 @@ namespace Platinum
 		{
 			List<Collider> res = new List<Collider>();
 
-			List<Collider> potential = quadTree.GetObjects(c.Rect)
-				.FindAll(c2 => (c.layers & c2.layers) != 0) // if they share any layers
-				.FindAll(c2 => (c.collidesWith & c2.categories) != 0); // if the collider being tested is looking for any of c2's categories
+			List<Collider> potential = quadTree.GetObjects(c.Rect).FindAll(c2 // single query for fewer iterations
+				=> (c.layers & c2.layers) != 0 // if they share any layers
+				&& (c.collidesWith & c2.categories) != 0 // if the collider being tested is looking for any of c2's categories
+				&& c != c2 // and clip out the checking object while we're at it
+				);
 
 			Vector2 ncorr = Vector2.Zero;
 
@@ -79,9 +81,11 @@ namespace Platinum
 
 		public static void TestColliderIndividual(Collider c, float buffer, Func<ColliderShape, ColliderShape, Vector2, CollisionState> testAction)
 		{
-			List<Collider> potential = quadTree.GetObjects(c.Bounds.ExpandOut(buffer).AsRectangle)
-				.FindAll(c2 => (c.layers & c2.layers) != 0) // if they share any layers
-				.FindAll(c2 => (c.collidesWith & c2.categories) != 0); // if the collider being tested is looking for any of c2's categories
+			List<Collider> potential = quadTree.GetObjects(c.Rect).FindAll(c2 // single query for fewer iterations
+				=> (c.layers & c2.layers) != 0 // if they share any layers
+				&& (c.collidesWith & c2.categories) != 0 // if the collider being tested is looking for any of c2's categories
+				&& c != c2 // and clip out the checking object while we're at it
+				);
 
 			Vector2 mtv = Vector2.Zero;
 
@@ -108,45 +112,6 @@ namespace Platinum
 			}
 		}
 
-		public static List<Collider> TestCollider(Collider c)
-		{
-			Vector2 blah; return TestCollider(c, false, out blah);
-		}
-		public static List<Collider> TestCollider(Collider c, bool calculateMTV, out Vector2 mtv)
-		{
-			List<Collider> res = new List<Collider>();
-
-			List<Collider> potential = quadTree.GetObjects(c.Rect)
-				.FindAll(c2 => (c.layers & c2.layers) != 0) // if they share any layers
-				.FindAll(c2 => (c.collidesWith & c2.categories) != 0); // if the collider being tested is looking for any of c2's categories
-
-			Vector2 corr = Vector2.Zero;
-			Vector2 ncorr = Vector2.Zero;
-
-			foreach (Collider c2 in potential)
-			{
-				if (c2 == c) continue;
-				bool hitFound = false;
-
-				foreach (ColliderShape cs1 in c.shapes)
-				{
-					foreach (ColliderShape cs2 in c2.shapes)
-					{
-						hitFound = TestCollision(cs1, cs2, calculateMTV, out ncorr);
-						if (calculateMTV && ncorr.Length() > corr.Length()) corr = ncorr;
-
-						if (!calculateMTV && hitFound) break;
-					}
-					if (!calculateMTV && hitFound) break;
-				}
-
-				if (hitFound) res.Add(c2);
-			}
-
-			mtv = corr;
-			return res;
-		}
-
 		public static float Raycast(LineSegment line, out Collider colliderHit, byte layers = 255, UInt32 lookFor = UInt32.MaxValue, params Entity[] ignore)
 		{
 			float rayDist = line.Length;
@@ -154,15 +119,17 @@ namespace Platinum
 			Collider cHit = null;
 			VecRect testRect = line.Bounds;
 
-			List<Collider> toTest = quadTree.GetObjects(testRect.AsRectangle);
-			foreach (Collider c in toTest)
-			{
-				if ((c.layers & layers) == 0) continue;
-				if ((c.categories & lookFor) == 0) continue;
-				if (ignore.Contains(c.parent)) continue;
+			List<Collider> potential = quadTree.GetObjects(testRect.AsRectangle).FindAll(c // single query for fewer iterations
+				=> (layers & c.layers) != 0 // if they share any layers
+				&& (lookFor & c.categories) != 0 // if the collider being tested is looking for any of c's categories
+				&& !ignore.Contains(c.parent)
+				);
 
+			foreach (Collider c in potential)
+			{
 				foreach (ColliderShape cs in c.shapes)
 				{
+					if (!line.Bounds.Intersects(cs.Bounds)) continue;
 					float nd = cs.RaycastAgainst(line);
 					if (nd < dist)
 					{

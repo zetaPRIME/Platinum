@@ -40,9 +40,7 @@ namespace Platinum
 			Update();
 
 			Vector2 screenCenter = (worldCenter - GameState.cameraPos).Pixelize();
-
 			Vector2[] points = new Vector2[drawPoints];
-
 			Vector2 rad = new Vector2(0, -radius);
 
 			for (int i = 0; i < drawPoints; i++)
@@ -55,6 +53,12 @@ namespace Platinum
 				LineSegment line = new LineSegment(points[i], points[(i + 1) % drawPoints]);
 				sb.Draw(Core.txPixel, line.start, null, Color.LightBlue, (float)Math.Atan2(line.Direction.Y, line.Direction.X), new Vector2(0f, 0.5f), new Vector2(line.Length, 1f), SpriteEffects.None, 0f);
 			}
+		}
+
+		public override float RaycastAgainst(LineSegment line)
+		{
+			
+			return base.RaycastAgainst(line);
 		}
 	}
 }
