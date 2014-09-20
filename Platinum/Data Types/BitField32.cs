@@ -36,6 +36,11 @@ namespace Platinum
 				}
 			}
 		}
+		public bool this[BitFlag index]
+		{
+			get { return this[(int)index.bitNumber]; }
+			set { this[(int)index.bitNumber] = value; }
+		}
 
 		public static implicit operator UInt32(BitField32 b)
 		{

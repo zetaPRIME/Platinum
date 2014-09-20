@@ -117,7 +117,7 @@ namespace Platinum
 		public static float Raycast(LineSegment line, out Collider colliderHit, byte layers = 255, UInt32 lookFor = UInt32.MaxValue, params Entity[] ignore)
 		{
 			float rayDist = line.Length;
-			float dist = float.MaxValue;
+			//float dist = float.MaxValue;
 			Collider cHit = null;
 			VecRect testRect = line.Bounds;
 
@@ -134,17 +134,18 @@ namespace Platinum
 				{
 					if (!line.Bounds.Intersects(cs.Bounds)) continue;
 					float nd = cs.RaycastAgainst(line);
-					if (nd < dist)
+					if (nd != float.MaxValue) { cHit = c; line.end = line.PointAlong(nd); };
+					/*if (nd < dist)
 					{
 						dist = nd;
 						cHit = c;
-					}
+					}*/
 				}
 			}
 
-			if (dist == float.MaxValue) { colliderHit = null; return -1; }
+			if (cHit == null/*dist == float.MaxValue*/) { colliderHit = null; return -1; }
 			colliderHit = cHit;
-			return dist;
+			return line.Length; //dist;
 		}
 
 		//

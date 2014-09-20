@@ -102,6 +102,7 @@
     <Compile Include="Platinum\Collision\CollisionManager_ShapeTest.cs" />
     <Compile Include="Platinum\Data Types\BitField.cs" />
     <Compile Include="Platinum\Data Types\BitField32.cs" />
+    <Compile Include="Platinum\Data Types\BitFlag.cs" />
     <Compile Include="Platinum\Data Types\EventParams.cs" />
     <Compile Include="Platinum\Data Types\ExtTexture.cs" />
     <Compile Include="Platinum\Data Types\LineSegment.cs" />
