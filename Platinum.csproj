@@ -116,6 +116,7 @@
     <Compile Include="Platinum\Game\GameState.cs" />
     <Compile Include="Platinum\Input\Input.cs" />
     <Compile Include="Platinum\Input\PlayerInput.cs" />
+    <Compile Include="Platinum\Utilities\Extensions_JSON.cs" />
     <Compile Include="Platinum\Utilities\Extensions_Vector.cs" />
     <Compile Include="Platinum\Utilities\Extensions_Graphics.cs" />
     <Compile Include="Platinum\Utilities\Utils.cs" />

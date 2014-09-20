@@ -57,8 +57,22 @@ namespace Platinum
 
 		public override float RaycastAgainst(LineSegment line)
 		{
-			
-			return base.RaycastAgainst(line);
+			float pl = Vector2.Dot(line.Normal, line.start);
+			float pc = Vector2.Dot(line.Normal, Center);
+			float dist = Math.Abs(pl - pc);
+
+			if (dist > Radius) return float.MaxValue; // no collision
+
+			float chord = (float)Math.Sqrt((Radius * Radius) - (dist * dist));
+
+			pl = Vector2.Dot(line.Direction, line.start);
+			pc = Vector2.Dot(line.Direction, Center);
+			dist = Math.Abs(pl - pc);
+
+			dist -= chord;// / 2;
+
+			if (dist > line.Length) return float.MaxValue;
+			return dist;
 		}
 	}
 }

@@ -53,6 +53,7 @@ namespace Platinum
 			List<Collider> potential = quadTree.GetObjects(c.Rect).FindAll(c2 // single query for fewer iterations
 				=> (c.layers & c2.layers) != 0 // if they share any layers
 				&& (c.collidesWith & c2.categories) != 0 // if the collider being tested is looking for any of c2's categories
+				&& (c2.parent == null || !c2.parent.Disabled) // don't count children of disabled entities
 				&& c != c2 // and clip out the checking object while we're at it
 				);
 
@@ -84,6 +85,7 @@ namespace Platinum
 			List<Collider> potential = quadTree.GetObjects(c.Rect).FindAll(c2 // single query for fewer iterations
 				=> (c.layers & c2.layers) != 0 // if they share any layers
 				&& (c.collidesWith & c2.categories) != 0 // if the collider being tested is looking for any of c2's categories
+				&& (c2.parent == null || !c2.parent.Disabled) // don't count children of disabled entities
 				&& c != c2 // and clip out the checking object while we're at it
 				);
 
@@ -122,7 +124,8 @@ namespace Platinum
 			List<Collider> potential = quadTree.GetObjects(testRect.AsRectangle).FindAll(c // single query for fewer iterations
 				=> (layers & c.layers) != 0 // if they share any layers
 				&& (lookFor & c.categories) != 0 // if the collider being tested is looking for any of c's categories
-				&& !ignore.Contains(c.parent)
+				&& (c.parent == null || !c.parent.Disabled) // don't count children of disabled entities
+				&& !ignore.Contains(c.parent) // ignore list
 				);
 
 			foreach (Collider c in potential)

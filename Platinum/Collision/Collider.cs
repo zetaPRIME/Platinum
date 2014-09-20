@@ -26,6 +26,9 @@ namespace Platinum
 		public BitField32 collidesWith = 1;
 		public BitField layers = 255;
 
+		public List<string> tags = new List<string>();
+		public bool HasTag(string tag) { return tags.Contains(tag) || (parent != null && parent.HasTag(tag)); }
+
 		public List<ColliderShape> shapes = new List<ColliderShape>();
 
 		Matrix parentLastMatrix;

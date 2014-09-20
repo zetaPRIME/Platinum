@@ -23,7 +23,7 @@ namespace Platinum
 			GameDef.gameService.PreUpdate();
 
 			// entities
-			List<Entity> shouldUpdate = GameState.entities.FindAll(e => !e.Asleep);
+			List<Entity> shouldUpdate = GameState.entities.FindAll(e => !e.Asleep && !e.Disabled);
 
 			foreach (Entity e in shouldUpdate) e.UpdatePhysics();
 
@@ -44,7 +44,7 @@ namespace Platinum
 
 			GameDef.gameService.PreDraw(spriteBatch);
 
-			List<Entity> drawList = GameState.entities.FindAll(e => (e.DrawOffScreen || e.OnScreen));
+			List<Entity> drawList = GameState.entities.FindAll(e => (e.DrawOffScreen || e.OnScreen) && !e.Disabled);
 			drawList = drawList.OrderBy(e => e.drawLayer).ToList(); // wow, that's easy
 			foreach (Entity e in drawList) e.Draw(spriteBatch);
 

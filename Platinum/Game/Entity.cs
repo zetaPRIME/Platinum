@@ -28,6 +28,7 @@ namespace Platinum
 		public virtual bool DrawOffScreen { get { return false; } }
 
 		public virtual bool Asleep { get { return Parent != null && Parent.Asleep; } set { /* just here so it can be overridden */ } }
+		public virtual bool Disabled { get { return Parent != null && Parent.Disabled; } set { /* just here so it can be overridden */ } }
 
 		internal Entity parent = null;
 		public Entity Parent

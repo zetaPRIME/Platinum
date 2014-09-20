@@ -18,6 +18,8 @@ namespace ExampleBase
 
 		float dscale = 1.0f;
 
+		Vector2 testVec = Vector2.Zero;
+
 		public override void Update()
 		{
 			if (!init)
@@ -69,6 +71,12 @@ namespace ExampleBase
 				//Position += Vector2.Reflect(velocity, correction);
 				Position += correction;
 			}*/
+
+			LineSegment line = new LineSegment(Position, Position + new Vector2(0, 128));
+			Collider blah;
+			float cast = CollisionManager.Raycast(line, out blah, 255, UInt32.MaxValue, this);
+			if (cast != -1) testVec = line.PointAlong(cast);
+			else testVec = line.end;
 			
 			frame++;
 		}
@@ -103,6 +111,8 @@ namespace ExampleBase
 			ExtTexture tex = PackageManager.globalPackage.GetTexture("TestImage");
 
 			sb.Draw(tex, ScreenPosition, null, Color.White, Rotation, tex.center, dscale, SpriteEffects.None);
+
+			sb.Draw(Core.txPixel, (testVec - GameState.cameraPos).Pixelize(), null, Color.White, 0f, Vector2.One * 0.5f, 5f, SpriteEffects.None, 0f);
 
 			//float cast = Collision.Raycast(new Vector2(320, 0), new Vector2(320, 480), 255);
 			//sb.DrawString(Core.fontDebug, "raycast " + cast, Vector2.One * 16, Color.White);

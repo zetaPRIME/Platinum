@@ -18,9 +18,6 @@ namespace Platinum
 		public int animFramesY = 1;
 		public int animFrames { get { return animFramesY * animFramesX; } }
 
-		public Vector2 center
-		{
-			get { return new Vector2(texture.Width / 2f, texture.Height / 2f); }
-		}
+		public Vector2 center { get { return new Vector2((texture.Width / animFramesX) / 2f, (texture.Height / animFramesY) / 2f); } }
 	}
 }
