@@ -15,7 +15,7 @@ namespace Platinum.UIKit
 		Button buttonDown { get { return btns[1]; } }
 		Button buttonBar { get { return btns[2]; } }
 
-		bool isDragging = false;
+		public bool isDragging = false;
 
 		public ScrollField field;
 		int scrollRange { get { return field.scrollBottom - field.bounds.Height; } }
@@ -54,15 +54,8 @@ namespace Platinum.UIKit
 		{
 			int range = bounds.Height - (bounds.Width * 5);
 
-			//int diff = (buttonBar.dragPoint - buttonBar.dragPointScreen).Y;
-			Point screenPosition = buttonBar.dragPointScreen - buttonBar.dragPoint;
-			//Console.WriteLine("" + screenPosition);
-			//Point positionDiff = new Point(buttonBar.bounds.X, buttonBar.bounds.Y) - screenPosition;
-			//buttonBar.bounds.Y = ((Input.MousePosition - screenPosition) + startPoint).Y;
+			buttonBar.bounds.Y = ((Input.MousePosition - buttonBar.dragPointScreen) + startPoint).Y;
 
-			buttonBar.bounds.Y = (Input.MousePosition - startPoint).Y;
-
-			//buttonBar.bounds.Y = (Input.MousePosition - screenPosition + buttonBar.dragPoint).Y;
 			if (buttonBar.bounds.Y < bounds.Width) buttonBar.bounds.Y = bounds.Width;
 			if (buttonBar.bounds.Y > range + bounds.Width) buttonBar.bounds.Y = range + bounds.Width;
 
@@ -112,6 +105,14 @@ namespace Platinum.UIKit
 			sb.GraphicsDevice.Clear(UI.colorBacking);
 
 			foreach (Button b in btns) b.Draw(sb);
+
+			for (int i = 0; i < 5; i++)
+			{
+				int width = (i + 1) * 2;
+
+				sb.DrawRect(new Rectangle((bounds.Width / 2) - (i + 1), 5 + i, width, 1), UI.colorText);
+				sb.DrawRect(new Rectangle((bounds.Width / 2) - (i + 1), bounds.Height - (6 + i), width, 1), UI.colorText);
+			}
 
 			UI.TargetPop();
 			sb.Draw(target, bounds, Color.White);

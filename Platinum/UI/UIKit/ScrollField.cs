@@ -68,6 +68,7 @@ namespace Platinum.UIKit
 		public override void MouseScroll(int clicks)
 		{
 			if (clicks == 0) return;
+			if (scrollbar != null && scrollbar.isDragging) return;
 			scroll.Y += clicks * ScrollStep;
 
 			if (scroll.Y > scrollBottom - bounds.Height) scroll.Y = scrollBottom - bounds.Height;

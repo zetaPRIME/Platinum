@@ -39,15 +39,15 @@ namespace Platinum.UIKit
 
 			framesOff = 0;
 
+			if (allowHold && left && draggable)
+			{
+				if (UI.focusDrag != this) { dragPoint = lastOver; dragPointScreen = Input.MousePosition; }
+				UI.focusDrag = this;
+			}
+
 			if (leftP && actionDown != null) actionDown();
 			if (leftR && allowHold && actionUp != null) actionUp();
 			if (allowHold && left && actionHeld != null) actionHeld();
-
-			if (allowHold && left && draggable)
-			{
-				if (UI.focusDrag != this) { dragPoint = lastOver; dragPointScreen = Input.MousePosition; Console.WriteLine("" + dragPoint + ", " + dragPointScreen); }
-				UI.focusDrag = this;
-			}
 		}
 		public override void Update()
 		{
