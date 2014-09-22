@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Platinum
 {
-	public class Entity : EventPassable
+	public class Entity : MessagePassable
 	{
 		public string Name { get; protected set; }
 		readonly List<string> tags = new List<string>();
@@ -69,20 +69,34 @@ namespace Platinum
 				position = Vector2.Transform(value, Matrix.Invert(pmt));
 			}
 		}
-
+		public Vector2 Velocity
+		{
+			get
+			{
+				Matrix pmt = Matrix.Identity;
+				if (parent != null) pmt = parent.Transform;
+				return Vector2.Transform(velocity, pmt);
+			}
+			set
+			{
+				Matrix pmt = Matrix.Identity;
+				if (parent != null) pmt = parent.Transform;
+				velocity = Vector2.Transform(value, Matrix.Invert(pmt));
+			}
+		}
 		public float Rotation
 		{
 			get
 			{
 				float par = 0f;
 				if (parent != null) par = parent.Rotation;
-				return par + rotation;
+				return (par + rotation).WrapRot();
 			}
 			set
 			{
 				float par = 0f;
 				if (parent != null) par = parent.Rotation;
-				rotation = value - par;
+				rotation = (value - par).WrapRot();
 			}
 		}
 

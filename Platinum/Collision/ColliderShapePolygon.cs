@@ -95,8 +95,8 @@ namespace Platinum
 
 			if (points == null) return;
 			List<LineSegment> faces = Faces;
-			foreach (LineSegment line in faces) sb.Draw(Core.txPixel, line.start - GameState.cameraPos, null, Color.LightGreen, (float)Math.Atan2(line.Direction.Y, line.Direction.X), new Vector2(0f, 0.5f), new Vector2(line.Length, 1f), SpriteEffects.None, 0f);
-			foreach (LineSegment line in faces) sb.Draw(Core.txPixel, line.start - GameState.cameraPos, null, Color.Yellow, 0f, new Vector2(0.5f, 0.5f), 3f, SpriteEffects.None, 0f);
+			foreach (LineSegment line in faces) sb.Draw(Core.txPixel, line.start, null, Color.LightGreen, (float)Math.Atan2(line.Direction.Y, line.Direction.X), new Vector2(0f, 0.5f), new Vector2(line.Length, 1f / GameState.cameraZoom), SpriteEffects.None, 0f);
+			foreach (LineSegment line in faces) sb.Draw(Core.txPixel, line.start, null, Color.Yellow, 0f, new Vector2(0.5f, 0.5f), 3f / GameState.cameraZoom, SpriteEffects.None, 0f);
 		}
 
 		public override float RaycastAgainst(LineSegment line)

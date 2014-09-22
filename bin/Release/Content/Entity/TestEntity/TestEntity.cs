@@ -20,6 +20,7 @@ namespace ExampleBase
 
 		Vector2 testVec = Vector2.Zero;
 
+		public override bool DrawOffScreen { get { return true; } }
 		public override void Update()
 		{
 			if (!init)
@@ -77,6 +78,9 @@ namespace ExampleBase
 			float cast = CollisionManager.Raycast(line, out blah, 255, UInt32.MaxValue, this);
 			if (cast != -1) testVec = line.PointAlong(cast);
 			else testVec = line.end;
+
+			if (p.Held(Button.Select)) GameState.cameraZoom += 0.01f;
+			if (p.Pressed(Button.Start)) GameState.cameraZoom = 1;
 			
 			frame++;
 		}
@@ -110,10 +114,12 @@ namespace ExampleBase
 
 			ExtTexture tex = PackageManager.globalPackage.GetTexture("TestImage");
 
-			sb.Draw(tex, ScreenPosition, null, Color.White, Rotation, tex.center, dscale, SpriteEffects.None);
+			sb.Draw(tex, Position, null, Color.White, Rotation, tex.center, dscale, SpriteEffects.None);
 
-			sb.Draw(Core.txPixel, (testVec - GameState.cameraPos).Pixelize(), null, Color.White, 0f, Vector2.One * 0.5f, 5f, SpriteEffects.None, 0f);
+			sb.Draw(Core.txPixel, testVec.Pixelize(), null, Color.White, 0f, Vector2.One * 0.5f, 5f, SpriteEffects.None, 0f);
 
+			sb.DrawRect(new Rectangle(600, 440, 40, 40), Color.Green);
+			
 			//float cast = Collision.Raycast(new Vector2(320, 0), new Vector2(320, 480), 255);
 			//sb.DrawString(Core.fontDebug, "raycast " + cast, Vector2.One * 16, Color.White);
 		}

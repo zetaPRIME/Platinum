@@ -91,10 +91,11 @@
     <Compile Include="Platinum\Asset Management\Package.cs" />
     <Compile Include="Platinum\Asset Management\PackageManager.cs" />
     <Compile Include="Platinum\Asset Management\RootPackage.cs" />
+    <Compile Include="Platinum\Basics\Core_Editor.cs" />
     <Compile Include="Platinum\Basics\Core.cs" />
     <Compile Include="Platinum\Basics\Core_Game.cs" />
-    <Compile Include="Platinum\Basics\EventPassable.cs" />
-    <Compile Include="Platinum\Basics\IEventPassable.cs" />
+    <Compile Include="Platinum\Basics\MessagePassable.cs" />
+    <Compile Include="Platinum\Basics\IMessagePassable.cs" />
     <Compile Include="Platinum\Basics\Program.cs" />
     <Compile Include="Platinum\Collision\ColliderShape.cs" />
     <Compile Include="Platinum\Collision\ColliderShapeCircle.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="Platinum\Data Types\BitField.cs" />
     <Compile Include="Platinum\Data Types\BitField32.cs" />
     <Compile Include="Platinum\Data Types\BitFlag.cs" />
-    <Compile Include="Platinum\Data Types\EventParams.cs" />
+    <Compile Include="Platinum\Data Types\MessageDetails.cs" />
     <Compile Include="Platinum\Data Types\ExtTexture.cs" />
     <Compile Include="Platinum\Data Types\LineSegment.cs" />
     <Compile Include="Platinum\Data Types\Range.cs" />
@@ -117,10 +118,17 @@
     <Compile Include="Platinum\Game\GameState.cs" />
     <Compile Include="Platinum\Input\Input.cs" />
     <Compile Include="Platinum\Input\PlayerInput.cs" />
+    <Compile Include="Platinum\UI\UI.cs" />
+    <Compile Include="Platinum\UI\UIElement.cs" />
+    <Compile Include="Platinum\UI\UIKit\Button.cs" />
+    <Compile Include="Platinum\UI\UIKit\ScrollBar.cs" />
+    <Compile Include="Platinum\UI\UIKit\ScrollField.cs" />
+    <Compile Include="Platinum\Utilities\Extensions_List.cs" />
     <Compile Include="Platinum\Utilities\Extensions_JSON.cs" />
     <Compile Include="Platinum\Utilities\Extensions_Vector.cs" />
     <Compile Include="Platinum\Utilities\Extensions_Graphics.cs" />
     <Compile Include="Platinum\Utilities\Utils.cs" />
+    <Compile Include="Platinum\Utilities\Wrappers\Vector2Wrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuadTree\QuadTree.cs" />
   </ItemGroup>

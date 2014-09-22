@@ -31,6 +31,18 @@ namespace Platinum
 			sb.Draw(texture.texture, position, sourceRectangle, color, rotation, origin, scale * texture.baseScale, SpriteEffects.None, 0f);
 		}
 
+		public static void CameraOn(this SpriteBatch sb, bool alreadyRunning = true)
+		{
+			if (alreadyRunning) sb.End();
+			sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, GameState.cameraTransform);
+		}
+
+		public static void CameraOff(this SpriteBatch sb, bool alreadyRunning = true)
+		{
+			if (alreadyRunning) sb.End();
+			sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone);
+		}
+
 		// ---------- //
 		// primitives //
 		// ---------- //
@@ -46,6 +58,18 @@ namespace Platinum
 		public static void DrawRect(this SpriteBatch sb, Rectangle rect, Color color)
 		{
 			sb.Draw(Core.txPixel, rect, color);
+		}
+
+		// ----- //
+		// color //
+		// ----- //
+		public static Color MultiplyBy(this Color first, Color mult)
+		{
+			return new Color(first.ToVector4() * mult.ToVector4());
+		}
+		public static Color MultiplyBy(this Color color, Vector4 mult)
+		{
+			return new Color(color.ToVector4() * mult);
 		}
 	}
 }

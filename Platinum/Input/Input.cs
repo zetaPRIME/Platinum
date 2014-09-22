@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Platinum
@@ -16,6 +17,12 @@ namespace Platinum
 		public static KeyboardState keyStateLast;
 
 		public static Settings padSettings;
+
+		public static MouseState mouseStateNow;
+		public static MouseState mouseStateLast;
+
+		public static Point MousePosition { get { return mouseStateNow.Position; } }
+		public static int MouseScroll { get { return (mouseStateNow.ScrollWheelValue - mouseStateLast.ScrollWheelValue) / -120; } }
 
 		public static void Init()
 		{
@@ -32,6 +39,9 @@ namespace Platinum
 		{
 			keyStateLast = keyStateNow;
 			keyStateNow = Keyboard.GetState();
+
+			mouseStateLast = mouseStateNow;
+			mouseStateNow = Mouse.GetState();
 
 			foreach (PlayerInput pi in players) pi.Update();
 		}

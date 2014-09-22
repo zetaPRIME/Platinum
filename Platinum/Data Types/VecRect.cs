@@ -99,5 +99,7 @@ namespace Platinum
 		{
 			return new VecRect(topLeft - Vector2.One * margin, bottomRight + Vector2.One * margin);
 		}
+
+		//public static operator *(this VecRect vec, Matrix mtx)
 	}
 }

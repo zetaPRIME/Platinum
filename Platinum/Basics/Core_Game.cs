@@ -14,6 +14,11 @@ namespace Platinum
 {
 	public partial class Core
 	{
+		protected void Init_Game()
+		{
+			//
+		}
+
 		protected void Update_Game(GameTime gameTime)
 		{
 			#region Debug keys
@@ -25,12 +30,10 @@ namespace Platinum
 			// entities
 			List<Entity> shouldUpdate = GameState.entities.FindAll(e => !e.Asleep && !e.Disabled);
 
-			foreach (Entity e in shouldUpdate) e.UpdatePhysics();
-
 			CollisionManager.PreUpdate();
-			//CollisionManager.TestAll();
-
-			foreach (Entity e in shouldUpdate) e.Update();
+			shouldUpdate.Operate(e => e.UpdatePhysics()).Operate(e => e.Update());
+			//foreach (Entity e in shouldUpdate) e.UpdatePhysics();
+			//foreach (Entity e in shouldUpdate) e.Update();
 
 			// todo: particles
 
@@ -39,9 +42,39 @@ namespace Platinum
 
 		protected void Draw_Game(GameTime gameTime)
 		{
-			spriteBatch.GraphicsDevice.Clear(new Color(0.5f, 0f, 1f));
-			spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+			PrepareTarget();
 
+			spriteBatch.GraphicsDevice.Clear(new Color(0.5f, 0f, 1f));
+
+			VecRect cameraBox = GameState.cameraBox; GameState.cameraBoxCache = cameraBox;
+			Vector2 worldSize = GameState.worldSize;
+			#region clamp camera position
+			if (worldSize.X < cameraBox.Size.X)
+			{
+				GameState.cameraPos.X = worldSize.X / 2f;
+			}
+			else
+			{
+				float left = cameraBox.left;
+				if (left < 0) GameState.cameraPos.X += -left;
+				float right = cameraBox.right - worldSize.X;
+				if (right > 0) GameState.cameraPos.X += -right;
+			}
+			if (worldSize.Y < cameraBox.Size.Y)
+			{
+				GameState.cameraPos.Y = worldSize.Y / 2f;
+			}
+			else
+			{
+				float top = cameraBox.top;
+				if (top < 0) GameState.cameraPos.Y += -top;
+				float bottom = cameraBox.bottom - worldSize.Y;
+				if (bottom > 0) GameState.cameraPos.Y += -bottom;
+			}
+			#endregion
+
+			spriteBatch.CameraOn(false);
+			
 			GameDef.gameService.PreDraw(spriteBatch);
 
 			List<Entity> drawList = GameState.entities.FindAll(e => (e.DrawOffScreen || e.OnScreen) && !e.Disabled);
@@ -50,12 +83,10 @@ namespace Platinum
 
 			GameDef.gameService.PostDraw(spriteBatch);
 
-			spriteBatch.End();
-
 			#region debug display
 			if (debugDisplay)
 			{
-				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+				spriteBatch.CameraOn(); // bake
 
 				const int maxDraw = 500;
 				int numDraw = 0;
@@ -71,9 +102,7 @@ namespace Platinum
 					if (numDraw == maxDraw) break;
 				}
 
-				spriteBatch.End();
-
-				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+				spriteBatch.CameraOff();
 
 				string debugText = "Debug display (F3)";
 				debugText += "\nEntities: " + GameState.entities.Count;// +" (" + CollisionManager.collidable.Count + " collidable)";
@@ -91,10 +120,11 @@ namespace Platinum
 				Tao.Sdl.Sdl.SDL_JoystickClose(dev);*/
 
 				spriteBatch.DrawString(fontDebug, debugText, Vector2.One * 8f, Color.White);
-
-				spriteBatch.End();
 			}
 			#endregion
+
+			BakeToScreen();
+			GameState.cameraBoxCache = null;
 		}
 	}
 }

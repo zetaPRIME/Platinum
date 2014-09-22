@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Platinum
 {
-	public class EventParams
+	public class MessageDetails
 	{
 		Dictionary<string, int> _int = new Dictionary<string, int>();
 		Dictionary<string, float> _float = new Dictionary<string, float>();
@@ -17,9 +17,21 @@ namespace Platinum
 		public string String(string name) { if (!_string.ContainsKey(name)) return null; return _string[name]; }
 		public object Object(string name) { if (!_obj.ContainsKey(name)) return null; return _obj[name]; }
 
-		public EventParams Add(string name, int entry) { _int.Add(name, entry); return this; }
-		public EventParams Add(string name, float entry) { _float.Add(name, entry); return this; }
-		public EventParams Add(string name, string entry) { _string.Add(name, entry); return this; }
-		public EventParams Add(string name, object entry) { _obj.Add(name, entry); return this; }
+		public MessageDetails Add(string name, int entry) { _int.Add(name, entry); return this; }
+		public MessageDetails Add(string name, float entry) { _float.Add(name, entry); return this; }
+		public MessageDetails Add(string name, string entry) { _string.Add(name, entry); return this; }
+		public MessageDetails Add(string name, object entry) { _obj.Add(name, entry); return this; }
+
+		public object this[string name]
+		{
+			get
+			{
+				if (_obj.ContainsKey(name)) return _obj[name];
+				if (_int.ContainsKey(name)) return _int[name];
+				if (_float.ContainsKey(name)) return _float[name];
+				if (_string.ContainsKey(name)) return _string[name];
+				return null;
+			}
+		}
 	}
 }

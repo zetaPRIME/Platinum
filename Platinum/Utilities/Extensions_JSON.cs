@@ -13,19 +13,19 @@ namespace Platinum
 	public static partial class Extensions
 	{
 		// read operations for basic types
-		public static void Read(this JsonData j, string name, ref bool target) { if (j.IsObject && j.Has(name) && j.IsBoolean) target = (bool)j; }
-		public static void Read(this JsonData j, string name, ref int target) { if (j.IsObject && j.Has(name) && j.IsInt) target = (int)j; }
-		public static void Read(this JsonData j, string name, ref long target) { if (j.IsObject && j.Has(name) && j.IsLong) target = (long)j; }
-		public static void Read(this JsonData j, string name, ref float target) { if (j.IsObject && j.Has(name) && j.IsDouble) target = (float)j; }
-		public static void Read(this JsonData j, string name, ref double target) { if (j.IsObject && j.Has(name) && j.IsDouble) target = (double)j; }
-		public static void Read(this JsonData j, string name, ref string target) { if (j.IsObject && j.Has(name) && j.IsString) target = (string)j; }
+		public static void Read(this JsonData j, string name, ref bool target) { if (j.IsObject && j.Has(name) && j[name].IsBoolean) target = (bool)j[name]; }
+		public static void Read(this JsonData j, string name, ref int target) { if (j.IsObject && j.Has(name) && j[name].IsInt) target = (int)j[name]; }
+		public static void Read(this JsonData j, string name, ref long target) { if (j.IsObject && j.Has(name) && j[name].IsLong) target = (long)j[name]; }
+		public static void Read(this JsonData j, string name, ref float target) { if (j.IsObject && j.Has(name) && j[name].IsDouble) target = (float)j[name]; }
+		public static void Read(this JsonData j, string name, ref double target) { if (j.IsObject && j.Has(name) && j[name].IsDouble) target = (double)j[name]; }
+		public static void Read(this JsonData j, string name, ref string target) { if (j.IsObject && j.Has(name) && j[name].IsString) target = (string)j[name]; }
 		
 		// nullable versions
-		public static void Read(this JsonData j, string name, ref bool? target) { if (j.IsObject && j.Has(name) && j.IsBoolean) target = (bool)j; }
-		public static void Read(this JsonData j, string name, ref int? target) { if (j.IsObject && j.Has(name) && j.IsInt) target = (int)j; }
-		public static void Read(this JsonData j, string name, ref long? target) { if (j.IsObject && j.Has(name) && j.IsLong) target = (long)j; }
-		public static void Read(this JsonData j, string name, ref float? target) { if (j.IsObject && j.Has(name) && j.IsDouble) target = (float)j; }
-		public static void Read(this JsonData j, string name, ref double? target) { if (j.IsObject && j.Has(name) && j.IsDouble) target = (double)j; }
+		public static void Read(this JsonData j, string name, ref bool? target) { if (j.IsObject && j.Has(name) && j[name].IsBoolean) target = (bool)j[name]; }
+		public static void Read(this JsonData j, string name, ref int? target) { if (j.IsObject && j.Has(name) && j[name].IsInt) target = (int)j[name]; }
+		public static void Read(this JsonData j, string name, ref long? target) { if (j.IsObject && j.Has(name) && j[name].IsLong) target = (long)j[name]; }
+		public static void Read(this JsonData j, string name, ref float? target) { if (j.IsObject && j.Has(name) && j[name].IsDouble) target = (float)j[name]; }
+		public static void Read(this JsonData j, string name, ref double? target) { if (j.IsObject && j.Has(name) && j[name].IsDouble) target = (double)j[name]; }
 
 		// less basic types!
 		public static void Read(this JsonData j, string name, ref Vector2 target)

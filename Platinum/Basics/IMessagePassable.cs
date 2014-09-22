@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Platinum
 {
-	public interface IEventPassable
+	public interface IMessagePassable
 	{
 		void Call(string name);
-		void Call(string name, EventParams param);
+		void Call(string name, MessageDetails param);
 	}
 }

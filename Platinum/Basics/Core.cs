@@ -23,13 +23,15 @@ namespace Platinum
 	public partial class Core : Game
 	{
 		public static Core instance;
-		public static EngineMode mode = EngineMode.Game;
+		public static EngineMode mode = EngineMode.Editor;//EngineMode.Game;
 
 		public static SpriteBatch spriteBatch;
 		public GraphicsDeviceManager graphics;
 
 		public static SpriteFont fontDebug;
 		public static Texture2D txPixel;
+
+		public static RenderTarget2D screenTarget;
 
 		// flags
 		public static bool debugDisplay = false;
@@ -104,6 +106,8 @@ namespace Platinum
 				}
 			}
 
+			GameDef.Load();
+
 			CollisionManager.ConfirmTree();
 		}
 
@@ -112,15 +116,19 @@ namespace Platinum
 		{
 			if (!init)
 			{
-				GameState.SetGameSize(640, 480);
+				GameState.SetGameSize((int)GameDef.screenSize.X, (int)GameDef.screenSize.Y);
+
+				if (mode == EngineMode.Game) Init_Game();
+				else if (mode == EngineMode.Editor) Init_Editor();
 
 				init = true;
 			}
 			//Console.WriteLine("Resolution is " + Window.ClientBounds.Width + "x" + Window.ClientBounds.Height);
 
 			Input.Update();
-			
+
 			if (mode == EngineMode.Game) Update_Game(gameTime);
+			else if (mode == EngineMode.Editor) Update_Editor(gameTime);
 
 			base.Update(gameTime);
 		}
@@ -130,8 +138,28 @@ namespace Platinum
 			spriteBatch.GraphicsDevice.SetRenderTarget(null);
 
 			if (mode == EngineMode.Game) Draw_Game(gameTime);
+			else if (mode == EngineMode.Editor) Draw_Editor(gameTime);
 
 			base.Draw(gameTime);
+		}
+
+		protected void PrepareTarget()
+		{
+			if (screenTarget == null || screenTarget.Bounds != Window.ClientBounds)
+			{
+				screenTarget = new RenderTarget2D(GraphicsDevice, Window.ClientBounds.Width, Window.ClientBounds.Height, false,
+					GraphicsDevice.PresentationParameters.BackBufferFormat, GraphicsDevice.PresentationParameters.DepthStencilFormat, 0, RenderTargetUsage.PreserveContents);
+			}
+			GraphicsDevice.SetRenderTarget(screenTarget);
+		}
+
+		protected void BakeToScreen()
+		{
+			spriteBatch.End();
+			spriteBatch.GraphicsDevice.SetRenderTarget(null);
+			spriteBatch.Begin();
+			spriteBatch.Draw(screenTarget, Vector2.Zero, Color.White);
+			spriteBatch.End();
 		}
 	}
 }
