@@ -34,15 +34,26 @@ namespace Platinum.UIKit
 
 			buttonUp.actionDown = () => ApplyButtonScroll(-1);
 			buttonDown.actionDown = () => ApplyButtonScroll(1);
+			buttonUp.actionHeld = () => HoldButtonScroll(-1);
+			buttonDown.actionHeld = () => HoldButtonScroll(1);
 
 			buttonBar.draggable = true;
 			buttonBar.actionDown = () => StartBarScroll();
 			buttonBar.actionHeld = () => ApplyBarScroll();
 		}
 
+		int dirButtonFrames = 0;
 		void ApplyButtonScroll(int clicks)
 		{
 			field.MouseScroll(clicks);
+			dirButtonFrames = 0;
+		}
+		void HoldButtonScroll(int clicks)
+		{
+			const int framesPer = 3;
+			const int startCycle = 8;
+			if (dirButtonFrames >= framesPer * startCycle && dirButtonFrames % framesPer == 0) field.MouseScroll(clicks);
+			dirButtonFrames++;
 		}
 
 		Point startPoint;

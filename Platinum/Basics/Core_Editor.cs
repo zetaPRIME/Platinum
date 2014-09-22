@@ -27,7 +27,7 @@ namespace Platinum
 			UI.elements.Add(sf);
 
 			UIKit.Button btn = new UIKit.Button();
-			btn.bounds = new Rectangle(100, 100, 64, 932);
+			btn.bounds = new Rectangle(100, 100, 64, 832);
 			btn.actionUp = () => { btn.bounds.Height = 32; };
 			sf.AddElement(btn);
 		}
