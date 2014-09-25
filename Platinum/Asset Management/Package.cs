@@ -25,7 +25,8 @@ namespace Platinum
 		Library,
 		SceneMode,
 		Scene,
-		Entity
+		Entity,
+		NotFound
 	}
 
 	public class Package
@@ -56,6 +57,7 @@ namespace Platinum
 		{
 			if (textures.ContainsKey(name)) return textures[name];
 			foreach (Package pkg in inherit) if (pkg.textures.ContainsKey(name)) return pkg.textures[name];
+			if (type == PackageType.Scene && GameState.scene.sceneMode.package.textures.ContainsKey(name)) return GameState.scene.sceneMode.package.textures[name]; // wow that's longwinded
 			if (type != PackageType.Global && PackageManager.globalPackage.textures.ContainsKey(name)) return PackageManager.globalPackage.textures[name];
 			return null;
 		}
@@ -64,6 +66,7 @@ namespace Platinum
 		{
 			if (files.ContainsKey(name)) return files[name];
 			foreach (Package pkg in inherit) if (pkg.files.ContainsKey(name)) return pkg.files[name];
+			if (type == PackageType.Scene && GameState.scene.sceneMode.package.files.ContainsKey(name)) return GameState.scene.sceneMode.package.files[name]; // wow that's longwinded
 			if (type != PackageType.Global && PackageManager.globalPackage.files.ContainsKey(name)) return PackageManager.globalPackage.files[name];
 			return null;
 		}
@@ -71,7 +74,7 @@ namespace Platinum
 		public void Free(Package from)
 		{
 			if (inheritedBy.Contains(from)) inheritedBy.Remove(from);
-			if (type == PackageType.Library && inheritedBy.Count == 0) Unload();
+			if ((type == PackageType.Library || type == PackageType.SceneMode) && inheritedBy.Count == 0) Unload();
 		}
 
 		public void Unload()
@@ -102,9 +105,9 @@ namespace Platinum
 			// literal
 			if (name.StartsWith("/")) ipath = name.Substring(1);
 			// subpackage
-			else if (PackageManager.availablePackages.Contains(path + "/" + name)) ipath = path + "/" + name;
+			else if (PackageManager.availablePackages.ContainsKey(path + "/" + name)) ipath = path + "/" + name;
 			// library
-			else if (PackageManager.availablePackages.Contains("Library/" + name)) ipath = "Library/" + name;
+			else if (PackageManager.availablePackages.ContainsKey("Library/" + name)) ipath = "Library/" + name;
 
 			if (ipath == "") return;
 			if (!PackageManager.loadedPackages.ContainsKey(ipath)) PackageManager.LoadPackage(ipath);

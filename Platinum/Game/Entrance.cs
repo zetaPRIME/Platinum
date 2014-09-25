@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Platinum
 {
-	public class RootPackage : Package
+	public class Entrance
 	{
 	}
 }

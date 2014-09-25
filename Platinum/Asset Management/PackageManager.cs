@@ -15,9 +15,8 @@ namespace Platinum
 {
 	public class PackageManager
 	{
-		public static RootPackage rootPackage;
-
-		public static List<String> availablePackages = new List<string>();
+		//public static List<string> availablePackages = new List<string>();
+		public static Dictionary<string, PackageInfo> availablePackages = new Dictionary<string, PackageInfo>();
 		public static Dictionary<string, Package> loadedPackages = new Dictionary<string, Package>();
 
 		public static Dictionary<string, Assembly> loadedAssemblies = new Dictionary<string, Assembly>();
@@ -62,13 +61,13 @@ namespace Platinum
 				{
 					if (IsPackage(zf))
 					{
-						AddPackageEntry(pstr.Substring(0, pstr.Length - 4) + "/");
+						GetPackageInfo(zf);//AddPackageEntry(pstr.Substring(0, pstr.Length - 4) + "/");
 					}
 
 					foreach (string s in zf.EntryFileNames)
 					{
 						if (s.IndexOf("/") == -1) continue;
-						if (matchDef.Contains(s.Substring(s.LastIndexOf("/") + 1))) AddPackageEntry(pstr.Substring(0, pstr.Length - 4) + "/" + s.Substring(0, s.LastIndexOf("/") + 1));
+						if (matchDef.Contains(s.Substring(s.LastIndexOf("/") + 1))) GetPackageInfo(zf, s.Substring(0, s.LastIndexOf("/") + 1), pstr.Substring(0, pstr.Length - 4) + "/" + s.Substring(0, s.LastIndexOf("/") + 1));// AddPackageEntry(pstr.Substring(0, pstr.Length - 4) + "/" + s.Substring(0, s.LastIndexOf("/") + 1));
 					}
 				}
 			}
@@ -77,7 +76,7 @@ namespace Platinum
 			Path dirs = basePath.Directories();
 			foreach (Path p in dirs)
 			{
-				if (IsPackage(p)) AddPackageEntry(p.ToString());
+				if (IsPackage(p)) GetPackageInfo(p);//AddPackageEntry(p.ToString());
 				/*else*/ FindPackages(p);
 			}
 		}
@@ -100,12 +99,75 @@ namespace Platinum
 
 			return false;
 		}
-		static void AddPackageEntry(string str)
+		public static void GetPackageInfo(Path path)
+		{
+			List<string> match = new List<string>(new string[]{ "library.json", "entity.json", "scenemode.json", "scene.json" });
+			PackageType[] types = { PackageType.Library, PackageType.Entity, PackageType.SceneMode, PackageType.Scene };
+
+			Path jsons = path.Files("*.json", false);
+
+			string defName = "";
+			PackageType type = PackageType.NotFound;
+			foreach (Path p in jsons) if (match.Contains(p.FileName))
+			{
+				type = types[match.IndexOf(p.FileName)];
+				defName = p.FileName;
+			}
+			if (type == PackageType.NotFound) return; // not package
+
+			PackageInfo info = new PackageInfo();
+			info.type = type;
+			info.isZip = false;
+			info.path = ProcessPackageName(path.ToString());
+
+			JsonData def = null;
+			path.Combine(defName).Open((FileStream fs) =>
+			{
+				byte[] contents = new byte[fs.Length];
+				fs.Read(contents, 0, (int)fs.Length);
+				def = JsonMapper.ToObject(Encoding.UTF8.GetString(contents));
+			});//, System.IO.FileMode.Open);
+			info.def = def;
+
+			availablePackages.Add(info.path, info);
+		}
+		public static void GetPackageInfo(ZipFile zf, string dir = "", string pname = "")
+		{
+			List<string> match = new List<string>(new string[] { "library.json", "entity.json", "scenemode.json", "scene.json" });
+			PackageType[] types = { PackageType.Library, PackageType.Entity, PackageType.SceneMode, PackageType.Scene };
+
+			string defName = "";
+			PackageType type = PackageType.NotFound;
+			foreach (string s in match) if (zf.ContainsEntry(dir + s))
+				{
+					type = types[match.IndexOf(s)];
+					defName = dir + s;
+				}
+			if (type == PackageType.NotFound) return; // not package
+
+			PackageInfo info = new PackageInfo();
+			info.type = type;
+			info.isZip = true;
+			info.path = ProcessPackageName(pname);
+
+			JsonData def = null;
+			using (MemoryStream ms = new MemoryStream())
+			{
+				zf[defName].Extract(ms);
+
+				byte[] contents = ms.ToArray();
+				def = JsonMapper.ToObject(Encoding.UTF8.GetString(contents));
+			}
+			info.def = def;
+
+			availablePackages.Add(info.path, info);
+		}
+		static string ProcessPackageName(string str)
 		{
 			str = str.Replace("\\", "/");
 			if (str.StartsWith("Content/")) str = str.Substring("Content/".Length);
 			if (str.EndsWith("/")) str = str.TrimEnd('/');
-			availablePackages.Add(str);
+			return str;
 		}
 
 		public static Package LoadPackage(string path, bool global = false)

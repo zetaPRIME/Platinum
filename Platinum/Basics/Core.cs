@@ -70,6 +70,7 @@ namespace Platinum
 			txPixel.SetData<Color>(new Color[] { Color.White });
 
 			Input.Init();
+			Window.TextInput += Input.OnTextInput;
 
 			Console.WriteLine("A ID: " + Input.padSettings[0].Button_A.ID);
 			Console.WriteLine("B ID: " + Input.padSettings[0].Button_B.ID);
@@ -143,7 +144,7 @@ namespace Platinum
 			base.Draw(gameTime);
 		}
 
-		protected void PrepareTarget()
+		internal void PrepareTarget()
 		{
 			if (screenTarget == null || screenTarget.Bounds != Window.ClientBounds)
 			{
@@ -153,7 +154,7 @@ namespace Platinum
 			GraphicsDevice.SetRenderTarget(screenTarget);
 		}
 
-		protected void BakeToScreen()
+		internal void BakeToScreen()
 		{
 			spriteBatch.End();
 			spriteBatch.GraphicsDevice.SetRenderTarget(null);

@@ -67,6 +67,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\OpenTK.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.XML" />
     <Reference Include="Tao.Sdl, Version=1.2.13.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e, processorArchitecture=MSIL">
@@ -89,8 +90,8 @@
     <Compile Include="LitJson\Lexer.cs" />
     <Compile Include="LitJson\ParserToken.cs" />
     <Compile Include="Platinum\Asset Management\Package.cs" />
+    <Compile Include="Platinum\Asset Management\PackageInfo.cs" />
     <Compile Include="Platinum\Asset Management\PackageManager.cs" />
-    <Compile Include="Platinum\Asset Management\RootPackage.cs" />
     <Compile Include="Platinum\Basics\Core_Editor.cs" />
     <Compile Include="Platinum\Basics\Core.cs" />
     <Compile Include="Platinum\Basics\Core_Game.cs" />
@@ -111,11 +112,18 @@
     <Compile Include="Platinum\Data Types\VecRect.cs" />
     <Compile Include="Platinum\Collision\Collider.cs" />
     <Compile Include="Platinum\Collision\CollisionManager.cs" />
+    <Compile Include="Platinum\Editor\EditorCore.cs" />
+    <Compile Include="Platinum\Game\EntityPlacement.cs" />
+    <Compile Include="Platinum\Game\Entrance.cs" />
+    <Compile Include="Platinum\Game\Map.cs" />
+    <Compile Include="Platinum\Game\SceneMode.cs" />
     <Compile Include="Platinum\Game\Entity.cs" />
     <Compile Include="Platinum\Game\EntityDef.cs" />
     <Compile Include="Platinum\Game\GameDef.cs" />
     <Compile Include="Platinum\Game\GameService.cs" />
     <Compile Include="Platinum\Game\GameState.cs" />
+    <Compile Include="Platinum\Game\Scene.cs" />
+    <Compile Include="Platinum\Game\SceneService.cs" />
     <Compile Include="Platinum\Input\Input.cs" />
     <Compile Include="Platinum\Input\PlayerInput.cs" />
     <Compile Include="Platinum\UI\UI.cs" />
@@ -123,6 +131,7 @@
     <Compile Include="Platinum\UI\UIKit\Button.cs" />
     <Compile Include="Platinum\UI\UIKit\ScrollBar.cs" />
     <Compile Include="Platinum\UI\UIKit\ScrollField.cs" />
+    <Compile Include="Platinum\UI\UIKit\TextField.cs" />
     <Compile Include="Platinum\Utilities\Extensions_List.cs" />
     <Compile Include="Platinum\Utilities\Extensions_JSON.cs" />
     <Compile Include="Platinum\Utilities\Extensions_Vector.cs" />

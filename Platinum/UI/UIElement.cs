@@ -36,6 +36,8 @@ namespace Platinum
 		public virtual void MouseAction(bool left, bool leftP, bool leftR, bool right, bool rightP, bool rightR) { }
 		public virtual void MouseScroll(int clicks) { }
 
+		public virtual void TextInput() { }
+
 		public virtual bool InterceptsMouse { get { return false; } }
 		public virtual bool InterceptsScrollwheel { get { return false; } }
 	}

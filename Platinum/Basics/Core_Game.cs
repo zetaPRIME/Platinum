@@ -26,6 +26,8 @@ namespace Platinum
 			#endregion
 
 			GameDef.gameService.PreUpdate();
+			GameState.scene.sceneMode.PreUpdate();
+			GameState.scene.sceneService.PreUpdate();
 
 			// entities
 			List<Entity> shouldUpdate = GameState.entities.FindAll(e => !e.Asleep && !e.Disabled);
@@ -37,6 +39,8 @@ namespace Platinum
 
 			// todo: particles
 
+			GameState.scene.sceneService.PostUpdate();
+			GameState.scene.sceneMode.PostUpdate();
 			GameDef.gameService.PostUpdate();
 		}
 
@@ -76,11 +80,13 @@ namespace Platinum
 			spriteBatch.CameraOn(false);
 			
 			GameDef.gameService.PreDraw(spriteBatch);
+			GameState.scene.sceneService.PreDraw(spriteBatch);
 
 			List<Entity> drawList = GameState.entities.FindAll(e => (e.DrawOffScreen || e.OnScreen) && !e.Disabled);
 			drawList = drawList.OrderBy(e => e.drawLayer).ToList(); // wow, that's easy
 			foreach (Entity e in drawList) e.Draw(spriteBatch);
 
+			GameState.scene.sceneService.PostDraw(spriteBatch);
 			GameDef.gameService.PostDraw(spriteBatch);
 
 			#region debug display

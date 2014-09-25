@@ -31,7 +31,7 @@ namespace Platinum
 			string path = name;
 
 			if (false) { } // TODO: scene subpackage
-			if (PackageManager.availablePackages.Contains("Entity/" + name)) path = "Entity/" + name;
+			if (PackageManager.availablePackages.ContainsKey("Entity/" + name)) path = "Entity/" + name;
 			else return; // none found
 
 			Package pkg;

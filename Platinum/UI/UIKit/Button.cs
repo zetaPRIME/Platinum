@@ -11,6 +11,7 @@ namespace Platinum.UIKit
 	public class Button : UIElement
 	{
 		public Action actionDown, actionHeld, actionUp;
+		public string text = "";
 
 		int mstate = 0;
 		bool allowHold = false;
@@ -73,6 +74,20 @@ namespace Platinum.UIKit
 			db3.Width--; db3.Height--;
 			sb.DrawRect(db3, cH.MultiplyBy(mult));
 			sb.DrawRect(db2, UI.colorBG.MultiplyBy(mult));
+
+			if (text != "") {
+				Vector2 size = UI.Font.MeasureString(text);
+				Vector2 center = new Vector2(db.X + (db.Width / 2), db.Y + (db.Height / 2));
+
+				string[] lines = text.Split('\n');
+				//float lineHeight = size.Y / lines.Length;
+				for (int i = 0; i < lines.Length; i++)
+				{
+					Vector2 linesize = UI.Font.MeasureString(lines[i]);
+					Vector2 pos = new Vector2(center.X - linesize.X / 2, (center.Y - size.Y) + linesize.Y * i + linesize.Y * 0.5f).Pixelize();
+					sb.DrawString(UI.Font, lines[i], pos, UI.colorText);
+				}
+			}
 
 		}
 	}

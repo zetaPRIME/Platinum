@@ -23,6 +23,7 @@ namespace Platinum.UIKit
 
 		public RenderTarget2D target;
 		public BitField border = 0; // UDLR
+		public bool noBackground = false;
 
 		public bool hasScrollbar = false;
 		public ScrollBar scrollbar;
@@ -83,13 +84,14 @@ namespace Platinum.UIKit
 			}
 
 			UI.TargetPush(target);
-			sb.GraphicsDevice.Clear(UI.colorBG);
+			if (noBackground) sb.GraphicsDevice.Clear(Color.Transparent);
+			else sb.GraphicsDevice.Clear(UI.colorBG);
 
 			if (border != 0)
 			{
 				Rectangle borderBounds = new Rectangle(0, 0, bounds.Width, bounds.Height);
 				Color cb = UI.colorBorder;
-				Color cib = new Color(cb, 0.5f);
+				Color cib = cb.MultiplyBy(Vector4.One * 0.25f);
 				if (border[0])
 				{
 					sb.DrawRect(borderBounds.MarginTop(3), cib);

@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Platinum
 {
+	public delegate void InputValidationDelegate(ref string str, ref int cursorPos);
 	public static class UI
 	{
 		static List<RenderTarget2D> targetStack = new List<RenderTarget2D>();
@@ -22,14 +23,17 @@ namespace Platinum
 		public static Color colorHighlight { get { return new Color(0.75f, 0.75f, 0.75f); } }
 		public static Color colorShadow { get { return new Color(0.125f, 0.125f, 0.125f); } }
 		public static Color colorBacking { get { return new Color(0.5f, 0.5f, 0.5f); } }
+		public static Color colorEntryField { get { return new Color(0.0625f, 0.0625f, 0.0625f); } }
 		public static Color colorText { get { return Color.White; } }
 
 		public static Vector4 colorMultMouseOver { get { return new Vector4(1.25f, 1.25f, 1.25f, 1f); } }
+		public static Vector4 colorMultTextInactive { get { return new Vector4(0.75f, 0.75f, 0.75f, 1f); } }
 		//public static Vector4 colorMultMousePressed { get { return new Vector4(0.75f, 0.75f, 0.75f, 1f); } }
 
 		// input focus
 		public static UIElement focusMouse, focusScroll;
 		public static UIElement focusDrag;
+		public static UIElement focusText;
 
 		public static void TargetPush(RenderTarget2D target)
 		{
@@ -73,18 +77,23 @@ namespace Platinum
 
 			if (Core.instance.IsActive)
 			{
+				MouseState n = Input.mouseStateNow;
+				MouseState p = Input.mouseStateLast;
+				bool nl = n.LeftButton == ButtonState.Pressed;
+				bool pl = p.LeftButton == ButtonState.Pressed;
+				bool nr = n.RightButton == ButtonState.Pressed;
+				bool pr = p.RightButton == ButtonState.Pressed;
+				if (nl && !pl) focusText = null;
+
 				if (focusMouse != null)
 				{
-					MouseState n = Input.mouseStateNow;
-					MouseState p = Input.mouseStateLast;
-					bool nl = n.LeftButton == ButtonState.Pressed;
-					bool pl = p.LeftButton == ButtonState.Pressed;
-					bool nr = n.RightButton == ButtonState.Pressed;
-					bool pr = p.RightButton == ButtonState.Pressed;
-
 					focusMouse.MouseAction(nl, nl && !pl, pl && !nl, nr, nr && !pr, pr && !nr);
 				}
 				if (focusScroll != null) focusScroll.MouseScroll(Input.MouseScroll);
+				if (focusText != null)
+				{
+					focusText.TextInput();
+				}
 			}
 
 			focusMouse = focusScroll = null;

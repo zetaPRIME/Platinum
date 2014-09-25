@@ -30,6 +30,21 @@ namespace Platinum
 		public virtual bool Asleep { get { return Parent != null && Parent.Asleep; } set { /* just here so it can be overridden */ } }
 		public virtual bool Disabled { get { return Parent != null && Parent.Disabled; } set { /* just here so it can be overridden */ } }
 
+		internal Entity riding = null;
+		public Entity Riding
+		{
+			get { return riding; }
+			set
+			{
+				Vector2 pos = Position;
+				float rot = Rotation;
+				Vector2 vel = Velocity;
+				riding = value;
+				Position = pos;
+				Rotation = rot;
+				Velocity = vel;
+			}
+		}
 		internal Entity parent = null;
 		public Entity Parent
 		{
@@ -38,11 +53,13 @@ namespace Platinum
 			{
 				Vector2 pos = Position;
 				float rot = Rotation;
+				Vector2 vel = Velocity;
 				if (parent != null) parent.children.Remove(this);
 				parent = value;
 				if (parent != null) parent.children.Add(this);
 				Position = pos;
 				Rotation = rot;
+				Velocity = vel;
 			}
 		}
 
@@ -59,13 +76,15 @@ namespace Platinum
 			get
 			{
 				Matrix pmt = Matrix.Identity;
-				if (parent != null) pmt = parent.Transform;
+				if (riding != null) pmt = riding.Transform;
+				else if (parent != null) pmt = parent.Transform;
 				return Vector2.Transform(position, pmt);
 			}
 			set
 			{
 				Matrix pmt = Matrix.Identity;
-				if (parent != null) pmt = parent.Transform;
+				if (riding != null) pmt = riding.Transform;
+				else if (parent != null) pmt = parent.Transform;
 				position = Vector2.Transform(value, Matrix.Invert(pmt));
 			}
 		}
@@ -74,13 +93,15 @@ namespace Platinum
 			get
 			{
 				Matrix pmt = Matrix.Identity;
-				if (parent != null) pmt = parent.Transform;
+				if (riding != null) pmt = riding.Transform;
+				else if (parent != null) pmt = parent.Transform;
 				return Vector2.Transform(velocity, pmt);
 			}
 			set
 			{
 				Matrix pmt = Matrix.Identity;
-				if (parent != null) pmt = parent.Transform;
+				if (riding != null) pmt = riding.Transform;
+				else if (parent != null) pmt = parent.Transform;
 				velocity = Vector2.Transform(value, Matrix.Invert(pmt));
 			}
 		}
@@ -89,13 +110,15 @@ namespace Platinum
 			get
 			{
 				float par = 0f;
-				if (parent != null) par = parent.Rotation;
+				if (riding != null) par = riding.Rotation;
+				else if (parent != null) par = parent.Rotation;
 				return (par + rotation).WrapRot();
 			}
 			set
 			{
 				float par = 0f;
-				if (parent != null) par = parent.Rotation;
+				if (riding != null) par = riding.Rotation;
+				else if (parent != null) par = parent.Rotation;
 				rotation = (value - par).WrapRot();
 			}
 		}
@@ -105,7 +128,8 @@ namespace Platinum
 			get
 			{
 				Matrix pmt = Matrix.Identity;
-				if (parent != null) pmt = parent.Transform;
+				if (riding != null) pmt = riding.Transform;
+				else if (parent != null) pmt = parent.Transform;
 				return pmt * Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(new Vector3(position, 0));
 			}
 		}

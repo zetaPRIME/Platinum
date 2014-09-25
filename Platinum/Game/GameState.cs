@@ -14,6 +14,9 @@ namespace Platinum
 		public static List<Entity> entities = new List<Entity>();
 
 		public static Vector2 worldSize = new Vector2(640, 480);
+		public static Color backColor = new Color(0.5f, 0f, 1f);
+
+		public static Scene scene;
 
 		public static Vector2 cameraPos = Vector2.Zero;
 		public static float cameraRot = 0f;
