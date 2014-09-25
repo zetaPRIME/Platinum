@@ -57,7 +57,7 @@ namespace Platinum
 		{
 			if (textures.ContainsKey(name)) return textures[name];
 			foreach (Package pkg in inherit) if (pkg.textures.ContainsKey(name)) return pkg.textures[name];
-			if (type == PackageType.Scene && GameState.scene.sceneMode.package.textures.ContainsKey(name)) return GameState.scene.sceneMode.package.textures[name]; // wow that's longwinded
+			if (type == PackageType.Scene && GameState.scene.sceneMode.package != null && GameState.scene.sceneMode.package.textures.ContainsKey(name)) return GameState.scene.sceneMode.package.textures[name]; // wow that's longwinded
 			if (type != PackageType.Global && PackageManager.globalPackage.textures.ContainsKey(name)) return PackageManager.globalPackage.textures[name];
 			return null;
 		}
@@ -66,9 +66,18 @@ namespace Platinum
 		{
 			if (files.ContainsKey(name)) return files[name];
 			foreach (Package pkg in inherit) if (pkg.files.ContainsKey(name)) return pkg.files[name];
-			if (type == PackageType.Scene && GameState.scene.sceneMode.package.files.ContainsKey(name)) return GameState.scene.sceneMode.package.files[name]; // wow that's longwinded
+			if (type == PackageType.Scene && GameState.scene.sceneMode.package != null && GameState.scene.sceneMode.package.files.ContainsKey(name)) return GameState.scene.sceneMode.package.files[name]; // wow that's longwinded
 			if (type != PackageType.Global && PackageManager.globalPackage.files.ContainsKey(name)) return PackageManager.globalPackage.files[name];
 			return null;
+		}
+
+		public List<string> GetAllFiles()
+		{
+			List<string> lst = files.Keys.ToList();
+			foreach (Package pkg in inherit) foreach (string s in pkg.files.Keys.ToList()) if (!lst.Contains(s)) lst.Add(s);
+			if (type == PackageType.Scene && GameState.scene.sceneMode.package != null) foreach (string s in GameState.scene.sceneMode.package.files.Keys.ToList()) if (!lst.Contains(s)) lst.Add(s);
+			if (type != PackageType.Global) foreach (string s in PackageManager.globalPackage.files.Keys.ToList()) if (!lst.Contains(s)) lst.Add(s);
+			return lst;
 		}
 
 		public void Free(Package from)

@@ -65,5 +65,32 @@ namespace Platinum
 
 			wnd.Width = width; wnd.Height = height;
 		}
+
+
+
+		// hmm.
+		public static void LoadScene(string name, bool forceReload = false)
+		{
+			string path = "Scene/" + name;
+			if (!forceReload && scene != null && scene.package.path == path) return; // no reloading if not asked!
+			if (!PackageManager.loadedPackages.ContainsKey(path)) PackageManager.LoadPackage(path);
+			if (!PackageManager.loadedPackages.ContainsKey(path)) return; // not found
+			scene.Unload();
+			scene = new Scene();
+			scene.package = PackageManager.loadedPackages[path];
+			scene.Load();
+		}
+
+		public static void EnterScene(string sceneName, string mapName = "", bool forceReload = false)
+		{
+			LoadScene(sceneName, forceReload);
+			if (mapName == "") mapName = scene.defaultMap;
+			EnterMap(mapName, forceReload);
+		}
+
+		public static void EnterMap(string mapName, bool reset = false)
+		{
+			if (scene.maps.ContainsKey(mapName)) scene.maps[mapName].Apply(reset);
+		}
 	}
 }

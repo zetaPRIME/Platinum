@@ -56,5 +56,22 @@ namespace Platinum
 				target = new VecRect(new Vector2((float)sub[0], (float)sub[1]), new Vector2((float)sub[2], (float)sub[3]));
 			}
 		}
+
+		public static void Read(this JsonData j, string name, ref Color target)
+		{
+			if (!j.IsObject || !j.Has(name)) return;
+			JsonData sub = j[name];
+			if (!sub.IsArray) return;
+			if (sub.Count == 3)
+			{
+				if (!(sub[0].IsLong || sub[0].IsInt) || !(sub[1].IsLong || sub[1].IsInt) || !(sub[2].IsLong || sub[2].IsInt)) return;
+				target = new Color((float)sub[0], (float)sub[1], (float)sub[2]);
+			}
+			else if (sub.Count == 4)
+			{
+				if (!(sub[0].IsLong || sub[0].IsInt) || !(sub[1].IsLong || sub[1].IsInt) || !(sub[2].IsLong || sub[2].IsInt) || !(sub[3].IsLong || sub[3].IsInt)) return;
+				target = new Color((float)sub[0], (float)sub[1], (float)sub[2], (float)sub[3]);
+			}
+		}
 	}
 }
