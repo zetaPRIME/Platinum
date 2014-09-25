@@ -39,7 +39,9 @@ namespace Platinum
 				Vector2 pos = Position;
 				float rot = Rotation;
 				Vector2 vel = Velocity;
+				if (riding != null) riding.riddenBy.Remove(this);
 				riding = value;
+				if (riding != null) riding.riddenBy.Add(this);
 				Position = pos;
 				Rotation = rot;
 				Velocity = vel;
@@ -67,6 +69,11 @@ namespace Platinum
 		public List<Entity> Children
 		{
 			get { return new List<Entity>(children); } // new copy
+		}
+		internal protected List<Entity> riddenBy = new List<Entity>();
+		public List<Entity> RiddenBy
+		{
+			get { return new List<Entity>(riddenBy); } // new copy
 		}
 
 		public EntityDef def;
@@ -159,7 +166,9 @@ namespace Platinum
 
 			// deparent and free children
 			Parent = null;
-			foreach (Entity e in Children) e.Parent = null; // todo: conditions where every child should also be deleted (though meanwhile OnKill can manually do that)
+			Riding = null;
+			foreach (Entity e in children) e.Parent = null; // todo: conditions where every child should also be deleted (though meanwhile OnKill can manually do that)
+			foreach (Entity e in riddenBy) e.Riding = null;
 
 			// remove from play
 			if (GameState.entities.Contains(this)) GameState.entities.Remove(this);
