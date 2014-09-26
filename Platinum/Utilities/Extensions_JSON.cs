@@ -44,15 +44,15 @@ namespace Platinum
 			if (sub.Count == 2) // two pairs
 			{
 				if (!sub[0].IsArray || sub[1].Count != 2 || sub[1].IsArray || sub[1].Count != 2) return;
-				if (!(sub[0][0].IsLong || sub[0][0].IsInt) || !(sub[0][1].IsLong || sub[0][1].IsInt)) return;
-				if (!(sub[1][0].IsLong || sub[1][0].IsInt) || !(sub[1][1].IsLong || sub[1][1].IsInt)) return;
+				if (!(sub[0][0].IsDouble || sub[0][0].IsInt) || !(sub[0][1].IsDouble || sub[0][1].IsInt)) return;
+				if (!(sub[1][0].IsDouble || sub[1][0].IsInt) || !(sub[1][1].IsDouble || sub[1][1].IsInt)) return;
 				target = new VecRect(new Vector2((float)sub[0][0], (float)sub[0][1]), new Vector2((float)sub[1][0], (float)sub[1][1]));
 				return;
 			}
 			if (sub.Count == 4) // plain values
 			{
-				if (!(sub[0].IsLong || sub[0].IsInt) || !(sub[1].IsLong || sub[1].IsInt)) return;
-				if (!(sub[2].IsLong || sub[2].IsInt) || !(sub[3].IsLong || sub[3].IsInt)) return;
+				if (!(sub[0].IsDouble || sub[0].IsInt) || !(sub[1].IsDouble || sub[1].IsInt)) return;
+				if (!(sub[2].IsDouble || sub[2].IsInt) || !(sub[3].IsDouble || sub[3].IsInt)) return;
 				target = new VecRect(new Vector2((float)sub[0], (float)sub[1]), new Vector2((float)sub[2], (float)sub[3]));
 			}
 		}
@@ -64,12 +64,12 @@ namespace Platinum
 			if (!sub.IsArray) return;
 			if (sub.Count == 3)
 			{
-				if (!(sub[0].IsLong || sub[0].IsInt) || !(sub[1].IsLong || sub[1].IsInt) || !(sub[2].IsLong || sub[2].IsInt)) return;
+				if (!(sub[0].IsDouble || sub[0].IsInt) || !(sub[1].IsDouble || sub[1].IsInt) || !(sub[2].IsDouble || sub[2].IsInt)) return;
 				target = new Color((float)sub[0], (float)sub[1], (float)sub[2]);
 			}
 			else if (sub.Count == 4)
 			{
-				if (!(sub[0].IsLong || sub[0].IsInt) || !(sub[1].IsLong || sub[1].IsInt) || !(sub[2].IsLong || sub[2].IsInt) || !(sub[3].IsLong || sub[3].IsInt)) return;
+				if (!(sub[0].IsDouble || sub[0].IsInt) || !(sub[1].IsDouble || sub[1].IsInt) || !(sub[2].IsDouble || sub[2].IsInt) || !(sub[3].IsDouble || sub[3].IsInt)) return;
 				target = new Color((float)sub[0], (float)sub[1], (float)sub[2], (float)sub[3]);
 			}
 		}
