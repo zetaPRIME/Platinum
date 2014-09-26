@@ -73,9 +73,9 @@ namespace Platinum
 		{
 			string path = "Scene/" + name;
 			if (!forceReload && scene != null && scene.package.path == path) return; // no reloading if not asked!
+			if (scene != null) scene.Unload();
 			if (!PackageManager.loadedPackages.ContainsKey(path)) PackageManager.LoadPackage(path);
 			if (!PackageManager.loadedPackages.ContainsKey(path)) return; // not found
-			scene.Unload();
 			scene = new Scene();
 			scene.package = PackageManager.loadedPackages[path];
 			scene.Load();

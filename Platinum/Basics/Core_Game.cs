@@ -16,12 +16,13 @@ namespace Platinum
 	{
 		protected void Init_Game()
 		{
-			//
+			GameState.EnterScene(GameDef.defaultScene);
 		}
 
 		protected void Update_Game(GameTime gameTime)
 		{
 			#region Debug keys
+			if (Input.KeyPressed(Keys.F2)) GameState.EnterScene(GameState.scene.name, GameState.scene.currentMap.name, true);
 			if (Input.KeyPressed(Keys.F3)) debugDisplay = !debugDisplay;
 			#endregion
 
@@ -48,7 +49,7 @@ namespace Platinum
 		{
 			PrepareTarget();
 
-			spriteBatch.GraphicsDevice.Clear(new Color(0.5f, 0f, 1f));
+			spriteBatch.GraphicsDevice.Clear(GameState.backColor);
 
 			VecRect cameraBox = GameState.cameraBox; GameState.cameraBoxCache = cameraBox;
 			Vector2 worldSize = GameState.worldSize;

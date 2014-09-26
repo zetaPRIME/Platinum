@@ -50,16 +50,34 @@ namespace Platinum
 
 		internal void LoadEntitySet(JsonData j, bool fromInclude = false, EntityPlacement parent = null)
 		{
-			//
+			if (j == null || !j.IsArray) return; // noap
+
+			foreach (JsonData e in j)
+			{
+				if (!e.IsObject) continue;
+				EntityPlacement p = new EntityPlacement();
+				p.def = e;
+				p.fromInclude = fromInclude;
+				p.parent = parent;
+				p.Load();
+				placements.Add(p);
+				if (e.Has("children")) LoadEntitySet(e["children"], fromInclude, p);
+			}
 		}
 
 		internal void Apply(bool reset = false)
 		{
 			GameState.worldSize = size;
+			GameState.backColor = backColor;
 			if (reset || entities == null)
 			{
 				entities = new List<Entity>();
 				// apply entity set
+				foreach (EntityPlacement p in placements)
+				{
+					if (p.parent != null) continue;
+					p.MakeEntity(this);
+				}
 			}
 			// todo: do the lift-and-set
 			GameState.entities = entities;

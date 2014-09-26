@@ -24,6 +24,13 @@ namespace Platinum
 			}
 		}*/
 
+		public static EntityDef GetDef(string name)
+		{
+			LoadEntity(name);
+			if (!defs.ContainsKey(name)) return null;
+			return defs[name];
+		}
+
 		public static void LoadEntity(string name)
 		{
 			if (defs.ContainsKey(name)) return; // don't try double-loading!

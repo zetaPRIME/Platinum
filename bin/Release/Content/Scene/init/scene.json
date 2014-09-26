@@ -1,0 +1,14 @@
+﻿{
+	"maps": {
+		"default": {
+			"backColor": [0.64, 0.75, 1],
+
+			"entities": [
+				{
+					"type": "derp",
+					"position": [100, 44]
+				}
+			]
+		}
+	}
+}
