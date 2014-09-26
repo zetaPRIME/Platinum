@@ -19,8 +19,6 @@ namespace Platinum.Editor
 	{
 		public static GameWindow Window { get { return Core.instance.Window; } }
 
-		static string blah = "blah";
-
 		public static void Init()
 		{
 			Rectangle screen = Window.ClientBounds;
@@ -56,9 +54,6 @@ namespace Platinum.Editor
 			sb.CameraOff(false);
 
 			UI.Draw(sb);
-
-			//Input.OperateText(ref blah);
-			//sb.DrawString(Core.fontDebug, blah, new Vector2(32, 32), Color.White);
 
 			Core.instance.BakeToScreen();
 		}

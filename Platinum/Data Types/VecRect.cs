@@ -29,6 +29,11 @@ namespace Platinum
 			return orig + (offset * -1f);
 		}
 
+		public static VecRect operator *(VecRect vec, float f)
+		{
+			return new VecRect(vec.topLeft * f, vec.bottomRight * f);
+		}
+
 		public static VecRect Zero { get { return new VecRect(Vector2.Zero, Vector2.Zero); } }
 		public static VecRect Radius { get { return new VecRect(-Vector2.One, Vector2.One); } }
 

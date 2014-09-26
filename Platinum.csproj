@@ -129,6 +129,7 @@
     <Compile Include="Platinum\UI\UI.cs" />
     <Compile Include="Platinum\UI\UIElement.cs" />
     <Compile Include="Platinum\UI\UIKit\Button.cs" />
+    <Compile Include="Platinum\UI\UIKit\Label.cs" />
     <Compile Include="Platinum\UI\UIKit\ScrollBar.cs" />
     <Compile Include="Platinum\UI\UIKit\ScrollField.cs" />
     <Compile Include="Platinum\UI\UIKit\TextField.cs" />

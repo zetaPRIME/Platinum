@@ -132,7 +132,7 @@ namespace Platinum
 
 		public Entity MakeEntity(Map map, Entity parent = null)
 		{
-			Entity e = EntityDef.NewEntity(typeName);
+			Entity e = EntityDef.NewEntity(typeName, true);
 			if (e == null) return null;
 
 			e.parent = parent;
@@ -142,6 +142,9 @@ namespace Platinum
 			e.direction = direction;
 
 			e.drawLayer = drawLayer;
+
+			e.LoadJson(def);
+			e.Init();
 
 			map.entities.Add(e);
 			foreach (EntityPlacement c in children)

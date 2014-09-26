@@ -6,6 +6,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using LitJson;
+
 namespace Platinum
 {
 	public class Entity : MessagePassable
@@ -21,9 +23,10 @@ namespace Platinum
 
 		public VecRect bounds = VecRect.Zero;
 
-		public List<Collider> colliders = new List<Collider>();
-		public bool collisionPassive = false;
+		public ExtTexture mainTexture;
 
+		public List<Collider> colliders = new List<Collider>();
+		
 		public int drawLayer = 0;
 		public virtual bool DrawOffScreen { get { return false; } }
 
@@ -150,6 +153,9 @@ namespace Platinum
 
 		public Vector2 ScreenPosition { get { return (Position - GameState.cameraPos).Pixelize(); } }
 		public bool OnScreen { get { return WorldBounds.Intersects(GameState.cameraBox); } }
+
+		public virtual void Init() { }
+		public virtual void LoadJson(JsonData j) { }
 
 		public virtual void Update() { }
 		public virtual void Draw(SpriteBatch sb) { }

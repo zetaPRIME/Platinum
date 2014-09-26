@@ -58,6 +58,8 @@ namespace Platinum
 			Core.spriteBatch.CameraOff(false);
 		}
 
+		public static void AddElement(UIElement element) { elements.Add(element); element.parent = null; }
+
 		public static void Update()
 		{
 			foreach (UIElement e in elements)
