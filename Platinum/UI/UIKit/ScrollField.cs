@@ -12,7 +12,7 @@ namespace Platinum.UIKit
 	{
 		// consts
 		public const int ScrollStep = 32;
-		public const int Margin = 16;
+		public const int Margin = 0;//16;
 		public const int ScrollbarSize = 16;
 
 		// everything else
@@ -87,6 +87,20 @@ namespace Platinum.UIKit
 			if (noBackground) sb.GraphicsDevice.Clear(Color.Transparent);
 			else sb.GraphicsDevice.Clear(UI.colorBG);
 
+			//DrawBorder(sb);
+
+			foreach (UIElement e in children) e.Draw(sb);
+
+			DrawBorder(sb);
+
+			if (scrollbar != null) scrollbar.Draw(sb);
+
+			UI.TargetPop();
+			sb.Draw(target, drawBounds, Color.White);
+		}
+
+		void DrawBorder(SpriteBatch sb)
+		{
 			if (border != 0)
 			{
 				Rectangle borderBounds = new Rectangle(0, 0, bounds.Width, bounds.Height);
@@ -117,13 +131,6 @@ namespace Platinum.UIKit
 					sb.DrawRect(borderBounds.MarginRight(1), cb);
 				}
 			}
-
-			foreach (UIElement e in children) e.Draw(sb);
-
-			if (scrollbar != null) scrollbar.Draw(sb);
-
-			UI.TargetPop();
-			sb.Draw(target, drawBounds, Color.White);
 		}
 
 		public override void Refresh()

@@ -84,6 +84,7 @@ namespace Platinum
 				}
 				if (def.editorEntity == null) def.editorEntity = new EditorEntity();
 				def.editorEntity.def = def;
+				def.editorEntity.LoadJson();
 			}
 
 			defs.Add(name, def);

@@ -21,23 +21,64 @@ namespace Platinum.Editor
 
 		public static void Init()
 		{
+			// TEMP
+			GameState.EnterScene(GameDef.defaultScene);
+
+			// scene display!
+			sceneDisplay = new SceneDisplay();
+			UI.AddElement(sceneDisplay);
+
+			// set up sidebar
+			sidebar = new SwitchField();
+			UI.AddElement(sidebar);
+
+			entityList = new ScrollField();
+			entityList.hasScrollbar = true;
+			entityList.border[2] = true;
+			sidebar.AddPage(entityList);
+
+			propertyPane = new ScrollField();
+			propertyPane.hasScrollbar = true;
+			propertyPane.border[2] = true;
+			sidebar.AddPage(propertyPane);
+
+			sidebar.currentPage = 1;
+
+			// test
+			ListLayout ll = new ListLayout();
+			propertyPane.AddElement(ll);
+			for (int i = 0; i < 320; i++)
+			{
+				UIButton b = new UIButton();
+				b.bounds = new Rectangle(0, 0, 32, 32);
+				b.text = "Testing button " + (i + 1);
+				ll.AddElement(b);
+			}
+
+			// set up sizing
+			RefreshLayout();
+
+			// set up an event because why not
+			Window.ClientSizeChanged += (s, ea) => { RefreshLayout(); };
+		}
+
+		public static SceneDisplay sceneDisplay;
+
+		public static SwitchField sidebar;
+		public static ScrollField entityList;
+		public static ScrollField propertyPane;
+
+		public static void RefreshLayout()
+		{
 			Rectangle screen = Window.ClientBounds;
 
-			ScrollField sf = new ScrollField();
-			sf.bounds = new Rectangle(600, 0, 200, 600);
-			sf.border[2] = true;
-			sf.hasScrollbar = true;
-			UI.elements.Add(sf);
+			int MenuHeight = 32;
+			int SidebarWidth = 200;
 
-			UIButton btn = new UIButton();
-			btn.bounds = new Rectangle(100, 100, 64, 832);
-			btn.actionUp = () => { btn.bounds.Height = 32; };
-			btn.text = "Pineapple\nsundae";
-			sf.AddElement(btn);
+			Rectangle subScreen = screen.MarginBottom(screen.Height - MenuHeight);
+			sidebar.bounds = subScreen.MarginRight(SidebarWidth);
 
-			TextField tf = new TextField();
-			tf.bounds = new Rectangle(8, 8, 100, 18);
-			sf.AddElement(tf);
+			sceneDisplay.bounds = subScreen.MarginLeft(subScreen.Width - SidebarWidth);
 		}
 
 		public static void Update()

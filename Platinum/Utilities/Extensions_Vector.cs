@@ -19,6 +19,11 @@ namespace Platinum
 			return new Vector2(inp.X * x, inp.Y * y);
 		}
 
+		public static Vector2 Clamp(this Vector2 inp, VecRect rect)
+		{
+			return new Vector2(Math.Max(rect.left, Math.Min(inp.X, rect.right)), Math.Max(rect.top, Math.Min(inp.Y, rect.bottom)));
+		}
+
 		public static float WrapRot(this float inp)
 		{
 			float res = inp % ((float)Math.PI * 2f);
@@ -48,6 +53,10 @@ namespace Platinum
 		public static Point PointWithin(this Rectangle rect, Point pt)
 		{
 			return new Point(pt.X - rect.X, pt.Y - rect.Y);
+		}
+		public static Vector2 VecSize(this Rectangle rect)
+		{
+			return new Vector2(rect.Width, rect.Height);
 		}
 
 		// quick matrix invert

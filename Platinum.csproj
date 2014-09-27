@@ -113,6 +113,8 @@
     <Compile Include="Platinum\Collision\Collider.cs" />
     <Compile Include="Platinum\Collision\CollisionManager.cs" />
     <Compile Include="Platinum\Editor\EditorCore.cs" />
+    <Compile Include="Platinum\Editor\EditorEntity.cs" />
+    <Compile Include="Platinum\Editor\SceneDisplay.cs" />
     <Compile Include="Platinum\Game\EntityPlacement.cs" />
     <Compile Include="Platinum\Game\Entrance.cs" />
     <Compile Include="Platinum\Game\Map.cs" />
@@ -130,8 +132,10 @@
     <Compile Include="Platinum\UI\UIElement.cs" />
     <Compile Include="Platinum\UI\UIKit\Button.cs" />
     <Compile Include="Platinum\UI\UIKit\Label.cs" />
+    <Compile Include="Platinum\UI\UIKit\ListLayout.cs" />
     <Compile Include="Platinum\UI\UIKit\ScrollBar.cs" />
     <Compile Include="Platinum\UI\UIKit\ScrollField.cs" />
+    <Compile Include="Platinum\UI\UIKit\SwitchField.cs" />
     <Compile Include="Platinum\UI\UIKit\TextField.cs" />
     <Compile Include="Platinum\Utilities\Extensions_List.cs" />
     <Compile Include="Platinum\Utilities\Extensions_JSON.cs" />

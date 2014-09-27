@@ -22,8 +22,9 @@ namespace Platinum.Editor
 		public virtual void LoadJson()
 		{
 			JsonData jr = def.source.def;
-			if (!jr.Has("editor") || !jr["editor"].IsObject) return; // yeah
-			JsonData j = jr["editor"];
+			JsonData j;
+			if (!jr.Has("editor") || !jr["editor"].IsObject) j = new JsonData(); // still set reasonable defaults
+			else j = jr["editor"];
 
 			VecRect drawBounds = VecRect.Radius * 16f;
 			VecRect selectBounds = VecRect.Radius * 16f;
@@ -54,6 +55,24 @@ namespace Platinum.Editor
 
 			float scale = Math.Min(Math.Max(maxSize.X / size.X, maxSize.Y / size.Y), 1);
 			sb.Draw(tx, pos.Pixelize(), 0, Color.White, 0f, tx.center, scale, SpriteEffects.None);
+		}
+
+		public virtual Vector2 SnapOffset
+		{
+			get
+			{
+				if (SelectBounds.Size.X % GameDef.gridSize == 0 && SelectBounds.Size.Y % GameDef.gridSize == 0)
+				{
+					int tx = (int)SelectBounds.Size.X / GameDef.gridSize;
+					int ty = (int)SelectBounds.Size.Y / GameDef.gridSize;
+					int gh = GameDef.gridSize / 2;
+					int x = 0; int y = 0;
+					if (tx % 2 != 0) x = gh;
+					if (ty % 2 != 0) y = gh;
+					return new Vector2(x, y);
+				}
+				return Vector2.One * GameDef.gridSize / 2f;
+			}
 		}
 	}
 }

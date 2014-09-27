@@ -37,8 +37,6 @@ namespace ExampleBase
 					e.position = new Vector2(rand.Next(640), rand.Next(480));
 					const float range = 4f * 2f;
 					e.velocity = new Vector2(((float)rand.NextDouble() - 0.5f) * range, ((float)rand.NextDouble() - 0.5f) * range);
-
-					e.collisionPassive = true;
 				}
 
 				e = EntityDef.NewEntity("TestEntity");

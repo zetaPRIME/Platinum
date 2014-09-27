@@ -69,18 +69,21 @@ namespace Platinum
 		{
 			GameState.worldSize = size;
 			GameState.backColor = backColor;
-			if (reset || entities == null)
+			if (Core.mode != EngineMode.Editor)
 			{
-				entities = new List<Entity>();
-				// apply entity set
-				foreach (EntityPlacement p in placements)
+				if (reset || entities == null)
 				{
-					if (p.parent != null) continue;
-					p.MakeEntity(this);
+					entities = new List<Entity>();
+					// apply entity set
+					foreach (EntityPlacement p in placements)
+					{
+						if (p.parent != null) continue;
+						p.MakeEntity(this);
+					}
 				}
+				// todo: do the lift-and-set
+				GameState.entities = entities;
 			}
-			// todo: do the lift-and-set
-			GameState.entities = entities;
 
 			GameState.scene.currentMap = this;
 		}

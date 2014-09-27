@@ -112,7 +112,7 @@ namespace Platinum
 		}
 		#endregion
 
-		//
+		#region loading, creating entity
 		public void Load()
 		{
 			// most important thing first!
@@ -154,5 +154,11 @@ namespace Platinum
 
 			return e;
 		}
+		#endregion
+
+		#region editor things
+		public VecRect DrawBounds { get { return type.editorEntity.DrawBounds + Position; } }
+		public VecRect SelectBounds { get { return type.editorEntity.SelectBounds + Position; } }
+		#endregion
 	}
 }

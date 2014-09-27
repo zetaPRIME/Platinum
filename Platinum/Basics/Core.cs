@@ -23,8 +23,8 @@ namespace Platinum
 	public partial class Core : Game
 	{
 		public static Core instance;
-		public static EngineMode mode = EngineMode.Game;
-		//public static EngineMode mode = EngineMode.Editor;
+		//public static EngineMode mode = EngineMode.Game;
+		public static EngineMode mode = EngineMode.Editor;
 
 		public static SpriteBatch spriteBatch;
 		public GraphicsDeviceManager graphics;
