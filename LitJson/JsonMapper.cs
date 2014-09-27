@@ -107,7 +107,9 @@ namespace LitJson
 			JsonWriter jw = new JsonWriter(sb);
 			jw.PrettyPrint = true;
 			ToJson(obj, jw);
-			return sb.ToString();
+			string str = sb.ToString();
+			str = str.Replace("\r", "").Replace("" + '\n', "" + '\r' + '\n'); // normalize linebreaks
+			return str;
 		}
 		#endregion
 
