@@ -112,7 +112,7 @@ namespace Platinum
 		}
 		#endregion
 
-		#region loading, creating entity
+		#region loading, saving, creating entity
 		public void Load()
 		{
 			// most important thing first!
@@ -128,6 +128,29 @@ namespace Platinum
 
 			def.Read("drawLayer", ref drawLayer);
 
+		}
+
+		public void Save()
+		{
+			def.Write("type", typeName);
+
+			def.Write("name", name);
+			def.Write("position", position);
+			def.Write("velocity", velocity);
+			def.Write("rotation", rotation);
+			def.Write("direction", direction);
+
+			def.Write("drawLayer", drawLayer);
+
+			def.Remove("children"); // going to remake it
+			JsonData ch = new JsonData();
+			ch.SetJsonType(JsonType.Array);
+			foreach (EntityPlacement ep in children)
+			{
+				ep.Save();
+				ch.Add(ep.def);
+			}
+			if (ch.Count > 0) def["children"] = ch;
 		}
 
 		public Entity MakeEntity(Map map, Entity parent = null)

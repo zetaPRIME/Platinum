@@ -22,6 +22,7 @@ namespace Platinum
 		public string defaultMap;
 
 		public string displayName;
+		public string author;
 		public string name
 		{
 			get
@@ -40,10 +41,12 @@ namespace Platinum
 			
 			// defaults
 			displayName = "Scene";
+			author = "N/A";
 			defaultMap = "default";
 
 			// and read json attributes
 			j.Read("displayName", ref displayName);
+			j.Read("author", ref author);
 			j.Read("defaultMap", ref defaultMap);
 
 			if (j.Has("maps") && j["maps"].IsObject)
@@ -104,6 +107,24 @@ namespace Platinum
 			}
 			if (sceneService == null) sceneService = new SceneService();
 			// todo: onload
+		}
+
+		internal void Save() // only saves to json def; writing is another operation
+		{
+			def.Write("displayName", displayName);
+			def.Write("author", author);
+			def.Write("defaultMap", defaultMap);
+
+			def.Remove("maps"); // pending remake etc.
+			JsonData m = new JsonData();
+			m.SetJsonType(JsonType.Object);
+			foreach (KeyValuePair<string, Map> kvp in maps)
+			{
+				kvp.Value.Save();
+				m[kvp.Key] = kvp.Value.def;
+			}
+			//if (m.Count > 0) def["maps"] = m;
+			def["maps"] = m;
 		}
 
 		internal void Unload()

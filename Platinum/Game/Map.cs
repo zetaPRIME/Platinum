@@ -48,6 +48,27 @@ namespace Platinum
 			if (def.Has("entities") && def["entities"].IsArray) LoadEntitySet(def["entities"]);
 		}
 
+		internal void Save()
+		{
+			// attributes
+			def.Write("size", size);
+			def.Write("backColor", backColor);
+
+			// don't need includes, if they're there they're there
+
+			def.Remove("entities"); // going to remake
+			JsonData e = new JsonData();
+			e.SetJsonType(JsonType.Array);
+
+			List<EntityPlacement> saveEntities = placements.Where((p) => !p.fromInclude && p.parent == null).ToList();
+			foreach (EntityPlacement ep in saveEntities)
+			{
+				ep.Save();
+				e.Add(ep.def);
+			}
+			if (e.Count > 0) def["entities"] = e;
+		}
+
 		internal void LoadEntitySet(JsonData j, bool fromInclude = false, EntityPlacement parent = null)
 		{
 			if (j == null || !j.IsArray) return; // noap

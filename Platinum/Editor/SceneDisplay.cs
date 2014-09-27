@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using LitJson;
+
 using Platinum.UIKit;
 
 namespace Platinum.Editor
@@ -117,6 +119,14 @@ namespace Platinum.Editor
 				if (Input.KeyHeld(Keys.D)) cameraPos += Vector2.UnitX * moveSpeed;
 			}
 			cameraPos = cameraPos.Clamp(new VecRect(Vector2.Zero, GameState.worldSize)).Pixelize();
+
+			// temp test
+			if (Input.KeyPressed(Keys.F))
+			{
+				GameState.scene.Save();
+				string blah = JsonMapper.ToPrettyJson(GameState.scene.def);
+				Console.WriteLine(blah);
+			}
 		}
 
 		RenderTarget2D target;
@@ -146,7 +156,6 @@ namespace Platinum.Editor
 				p.type.editorEntity.DrawInEditor(p, sb);
 				if (selection.Contains(p))
 				{
-					Console.WriteLine("blah");
 					sb.DrawRect(p.DrawBounds.AsRectangle, colorSelection.MultiplyBy(0.5f));
 				}
 			}

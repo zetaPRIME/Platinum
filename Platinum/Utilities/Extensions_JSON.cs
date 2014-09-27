@@ -73,5 +73,39 @@ namespace Platinum
 				target = new Color((float)sub[0], (float)sub[1], (float)sub[2], (float)sub[3]);
 			}
 		}
+
+		// write for basics
+		public static void Write(this JsonData j, string name, bool? value) { if (!j.IsObject) return; if (value == null && j.Has(name)) j.Remove(name); else j[name] = value; }
+		public static void Write(this JsonData j, string name, int? value) { if (!j.IsObject) return; if (value == null && j.Has(name)) j.Remove(name); else j[name] = value; }
+		public static void Write(this JsonData j, string name, long? value) { if (!j.IsObject) return; if (value == null && j.Has(name)) j.Remove(name); else j[name] = value; }
+		public static void Write(this JsonData j, string name, float? value) { if (!j.IsObject) return; if (value == null && j.Has(name)) j.Remove(name); else j[name] = value; }
+		public static void Write(this JsonData j, string name, double? value) { if (!j.IsObject) return; if (value == null && j.Has(name)) j.Remove(name); else j[name] = value; }
+		public static void Write(this JsonData j, string name, string value) { if (!j.IsObject) return; if (value == null && j.Has(name)) j.Remove(name); else j[name] = value; }
+
+		// and again, not-so-basics
+		public static void Write(this JsonData j, string name, Vector2 value)
+		{
+			if (!j.IsObject) return;
+			JsonData a = new JsonData();
+			a.SetJsonType(JsonType.Array);
+			a.Add(value.X);
+			a.Add(value.Y);
+			j[name] = a;
+		}
+
+		// todo: vecrect
+
+		public static void Write(this JsonData j, string name, Color value)
+		{
+			if (!j.IsObject) return;
+			JsonData a = new JsonData();
+			a.SetJsonType(JsonType.Array);
+			Vector4 v = value.ToVector4();
+			a.Add(v.X);
+			a.Add(v.Y);
+			a.Add(v.Z);
+			if (v.W != 1) a.Add(v.W);
+			j[name] = a;
+		}
 	}
 }
