@@ -19,7 +19,8 @@ namespace Platinum
 		public static Vector2 screenSize = new Vector2(640, 480);
 
 		public static string defaultScene = "init";
-		public static Color defaultBackColor = new Color(0.5f, 0f, 1f);
+		public static Vector4 defaultBackColorVec;
+		public static Color defaultBackColor { get { return new Color(defaultBackColorVec); } set { defaultBackColorVec = value.ToVector4(); } }
 
 		public static void Load()
 		{
@@ -31,7 +32,7 @@ namespace Platinum
 			gridSize = 32;
 			screenSize = new Vector2(640, 480);
 			defaultScene = "init";
-			defaultBackColor = new Color(0.5f, 0f, 1f);
+			defaultBackColorVec = new Vector4(0.5f, 0f, 1f, 1f);
 
 			// and load
 			j.Read("defaultPixelScale", ref defaultPixelScale);
@@ -39,7 +40,7 @@ namespace Platinum
 			j.Read("screenSize", ref screenSize);
 			j.Read("defaultScene", ref defaultScene);
 
-			j.Read("defaultBackColor", ref defaultBackColor);
+			j.Read("defaultBackColor", ref defaultBackColorVec);
 
 			// apply things that need to be applied
 			GameState.SetGameSize((int)screenSize.X, (int)screenSize.Y);

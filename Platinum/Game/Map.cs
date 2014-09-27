@@ -13,7 +13,8 @@ namespace Platinum
 	{
 		public string name;
 		public Vector2 size;
-		public Color backColor;
+		public Vector4 backColorVec;
+		public Color backColor { get { return new Color(backColorVec); } set { backColorVec = value.ToVector4(); } }
 		public List<Entity> entities;
 		public List<EntityPlacement> placements;
 
@@ -23,11 +24,11 @@ namespace Platinum
 		{
 			// defaults
 			size = GameDef.screenSize;
-			backColor = GameDef.defaultBackColor;
+			backColorVec = GameDef.defaultBackColorVec;
 
 			// read in
 			def.Read("size", ref size);
-			def.Read("backColor", ref backColor);
+			def.Read("backColor", ref backColorVec);
 
 			// set up some stuff
 			placements = new List<EntityPlacement>();
@@ -52,7 +53,7 @@ namespace Platinum
 		{
 			// attributes
 			def.Write("size", size);
-			def.Write("backColor", backColor);
+			def.Write("backColor", backColorVec, true);
 
 			// don't need includes, if they're there they're there
 

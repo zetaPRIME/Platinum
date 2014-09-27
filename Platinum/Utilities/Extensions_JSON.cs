@@ -12,6 +12,8 @@ namespace Platinum
 {
 	public static partial class Extensions
 	{
+		const int ColorRoundDigits = 4;
+
 		// read operations for basic types
 		public static void Read(this JsonData j, string name, ref bool target) { if (j.IsObject && j.Has(name) && j[name].IsBoolean) target = (bool)j[name]; }
 		public static void Read(this JsonData j, string name, ref int target) { if (j.IsObject && j.Has(name) && j[name].IsInt) target = (int)j[name]; }
@@ -74,6 +76,23 @@ namespace Platinum
 			}
 		}
 
+		public static void Read(this JsonData j, string name, ref Vector4 target)
+		{
+			if (!j.IsObject || !j.Has(name)) return;
+			JsonData sub = j[name];
+			if (!sub.IsArray) return;
+			if (sub.Count == 3)
+			{
+				if (!(sub[0].IsDouble || sub[0].IsInt) || !(sub[1].IsDouble || sub[1].IsInt) || !(sub[2].IsDouble || sub[2].IsInt)) return;
+				target = new Vector4((float)sub[0], (float)sub[1], (float)sub[2], 1);
+			}
+			else if (sub.Count == 4)
+			{
+				if (!(sub[0].IsDouble || sub[0].IsInt) || !(sub[1].IsDouble || sub[1].IsInt) || !(sub[2].IsDouble || sub[2].IsInt) || !(sub[3].IsDouble || sub[3].IsInt)) return;
+				target = new Vector4((float)sub[0], (float)sub[1], (float)sub[2], (float)sub[3]);
+			}
+		}
+
 		// write for basics
 		public static void Write(this JsonData j, string name, bool? value) { if (!j.IsObject) return; if (value == null && j.Has(name)) j.Remove(name); else j[name] = value; }
 		public static void Write(this JsonData j, string name, int? value) { if (!j.IsObject) return; if (value == null && j.Has(name)) j.Remove(name); else j[name] = value; }
@@ -105,6 +124,19 @@ namespace Platinum
 			a.Add(v.Y);
 			a.Add(v.Z);
 			if (v.W != 1) a.Add(v.W);
+			j[name] = a;
+		}
+
+		public static void Write(this JsonData j, string name, Vector4 value, bool asColor = false)
+		{
+			if (!j.IsObject) return;
+			JsonData a = new JsonData();
+			a.SetJsonType(JsonType.Array);
+			Vector4 v = value;
+			a.Add(Math.Round(v.X, ColorRoundDigits));
+			a.Add(Math.Round(v.Y, ColorRoundDigits));
+			a.Add(Math.Round(v.Z, ColorRoundDigits));
+			if (!asColor || v.W != 1) a.Add(Math.Round(v.W, ColorRoundDigits));
 			j[name] = a;
 		}
 	}

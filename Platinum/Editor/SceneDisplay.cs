@@ -27,7 +27,10 @@ namespace Platinum.Editor
 		{
 			get
 			{
-				return Matrix.CreateTranslation(-cameraPos.Upcast()) * Matrix.CreateRotationZ(cameraRot) * Matrix.CreateScale(cameraZoom) * Matrix.CreateTranslation((bounds.VecSize() * 0.5f).Upcast());
+				Vector2 cPos = cameraPos;
+				if (bounds.Width % 2 == 1) cPos.X += 0.5f;
+				if (bounds.Height % 2 == 1) cPos.Y += 0.5f;
+				return Matrix.CreateTranslation(-cPos.Upcast()) * Matrix.CreateRotationZ(cameraRot) * Matrix.CreateScale(cameraZoom) * Matrix.CreateTranslation((bounds.VecSize() * 0.5f).Upcast());
 				//return Matrix.CreateTranslation(cameraPos.Upcast()) * Matrix.CreateTranslation((GameDef.screenSize * -0.5f).Upcast()) * Matrix.CreateRotationZ(cameraRot);
 			}
 		}
@@ -75,18 +78,22 @@ namespace Platinum.Editor
 			if (left)
 			{
 				Vector2 curDiff = mouseWorld - mouseDownWorld;
-				foreach (EntityPlacement p in selection)
+				if (curDiff.Length() > 2) // threshold so you don't accidentally snap
 				{
-					p.position = p.oldPosition + curDiff;
+					foreach (EntityPlacement p in selection)
+					{
+						p.position = p.oldPosition + curDiff;
 
-					float gridSize = GameDef.gridSize;
-					Vector2 snap = p.type.editorEntity.SnapOffset;
+						float gridSize = GameDef.gridSize;
+						if (Input.KeyHeld(Keys.LeftShift)) gridSize /= 2;
+						Vector2 snap = p.type.editorEntity.SnapOffset;
 
-					p.position += Vector2.One * gridSize / 2;
-					p.position += snap;
-					p.position = new Vector2((int)(p.position.X / gridSize) * gridSize, (int)(p.position.Y / gridSize) * gridSize);
-					p.position -= snap;
-					//p.position -= Vector2.One * gridSize;
+						p.position += Vector2.One * gridSize / 2;
+						p.position += snap;
+						p.position = new Vector2((int)(p.position.X / gridSize) * gridSize, (int)(p.position.Y / gridSize) * gridSize);
+						p.position -= snap;
+						//p.position -= Vector2.One * gridSize;
+					}
 				}
 
 				if (selection.Count == 0)
@@ -156,7 +163,14 @@ namespace Platinum.Editor
 				p.type.editorEntity.DrawInEditor(p, sb);
 				if (selection.Contains(p))
 				{
-					sb.DrawRect(p.DrawBounds.AsRectangle, colorSelection.MultiplyBy(0.5f));
+					VecRect edb = p.DrawBounds;
+					sb.DrawRect(edb.AsRectangle, colorSelection.MultiplyBy(0.5f));
+
+					edb.ExpandOut(1.0f);
+					sb.DrawLine(new LineSegment(edb.topLeft, edb.topRight), colorSelection);
+					sb.DrawLine(new LineSegment(edb.bottomLeft, edb.bottomRight), colorSelection);
+					sb.DrawLine(new LineSegment(edb.topLeft, edb.bottomLeft), colorSelection);
+					sb.DrawLine(new LineSegment(edb.topRight, edb.bottomRight), colorSelection);
 				}
 			}
 
