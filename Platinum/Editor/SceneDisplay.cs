@@ -13,6 +13,10 @@ namespace Platinum.Editor
 {
 	public class SceneDisplay : UIElement
 	{
+		// colors etc.
+		Color colorSelection = new Color(0.8f, 0.9f, 1f, 1f);
+
+		// camera
 		public Vector2 cameraPos;
 		public float cameraZoom = 1f;
 		public float cameraRot = 0f;
@@ -38,8 +42,68 @@ namespace Platinum.Editor
 		public List<EntityPlacement> selection = new List<EntityPlacement>();
 
 		//
+		public Vector2 mouseScreen { get { return Vector2.Transform(mouseWorld, cameraTransform); } set { mouseWorld = Vector2.Transform(value, cameraTransform.Invert()); } }
+		public Vector2 mouseDownScreen { get { return Vector2.Transform(mouseDownWorld, cameraTransform); } set { mouseDownWorld = Vector2.Transform(value, cameraTransform.Invert()); } }
+		public Vector2 mouseWorld;// { get { return Vector2.Transform(mouseScreen, cameraTransform.Invert()); } }
+		public Vector2 mouseDownWorld;// { get { return Vector2.Transform(mouseDownScreen, cameraTransform.Invert()); } }
 		public override bool InterceptsMouse { get { return true; } }
 		public override bool InterceptsScrollwheel { get { return true; } }
+
+		public override void MouseOver(Point point)
+		{
+			UI.TakeFocus(this);
+			mouseScreen = new Vector2(point.X, point.Y);
+		}
+
+		public override void MouseAction(bool left, bool leftP, bool leftR, bool right, bool rightP, bool rightR)
+		{
+			if (leftP)
+			{
+				mouseDownScreen = mouseScreen;
+
+				selection.Clear();
+				EntityPlacement p = FindClickEntity();
+				if (p != null)
+				{
+					selection.Add(p);
+					p.oldPosition = p.position;
+				}
+			}
+
+			if (left)
+			{
+				Vector2 curDiff = mouseWorld - mouseDownWorld;
+				foreach (EntityPlacement p in selection)
+				{
+					p.position = p.oldPosition + curDiff;
+
+					float gridSize = GameDef.gridSize;
+					Vector2 snap = p.type.editorEntity.SnapOffset;
+
+					p.position += Vector2.One * gridSize / 2;
+					p.position += snap;
+					p.position = new Vector2((int)(p.position.X / gridSize) * gridSize, (int)(p.position.Y / gridSize) * gridSize);
+					p.position -= snap;
+					//p.position -= Vector2.One * gridSize;
+				}
+
+				if (selection.Count == 0)
+				{
+					cameraPos -= curDiff;
+					cameraPos = cameraPos.Clamp(new VecRect(Vector2.Zero, GameState.worldSize)).Pixelize();
+				}
+			}
+		}
+
+		public EntityPlacement FindClickEntity()
+		{
+			Vector2 point = mouseWorld;
+
+			List<EntityPlacement> eligible = GameState.scene.currentMap.placements.Where((p) => p.SelectBounds.Contains(point)).OrderBy((p) => p.drawLayer).Reverse().ToList();
+			if (eligible.Count == 0) return null;
+
+			return eligible[0];
+		}
 
 		public override void Update()
 		{
@@ -78,7 +142,13 @@ namespace Platinum.Editor
 
 			foreach (EntityPlacement p in drawList)
 			{
-				sb.DrawRect(p.DrawBounds.AsRectangle, Color.Blue);
+				//sb.DrawRect(p.DrawBounds.AsRectangle, Color.Blue);
+				p.type.editorEntity.DrawInEditor(p, sb);
+				if (selection.Contains(p))
+				{
+					Console.WriteLine("blah");
+					sb.DrawRect(p.DrawBounds.AsRectangle, colorSelection.MultiplyBy(0.5f));
+				}
 			}
 
 			// draw bounds

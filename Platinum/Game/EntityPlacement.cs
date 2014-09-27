@@ -159,6 +159,8 @@ namespace Platinum
 		#region editor things
 		public VecRect DrawBounds { get { return type.editorEntity.DrawBounds + Position; } }
 		public VecRect SelectBounds { get { return type.editorEntity.SelectBounds + Position; } }
+
+		public Vector2 oldPosition;
 		#endregion
 	}
 }

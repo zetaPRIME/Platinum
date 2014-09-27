@@ -42,7 +42,14 @@ namespace Platinum.Editor
 		{
 			ExtTexture tx = def.mainTexture;
 			if (editorIcon != null) tx = editorIcon;
-			sb.Draw(tx, ep.position, 0, Color.White, 0f, tx.center, 1f, SpriteEffects.None);
+			if (tx == null)
+			{
+				sb.DrawRect(ep.DrawBounds.AsRectangle, Color.Magenta);
+				const string str = "NO ?\nICON";
+				Vector2 center = UI.Font.MeasureString(str) / 2f;
+				sb.DrawString(UI.Font, str, ep.Position.Pixelize(), Color.White, 0f, center.Pixelize(), 1f, SpriteEffects.None, 0f);
+			}
+			else sb.Draw(tx, ep.position, 0, Color.White, 0f, tx.center, 1f, SpriteEffects.None);
 		}
 
 		public virtual void DrawIcon(Rectangle rect, SpriteBatch sb)

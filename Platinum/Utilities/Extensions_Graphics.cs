@@ -71,5 +71,9 @@ namespace Platinum
 		{
 			return new Color(color.ToVector4() * mult);
 		}
+		public static Color MultiplyBy(this Color color, float mult)
+		{
+			return new Color(color.ToVector4() * mult);
+		}
 	}
 }
