@@ -35,7 +35,7 @@ namespace Platinum
 			if (!j.IsObject || !j.Has(name)) return;
 			JsonData sub = j[name];
 			if (!sub.IsArray || sub.Count != 2) return;
-			if (!(sub[0].IsLong || sub[0].IsInt) || !(sub[1].IsLong || sub[1].IsInt)) return;
+			if (!(sub[0].IsDouble || sub[0].IsInt) || !(sub[1].IsDouble || sub[1].IsInt)) return;
 			target = new Vector2((float)sub[0], (float)sub[1]);
 		}
 

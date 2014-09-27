@@ -1,14 +1,96 @@
-﻿{
-	"maps": {
-		"default": {
-			"backColor": [0.64, 0.75, 1],
 
-			"entities": [
-				{
-					"type": "derp",
-					"position": [100, 44]
-				}
-			]
-		}
-	}
+{
+    "displayName" : "Scene",
+    "author"      : "N/A",
+    "defaultMap"  : "default",
+    "maps"        : {
+        "default" : {
+            "backColor" : [
+                0.64,
+                0.75,
+                1.0
+            ],
+            "size"      : [
+                800.0,
+                600.0
+            ],
+            "entities"  : [
+                {
+                    "type" : "derp",
+                    "position" : [
+                        100.0,
+                        44.0
+                    ],
+                    "name"     : "",
+                    "velocity" : [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation" : 0.0,
+                    "direction" : 1,
+                    "drawLayer" : 0
+                },
+                {
+                    "type" : "derp",
+                    "position" : [
+                        176.0,
+                        112.0
+                    ],
+                    "name"     : "",
+                    "velocity" : [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation" : 0.0,
+                    "direction" : 1,
+                    "drawLayer" : 0
+                },
+                {
+                    "type" : "derp",
+                    "position" : [
+                        208.0,
+                        112.0
+                    ],
+                    "name"     : "",
+                    "velocity" : [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation" : 0.0,
+                    "direction" : 1,
+                    "drawLayer" : 0
+                },
+                {
+                    "type" : "derp",
+                    "position" : [
+                        176.0,
+                        144.0
+                    ],
+                    "name"     : "",
+                    "velocity" : [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation" : 0.0,
+                    "direction" : 1,
+                    "drawLayer" : 0
+                },
+                {
+                    "type" : "derp",
+                    "position" : [
+                        208.0,
+                        144.0
+                    ],
+                    "name"     : "",
+                    "velocity" : [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation" : 0.0,
+                    "direction" : 1,
+                    "drawLayer" : 0
+                }
+            ]
+        }
+    }
 }

@@ -28,6 +28,12 @@ namespace Platinum.Editor
 			sceneDisplay = new SceneDisplay();
 			UI.AddElement(sceneDisplay);
 
+			// menu bar
+			menuBar = new ScrollField();
+			menuBar.hasScrollbar = false;
+			menuBar.border[1] = true;
+			UI.AddElement(menuBar);
+
 			// set up sidebar
 			sidebar = new SwitchField();
 			UI.AddElement(sidebar);
@@ -64,6 +70,8 @@ namespace Platinum.Editor
 
 		public static SceneDisplay sceneDisplay;
 
+		public static ScrollField menuBar;
+
 		public static SwitchField sidebar;
 		public static ScrollField entityList;
 		public static ScrollField propertyPane;
@@ -74,6 +82,8 @@ namespace Platinum.Editor
 
 			int MenuHeight = 32;
 			int SidebarWidth = 200;
+
+			menuBar.bounds = screen.MarginTop(MenuHeight);
 
 			Rectangle subScreen = screen.MarginBottom(screen.Height - MenuHeight);
 			sidebar.bounds = subScreen.MarginRight(SidebarWidth);

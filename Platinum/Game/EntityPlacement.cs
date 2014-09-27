@@ -183,6 +183,60 @@ namespace Platinum
 		public VecRect DrawBounds { get { return type.editorEntity.DrawBounds + Position; } }
 		public VecRect SelectBounds { get { return type.editorEntity.SelectBounds + Position; } }
 
+		public EntityPlacement Copy(Vector2 position)
+		{
+			EntityPlacement cp = new EntityPlacement();
+
+			Save();
+			cp.def = JsonMapper.ToObject(JsonMapper.ToJson(def));
+			cp.LoadAndCreateChildren();
+
+			cp.Position = position;
+
+			return cp;
+		}
+
+		public void LoadAndCreateChildren()
+		{
+			Load();
+
+			if (!def.Has("children") || !def["children"].IsArray) return;
+			JsonData j = def["children"];
+			foreach (JsonData c in j)
+			{
+				EntityPlacement e = new EntityPlacement();
+				e.def = c;
+				e.LoadAndCreateChildren();
+				e.Parent = this;
+			}
+		}
+
+		public void AddToMap(Map map)
+		{
+			if (!map.placements.Contains(this)) map.placements.Add(this);
+			foreach (EntityPlacement e in children)
+			{
+				e.AddToMap(map);
+			}
+		}
+
+		public void Snap(float gridSize)
+		{
+			Vector2 snap = type.editorEntity.SnapOffset;
+
+			position += Vector2.One * gridSize / 2;
+			position += snap;
+			position = new Vector2((int)(position.X / gridSize) * gridSize, (int)(position.Y / gridSize) * gridSize);
+			position -= snap;
+		}
+
+		public void Kill(Map map)
+		{
+			foreach (EntityPlacement e in children) e.Parent = null;
+			Parent = null;
+			map.placements.Remove(this);
+		}
+
 		public Vector2 oldPosition;
 		#endregion
 	}

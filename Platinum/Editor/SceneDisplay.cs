@@ -66,12 +66,14 @@ namespace Platinum.Editor
 			{
 				mouseDownScreen = mouseScreen;
 
-				selection.Clear();
 				EntityPlacement p = FindClickEntity();
+				if (!Input.KeyHeld(Keys.LeftShift) && !selection.Contains(p)) selection.Clear();
 				if (p != null)
 				{
+					selection.Remove(p);
 					selection.Add(p);
-					p.oldPosition = p.position;
+					foreach (EntityPlacement s in selection) s.oldPosition = s.position;
+					//p.oldPosition = p.position;
 				}
 			}
 
@@ -80,19 +82,19 @@ namespace Platinum.Editor
 				Vector2 curDiff = mouseWorld - mouseDownWorld;
 				if (curDiff.Length() > 2) // threshold so you don't accidentally snap
 				{
-					foreach (EntityPlacement p in selection)
+					if (selection.Count > 0)
 					{
-						p.position = p.oldPosition + curDiff;
-
+						EntityPlacement master = selection[selection.Count - 1];
 						float gridSize = GameDef.gridSize;
 						if (Input.KeyHeld(Keys.LeftShift)) gridSize /= 2;
-						Vector2 snap = p.type.editorEntity.SnapOffset;
+						master.position = master.oldPosition + curDiff;
+						master.Snap(gridSize);
 
-						p.position += Vector2.One * gridSize / 2;
-						p.position += snap;
-						p.position = new Vector2((int)(p.position.X / gridSize) * gridSize, (int)(p.position.Y / gridSize) * gridSize);
-						p.position -= snap;
-						//p.position -= Vector2.One * gridSize;
+						foreach (EntityPlacement p in selection)
+						{
+							if (p == master) continue;
+							p.position = master.position + (p.oldPosition - master.oldPosition);
+						}
 					}
 				}
 
@@ -101,6 +103,14 @@ namespace Platinum.Editor
 					cameraPos -= curDiff;
 					cameraPos = cameraPos.Clamp(new VecRect(Vector2.Zero, GameState.worldSize)).Pixelize();
 				}
+			}
+
+			if (rightP && selection.Count == 1)
+			{
+				EntityPlacement p = selection[0].Copy(mouseWorld);
+				p.AddToMap(GameState.scene.currentMap);
+				selection[0] = p;
+				p.Snap(GameDef.gridSize);
 			}
 		}
 
@@ -132,7 +142,15 @@ namespace Platinum.Editor
 			{
 				GameState.scene.Save();
 				string blah = JsonMapper.ToPrettyJson(GameState.scene.def);
-				Console.WriteLine(blah);
+				GameState.scene.package.SaveDef(blah);
+			}
+
+			if (Input.KeyPressed(Keys.Delete))
+			{
+				foreach (EntityPlacement p in selection)
+				{
+					p.Kill(GameState.scene.currentMap);
+				}
 			}
 		}
 

@@ -32,6 +32,7 @@ namespace Platinum
 	public class Package
 	{
 		public PackageType type = PackageType.Library;
+		public PackageInfo info;
 
 		public string path;
 
@@ -196,6 +197,31 @@ namespace Platinum
 					}
 				}
 			}
+		}
+
+		public void SaveDef(string fileText)
+		{
+			string defname = "";
+			defname = Enum.GetName(typeof(PackageType), type).ToLower() + ".json";
+			SaveFile(defname, fileText);
+		}
+		public void SaveFile(string path, string fileText)
+		{
+			SaveFile(path, Encoding.UTF8.GetBytes(fileText));
+		}
+		public void SaveFile(string path, byte[] file)
+		{
+			if (info.isZip) throw new NotSupportedException("Cannot save to zipped packages.");
+			if (files.ContainsKey(path)) files[path] = file;
+			else files.Add(path, file);
+
+			Path fp = info.fPath.Combine(path);
+			fp.Open((fs) =>
+			{
+				fs.SetLength(file.Length);
+				fs.Seek(0, SeekOrigin.Begin);
+				fs.Write(file, 0, file.Length);
+			});
 		}
 
 		void LoadTexture(string fileName, Stream stream)

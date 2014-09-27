@@ -119,6 +119,7 @@ namespace Platinum
 			info.type = type;
 			info.isZip = false;
 			info.path = ProcessPackageName(path.ToString());
+			info.fPath = path;
 
 			JsonData def = null;
 			path.Combine(defName).Open((FileStream fs) =>
@@ -238,6 +239,7 @@ namespace Platinum
 				pkg.def = def;
 			}
 
+			if (availablePackages.ContainsKey(pkg.path)) pkg.info = availablePackages[pkg.path];
 			pkg.AddFiles(bpath);
 			pkg.ReadDef();
 			pkg.MakeAssembly();
@@ -293,6 +295,7 @@ namespace Platinum
 				pkg.def = def;
 			}
 
+			pkg.info = availablePackages[pkg.path];
 			pkg.AddFiles(zf, subpath);
 			pkg.ReadDef();
 			pkg.MakeAssembly();
