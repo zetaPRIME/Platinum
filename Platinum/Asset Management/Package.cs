@@ -142,6 +142,7 @@ namespace Platinum
 				if (subName.StartsWith(qpath)) subName = subName.Substring(qpath.Length);
 
 				if (p.Extension == ".zip") continue; // zips are assumed to be subpackages
+				if (p.Extension == ".psd" || p.Extension == ".xcf") continue; // don't bother loading big graphics work files you can't actually use
 				if (p.Extension == ".png")
 				{
 					p.Open((FileStream fs) =>
@@ -180,6 +181,7 @@ namespace Platinum
 				string subName = s.Substring(subpath.Length);
 
 				if (subName.EndsWith(".zip")) throw new Exception("Subpackage zip " + subName + " found in zipped package " + path + "; nested zipped packages are not supported."); // YOU'RE DOIN' IT WRONG
+				if (subName.EndsWith(".psd") || subName.EndsWith(".xcf")) continue; // don't bother loading big graphics work files you can't actually use
 				if (subName.EndsWith(".png"))
 				{
 					using (MemoryStream ms = new MemoryStream())

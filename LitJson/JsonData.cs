@@ -792,11 +792,7 @@ namespace LitJson
 
             if (obj.IsObject) {
                 writer.WriteObjectStart ();
-
-				IDictionary blah = (IDictionary)obj;
-				blah = blah;
-
-                foreach (DictionaryEntry entry in ((IDictionary) obj)) {
+				foreach (DictionaryEntry entry in ((IDictionary) obj)) {
                     writer.WritePropertyName ((string) entry.Key);
                     WriteJson ((JsonData) entry.Value, writer);
                 }

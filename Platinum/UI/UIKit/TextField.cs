@@ -114,7 +114,7 @@ namespace Platinum.UIKit
 			if (UI.focusText == this) focusLastFrame = true;
 			else
 			{
-				if (actionUnfocus != null) actionUnfocus(text);
+				if (focusLastFrame && actionUnfocus != null) actionUnfocus(text);
 				focusLastFrame = false;
 			}
 		}
