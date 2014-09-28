@@ -80,7 +80,7 @@ namespace Platinum
 				EntityPlacement p = new EntityPlacement();
 				p.def = e;
 				p.fromInclude = fromInclude;
-				p.parent = parent;
+				p.Parent = parent;
 				p.Load();
 				placements.Add(p);
 				if (e.Has("children")) LoadEntitySet(e["children"], fromInclude, p);
@@ -108,6 +108,15 @@ namespace Platinum
 			}
 
 			GameState.scene.currentMap = this;
+
+			CollisionManager.Reset();
+
+			if (Core.mode == EngineMode.Editor)
+			{
+				GameWindow window = Editor.EditorCore.Window;
+
+				window.Title = GameDef.name + " - Editor - " + GameState.scene.displayName + " (" + GameState.scene.name + ") - Map: " + name;
+			}
 		}
 	}
 }

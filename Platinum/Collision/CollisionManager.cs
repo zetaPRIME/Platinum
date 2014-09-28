@@ -28,6 +28,13 @@ namespace Platinum
 			ConfirmTree();
 		}
 
+		public static void Reset()
+		{
+			ConfirmTree();
+			quadTree.Clear();
+			foreach (Entity e in GameState.entities) e.UpdateColliders();
+		}
+
 		public static void ConfirmTree()
 		{
 			Rectangle wRect = worldRect();

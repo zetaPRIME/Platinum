@@ -17,6 +17,10 @@ namespace Platinum.Editor
 	{
 		// colors etc.
 		Color colorSelection = new Color(0.8f, 0.9f, 1f, 1f);
+		Color colorGrid = Color.White.MultiplyBy(0.5f);
+
+		Color colorLinkParent = Color.Yellow;
+		Color colorLinkChild = Color.LightGreen;
 
 		// camera
 		public Vector2 cameraPos;
@@ -51,6 +55,7 @@ namespace Platinum.Editor
 		public Vector2 mouseDownScreen { get { return Vector2.Transform(mouseDownWorld, cameraTransform); } set { mouseDownWorld = Vector2.Transform(value, cameraTransform.Invert()); } }
 		public Vector2 mouseWorld;// { get { return Vector2.Transform(mouseScreen, cameraTransform.Invert()); } }
 		public Vector2 mouseDownWorld;// { get { return Vector2.Transform(mouseDownScreen, cameraTransform.Invert()); } }
+		public EntityPlacement mouseOverEntity;
 		public override bool InterceptsMouse { get { return true; } }
 		public override bool InterceptsScrollwheel { get { return true; } }
 
@@ -62,17 +67,18 @@ namespace Platinum.Editor
 
 		public override void MouseAction(bool left, bool leftP, bool leftR, bool right, bool rightP, bool rightR)
 		{
+			mouseOverEntity = FindClickEntity();
 			if (leftP)
 			{
 				mouseDownScreen = mouseScreen;
 
-				EntityPlacement p = FindClickEntity();
+				EntityPlacement p = mouseOverEntity;
 				if (!Input.KeyHeld(Keys.LeftShift) && !selection.Contains(p)) selection.Clear();
 				if (p != null)
 				{
 					selection.Remove(p);
 					selection.Add(p);
-					foreach (EntityPlacement s in selection) s.oldPosition = s.position;
+					foreach (EntityPlacement s in selection) s.oldPosition = s.Position;
 					//p.oldPosition = p.position;
 				}
 			}
@@ -87,13 +93,13 @@ namespace Platinum.Editor
 						EntityPlacement master = selection[selection.Count - 1];
 						float gridSize = GameDef.gridSize;
 						if (Input.KeyHeld(Keys.LeftShift)) gridSize /= 2;
-						master.position = master.oldPosition + curDiff;
+						master.Position = master.oldPosition + curDiff;
 						master.Snap(gridSize);
 
 						foreach (EntityPlacement p in selection)
 						{
 							if (p == master) continue;
-							p.position = master.position + (p.oldPosition - master.oldPosition);
+							p.Position = master.Position + (p.oldPosition - master.oldPosition);
 						}
 					}
 				}
@@ -137,19 +143,39 @@ namespace Platinum.Editor
 			}
 			cameraPos = cameraPos.Clamp(new VecRect(Vector2.Zero, GameState.worldSize)).Pixelize();
 
-			// temp test
-			if (Input.KeyPressed(Keys.F))
-			{
-				GameState.scene.Save();
-				string blah = JsonMapper.ToPrettyJson(GameState.scene.def);
-				GameState.scene.package.SaveDef(blah);
-			}
-
 			if (Input.KeyPressed(Keys.Delete))
 			{
 				foreach (EntityPlacement p in selection)
 				{
 					p.Kill(GameState.scene.currentMap);
+				}
+			}
+
+			// ctrl hotkeys
+			if (Input.KeyHeld(Keys.LeftControl))
+			{
+				// save
+				if (Input.KeyPressed(Keys.S)) EditorCore.SaveScene();
+			}
+			else // not-ctrl hotkeys
+			{
+				if (Input.KeyPressed(Keys.L)) { // link
+					if (Input.KeyHeld(Keys.LeftShift))
+					{
+						foreach (EntityPlacement p in selection) p.Parent = null;
+					}
+					else
+					{
+						if (selection.Count > 1)
+						{
+							EntityPlacement master = selection[selection.Count - 1];
+							foreach (EntityPlacement p in selection)
+							{
+								if (p == master) continue;
+								p.Parent = master;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -173,6 +199,28 @@ namespace Platinum.Editor
 			sb.GraphicsDevice.Clear(GameState.backColor);
 
 			VecRect cameraBoxCache = cameraBox;
+
+			int numGrid = (int)Math.Max(cameraBoxCache.Size.X, cameraBoxCache.Size.Y) / GameDef.gridSize;
+			numGrid += 2;
+			// draw grid
+			for (int i = 0; i < numGrid; i++)
+			{
+				Vector2 gridStart = new Vector2((int)(cameraBoxCache.topLeft.X / GameDef.gridSize) * GameDef.gridSize, (int)(cameraBoxCache.topLeft.Y / GameDef.gridSize) * GameDef.gridSize) - Vector2.One * GameDef.gridSize;
+				gridStart += Vector2.One;
+				sb.DrawLine(new LineSegment(gridStart + new Vector2(GameDef.gridSize * i, 0), gridStart + new Vector2(GameDef.gridSize * i, 9999)), colorGrid);
+				sb.DrawLine(new LineSegment(gridStart + new Vector2(0, GameDef.gridSize * i), gridStart + new Vector2(9999, GameDef.gridSize * i)), colorGrid);
+
+				gridStart -= Vector2.One;
+				Color colorGrid2 = colorGrid.MultiplyBy(0.5f);
+				sb.DrawLine(new LineSegment(gridStart + new Vector2(GameDef.gridSize * i, 0), gridStart + new Vector2(GameDef.gridSize * i, 9999)), colorGrid2);
+				sb.DrawLine(new LineSegment(gridStart + new Vector2(0, GameDef.gridSize * i), gridStart + new Vector2(9999, GameDef.gridSize * i)), colorGrid2);
+			}
+
+			// some stuff
+			EntityPlacement selMaster = null;
+			if (selection.Count > 0) selMaster = selection[selection.Count - 1];
+
+			// draw entities
 			List<EntityPlacement> drawList = GameState.scene.currentMap.placements.Where((p) => p.DrawBounds.Intersects(cameraBoxCache)).OrderBy((p) => p.drawLayer).ToList();
 
 			foreach (EntityPlacement p in drawList)
@@ -184,12 +232,23 @@ namespace Platinum.Editor
 					VecRect edb = p.DrawBounds;
 					sb.DrawRect(edb.AsRectangle, colorSelection.MultiplyBy(0.5f));
 
-					edb.ExpandOut(1.0f);
-					sb.DrawLine(new LineSegment(edb.topLeft, edb.topRight), colorSelection);
-					sb.DrawLine(new LineSegment(edb.bottomLeft, edb.bottomRight), colorSelection);
-					sb.DrawLine(new LineSegment(edb.topLeft, edb.bottomLeft), colorSelection);
-					sb.DrawLine(new LineSegment(edb.topRight, edb.bottomRight), colorSelection);
+					float lineWidth = 1;
+					if (p == selMaster && selection.Count > 1) lineWidth = 2;
+					//edb = edb.ExpandOut(1.0f);
+					sb.DrawLine(new LineSegment(edb.topLeft, edb.topRight), colorSelection, lineWidth);
+					sb.DrawLine(new LineSegment(edb.bottomLeft, edb.bottomRight), colorSelection, lineWidth);
+					sb.DrawLine(new LineSegment(edb.topLeft, edb.bottomLeft), colorSelection, lineWidth);
+					sb.DrawLine(new LineSegment(edb.topRight, edb.bottomRight), colorSelection, lineWidth);
 				}
+			}
+
+			// draw things relevant to mouseover entity
+			EntityPlacement lineEntity = mouseOverEntity;
+			if (lineEntity == null) lineEntity = selMaster;
+			if (lineEntity != null)
+			{
+				lineEntity.DrawParentLine(sb, colorLinkParent, 2.5f);
+				lineEntity.DrawChildLines(sb, colorLinkChild, 2.5f);
 			}
 
 			// draw bounds

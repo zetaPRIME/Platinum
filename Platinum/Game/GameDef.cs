@@ -13,6 +13,8 @@ namespace Platinum
 	{
 		public static GameService gameService = new GameService();
 
+		public static string name = "Platinum";
+
 		public static int defaultPixelScale = 2;
 		public static int gridSize = 32;
 
@@ -28,6 +30,7 @@ namespace Platinum
 			if (j == null) j = new JsonData();
 
 			// defaults
+			name = "Platinum";
 			defaultPixelScale = 2;
 			gridSize = 32;
 			screenSize = new Vector2(640, 480);
@@ -35,6 +38,7 @@ namespace Platinum
 			defaultBackColorVec = new Vector4(0.5f, 0f, 1f, 1f);
 
 			// and load
+			j.Read("name", ref name);
 			j.Read("defaultPixelScale", ref defaultPixelScale);
 			j.Read("gridSize", ref gridSize);
 			j.Read("screenSize", ref screenSize);
@@ -44,6 +48,7 @@ namespace Platinum
 
 			// apply things that need to be applied
 			GameState.SetGameSize((int)screenSize.X, (int)screenSize.Y);
+			Core.instance.Window.Title = name;
 		}
 	}
 }

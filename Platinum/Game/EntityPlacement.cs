@@ -223,11 +223,14 @@ namespace Platinum
 		public void Snap(float gridSize)
 		{
 			Vector2 snap = type.editorEntity.SnapOffset;
+			if (parent != null) snap -= parent.type.editorEntity.SnapOffset;
 
 			position += Vector2.One * gridSize / 2;
+			position += Vector2.One * gridSize * 1024;
 			position += snap;
 			position = new Vector2((int)(position.X / gridSize) * gridSize, (int)(position.Y / gridSize) * gridSize);
 			position -= snap;
+			position -= Vector2.One * gridSize * 1024;
 		}
 
 		public void Kill(Map map)
@@ -238,6 +241,23 @@ namespace Platinum
 		}
 
 		public Vector2 oldPosition;
+
+		public void DrawParentLine(SpriteBatch sb, Color color, float lineWidth)
+		{
+			if (lineWidth < 1f) lineWidth = 1f;
+			if (parent == null) return;
+			sb.DrawLine(new LineSegment(Position, parent.Position), color, lineWidth);
+			parent.DrawParentLine(sb, color.MultiplyBy(0.9f), lineWidth * 0.95f);
+		}
+		public void DrawChildLines(SpriteBatch sb, Color color, float lineWidth)
+		{
+			if (lineWidth < 1f) lineWidth = 1f;
+			foreach (EntityPlacement c in children)
+			{
+				sb.DrawLine(new LineSegment(Position, c.Position), color, lineWidth);
+				c.DrawChildLines(sb, color.MultiplyBy(0.9f), lineWidth * 0.95f);
+			}
+		}
 		#endregion
 	}
 }

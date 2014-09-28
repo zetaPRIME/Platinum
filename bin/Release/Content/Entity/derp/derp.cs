@@ -18,7 +18,7 @@ namespace ExampleBase
 			if (init)
 			{
 				init = false;
-				bounds = new VecRect(Vector2.One * -32, Vector2.One * 32);
+				bounds = VecRect.Radius * 16f;
 				new ColliderShapePolygon(new Collider(this), bounds.topLeft, bounds.topRight, bounds.bottomRight, bounds.bottomLeft);
 				this.colliders[0].categories[0] = true;
 				UpdateColliders();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using LitJson;
 using Fluent.IO;
 using Ionic.Zip;
 
@@ -107,6 +108,15 @@ namespace Platinum.Editor
 			UI.Draw(sb);
 
 			Core.instance.BakeToScreen();
+		}
+
+
+		// API stuffs
+		public static void SaveScene()
+		{
+			GameState.scene.Save();
+			string file = JsonMapper.ToPrettyJson(GameState.scene.def);
+			GameState.scene.package.SaveDef(file);
 		}
 	}
 }
