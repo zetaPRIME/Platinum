@@ -39,7 +39,7 @@ namespace Platinum.UIKit
 
 		public override void Refresh()
 		{
-			
+			UpdateLayout();
 		}
 
 		void UpdateLayout()

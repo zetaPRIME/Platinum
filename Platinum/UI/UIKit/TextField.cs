@@ -11,6 +11,11 @@ namespace Platinum.UIKit
 {
 	public class TextField : UIElement
 	{
+		public TextField()
+		{
+			bounds = new Rectangle(0, 0, 100, 20);
+		}
+
 		public string text = "";
 		public Action<string> actionEnter;
 		public Action<string> actionUnfocus;
@@ -116,6 +121,11 @@ namespace Platinum.UIKit
 			{
 				if (focusLastFrame && actionUnfocus != null) actionUnfocus(text);
 				focusLastFrame = false;
+				if (actionUpdate != null)
+				{
+					actionUpdate(this);
+					cursorIndex = Math.Max(0, Math.Min(cursorIndex, text.Length));
+				}
 			}
 		}
 

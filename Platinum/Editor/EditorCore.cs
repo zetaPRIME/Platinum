@@ -52,15 +52,8 @@ namespace Platinum.Editor
 			sidebar.currentPage = 1;
 
 			// test
-			ListLayout ll = new ListLayout();
-			propertyPane.AddElement(ll);
-			for (int i = 0; i < 320; i++)
-			{
-				UIButton b = new UIButton();
-				b.bounds = new Rectangle(0, 0, 32, 32);
-				b.text = "Testing button " + (i + 1);
-				ll.AddElement(b);
-			}
+			propertyPage = new ListLayout();
+			propertyPane.AddElement(propertyPage);
 
 			// set up sizing
 			RefreshLayout();
@@ -76,6 +69,7 @@ namespace Platinum.Editor
 		public static SwitchField sidebar;
 		public static ScrollField entityList;
 		public static ScrollField propertyPane;
+		public static ListLayout propertyPage;
 
 		public static void RefreshLayout()
 		{
@@ -117,6 +111,112 @@ namespace Platinum.Editor
 			GameState.scene.Save();
 			string file = JsonMapper.ToPrettyJson(GameState.scene.def);
 			GameState.scene.package.SaveDef(file);
+		}
+
+		static EntityPlacement propertyTarget;
+
+		public static void SetPropertiesFromContext()
+		{
+			if (sceneDisplay.selection.Count == 1) SetPropertyPage(sceneDisplay.selection[0]);
+			else if (sceneDisplay.selection.Count == 0)
+			{
+				propertyTarget = null;
+				propertyPage.children.Clear();
+				sidebar.currentPage = 0;
+			}
+			else
+			{
+				propertyTarget = null;
+				propertyPage.children.Clear();
+				sidebar.currentPage = 1;
+				Label l = new Label();
+				l.text = "Multiple entities selected;\nproperty editing disabled";
+				propertyPage.AddElement(l);
+				propertyPage.Update();
+			}
+		}
+		public static void SetPropertyPage(EntityPlacement ep)
+		{
+			if (ep == propertyTarget) return; // no need
+			propertyTarget = ep;
+			if (ep == null) return; // what are you even doing
+
+			propertyPage.children.Clear();
+
+			// common things
+			propertyPage.AddElement(new Label("Editing " + ep.typeName));
+			propertyPage.AddElement(new Separator());
+
+			propertyPage.AddElement(new Label("Position:"));
+			TextField t;
+			{
+				t = new TextField();
+				t.actionUpdate = (tf) =>
+				{
+					tf.text = "" + ep.position.X;
+				};
+				t.actionEnter = (txt) =>
+				{
+					float res = 0;
+					if (float.TryParse(txt, out res)) ep.position.X = res;
+				};
+				propertyPage.AddElement(t);
+
+				t = new TextField();
+				t.actionUpdate = (tf) =>
+				{
+					tf.text = "" + ep.position.Y;
+				};
+				t.actionEnter = (txt) =>
+				{
+					float res = 0;
+					if (float.TryParse(txt, out res)) ep.position.Y = res;
+				};
+				propertyPage.AddElement(t);
+			}
+
+			propertyPage.AddElement(new Label("Rotation:"));
+			{
+				t = new TextField();
+				t.actionUpdate = (tf) =>
+				{
+					tf.text = "" + Math.Round(ep.rotation * (180f / Math.PI), 3);
+				};
+				t.actionEnter = (txt) =>
+				{
+					float res = 0;
+					if (float.TryParse(txt, out res)) ep.rotation = res * ((float)Math.PI / 180f);
+				};
+				propertyPage.AddElement(t);
+			}
+
+			propertyPage.AddElement(new Label("Draw layer:"));
+			{
+				t = new TextField();
+				t.actionUpdate = (tf) =>
+				{
+					tf.text = "" + ep.drawLayer;
+				};
+				t.actionEnter = (txt) =>
+				{
+					int res = 0;
+					if (int.TryParse(txt, out res)) ep.drawLayer = res;
+				};
+				propertyPage.AddElement(t);
+			}
+
+			// custom properties
+			List<UIElement> custom = ep.type.editorEntity.BuildProperties(ep);
+			if (custom != null && custom.Count > 0)
+			{
+				propertyPage.AddElement(new Separator());
+				foreach (UIElement e in custom) propertyPage.AddElement(e);
+			}
+
+			// and finish
+			propertyPane.scroll = Point.Zero;
+			propertyPage.Update();
+			sidebar.currentPage = 1;
 		}
 	}
 }

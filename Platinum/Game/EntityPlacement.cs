@@ -75,13 +75,13 @@ namespace Platinum
 			get
 			{
 				Matrix pmt = Matrix.Identity;
-				if (parent != null) pmt = parent.Transform;
+				if (parent != null) pmt = Matrix.CreateRotationZ(parent.Rotation);//parent.Transform;
 				return Vector2.Transform(velocity, pmt);
 			}
 			set
 			{
 				Matrix pmt = Matrix.Identity;
-				if (parent != null) pmt = parent.Transform;
+				if (parent != null) pmt = Matrix.CreateRotationZ(parent.Rotation); //parent.Transform;
 				velocity = Vector2.Transform(value, Matrix.Invert(pmt));
 			}
 		}
@@ -107,7 +107,7 @@ namespace Platinum
 			{
 				Matrix pmt = Matrix.Identity;
 				if (parent != null) pmt = parent.Transform;
-				return pmt * Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(new Vector3(position, 0));
+				return Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(new Vector3(position, 0)) * pmt;
 			}
 		}
 		#endregion
@@ -158,7 +158,7 @@ namespace Platinum
 			Entity e = EntityDef.NewEntity(typeName, true);
 			if (e == null) return null;
 
-			e.parent = parent;
+			e.Parent = parent;
 			e.position = position;
 			e.velocity = velocity;
 			e.rotation = rotation;
@@ -205,9 +205,9 @@ namespace Platinum
 			foreach (JsonData c in j)
 			{
 				EntityPlacement e = new EntityPlacement();
+				e.Parent = this;
 				e.def = c;
 				e.LoadAndCreateChildren();
-				e.Parent = this;
 			}
 		}
 
@@ -235,7 +235,7 @@ namespace Platinum
 
 		public void Kill(Map map)
 		{
-			foreach (EntityPlacement e in children) e.Parent = null;
+			foreach (EntityPlacement e in Children) e.Parent = null;
 			Parent = null;
 			map.placements.Remove(this);
 		}

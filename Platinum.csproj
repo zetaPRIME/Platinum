@@ -135,6 +135,7 @@
     <Compile Include="Platinum\UI\UIKit\ListLayout.cs" />
     <Compile Include="Platinum\UI\UIKit\ScrollBar.cs" />
     <Compile Include="Platinum\UI\UIKit\ScrollField.cs" />
+    <Compile Include="Platinum\UI\UIKit\Separator.cs" />
     <Compile Include="Platinum\UI\UIKit\SwitchField.cs" />
     <Compile Include="Platinum\UI\UIKit\TextField.cs" />
     <Compile Include="Platinum\Utilities\Extensions_List.cs" />

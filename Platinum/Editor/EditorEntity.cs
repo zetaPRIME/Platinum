@@ -38,18 +38,18 @@ namespace Platinum.Editor
 			editorIcon = def.source.GetTexture(iconName);
 		}
 
-		public virtual void DrawInEditor(EntityPlacement ep, SpriteBatch sb)
+		public virtual void DrawInEditor(EntityPlacement ep, SpriteBatch sb, Color colorModifier)
 		{
 			ExtTexture tx = def.mainTexture;
 			if (editorIcon != null) tx = editorIcon;
 			if (tx == null)
 			{
-				sb.DrawRect(ep.DrawBounds.AsRectangle, Color.Magenta);
+				sb.DrawRect(ep.DrawBounds.AsRectangle, Color.Magenta.MultiplyBy(colorModifier));
 				const string str = "NO ?\nICON";
 				Vector2 center = UI.Font.MeasureString(str) / 2f;
-				sb.DrawString(UI.Font, str, ep.Position.Pixelize(), Color.White, 0f, center.Pixelize(), 1f, SpriteEffects.None, 0f);
+				sb.DrawString(UI.Font, str, ep.Position.Pixelize(), colorModifier, 0f, center.Pixelize(), 1f, SpriteEffects.None, 0f);
 			}
-			else sb.Draw(tx, ep.position, 0, Color.White, 0f, tx.center, 1f, SpriteEffects.None);
+			else sb.Draw(tx, ep.position, 0, colorModifier, 0f, tx.center, 1f, SpriteEffects.None);
 		}
 
 		public virtual void DrawIcon(Rectangle rect, SpriteBatch sb)
@@ -80,6 +80,11 @@ namespace Platinum.Editor
 				}
 				return Vector2.One * GameDef.gridSize / 2f;
 			}
+		}
+
+		public virtual List<UIElement> BuildProperties(EntityPlacement p)
+		{
+			return null;
 		}
 	}
 }

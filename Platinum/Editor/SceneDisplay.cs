@@ -49,6 +49,7 @@ namespace Platinum.Editor
 
 		//
 		public List<EntityPlacement> selection = new List<EntityPlacement>();
+		public List<EntityPlacement> hidden = new List<EntityPlacement>();
 
 		//
 		public Vector2 mouseScreen { get { return Vector2.Transform(mouseWorld, cameraTransform); } set { mouseWorld = Vector2.Transform(value, cameraTransform.Invert()); } }
@@ -81,6 +82,7 @@ namespace Platinum.Editor
 					foreach (EntityPlacement s in selection) s.oldPosition = s.Position;
 					//p.oldPosition = p.position;
 				}
+				EditorCore.SetPropertiesFromContext();
 			}
 
 			if (left)
@@ -111,12 +113,67 @@ namespace Platinum.Editor
 				}
 			}
 
-			if (rightP && selection.Count == 1)
+			if (rightP)
 			{
-				EntityPlacement p = selection[0].Copy(mouseWorld);
-				p.AddToMap(GameState.scene.currentMap);
-				selection[0] = p;
-				p.Snap(GameDef.gridSize);
+				if (selection.Count == 1)
+				{
+					EntityPlacement p = selection[0].Copy(mouseWorld);
+					p.AddToMap(GameState.scene.currentMap);
+					selection[0] = p;
+					p.Snap(GameDef.gridSize);
+				}
+				else if (selection.Count > 1)
+				{
+					List<EntityPlacement> selc = new List<EntityPlacement>();
+
+					EntityPlacement selMaster = selection[selection.Count - 1];
+					EntityPlacement mp = selMaster.Copy(mouseWorld);
+					mp.AddToMap(GameState.scene.currentMap);
+					mp.Snap(GameDef.gridSize);
+					
+					foreach (EntityPlacement p in selection)
+					{
+						if (p == selMaster) continue;
+						if (HasParentSelected(p)) continue;
+						EntityPlacement np = p.Copy(mp.Position + (p.Position - selMaster.Position));
+						np.AddToMap(GameState.scene.currentMap);
+						selc.Add(np);
+					}
+
+					selection.Clear();
+					selection.AddRange(selc);
+					selection.Add(mp);
+				}
+
+				EditorCore.SetPropertiesFromContext();
+			}
+		}
+
+		bool HasParentSelected(EntityPlacement p)
+		{
+			if (p.parent == null) return false;
+			if (selection.Contains(p.parent)) return true;
+			return HasParentSelected(p.parent);
+		}
+
+		void SelectChildren(EntityPlacement p)
+		{
+			foreach (EntityPlacement c in p.children)
+			{
+				if (!selection.Contains(c)) selection.Add(c);
+				SelectChildren(c);
+			}
+		}
+
+		public override void MouseScroll(int clicks)
+		{
+			if (mouseOverEntity == null) return; // have to operate on this, of course!
+
+			if (Input.KeyHeld(Keys.LeftControl))
+			{
+				int atOnce = 10;
+				if (Input.KeyHeld(Keys.LeftShift)) atOnce = 1;
+				mouseOverEntity.drawLayer -= clicks * atOnce;
 			}
 		}
 
@@ -124,7 +181,7 @@ namespace Platinum.Editor
 		{
 			Vector2 point = mouseWorld;
 
-			List<EntityPlacement> eligible = GameState.scene.currentMap.placements.Where((p) => p.SelectBounds.Contains(point)).OrderBy((p) => p.drawLayer).Reverse().ToList();
+			List<EntityPlacement> eligible = GameState.scene.currentMap.placements.Where((p) => p.SelectBounds.Contains(point) && !hidden.Contains(p)).OrderBy((p) => p.drawLayer).Reverse().ToList();
 			if (eligible.Count == 0) return null;
 
 			return eligible[0];
@@ -132,6 +189,7 @@ namespace Platinum.Editor
 
 		public override void Update()
 		{
+			if (UI.focusMouse != this) mouseOverEntity = null; // mouse isn't over an entity if it's not over this
 			if (UI.focusText == null && !Input.KeyHeld(Keys.LeftControl))
 			{
 				float moveSpeed = 8f;
@@ -143,23 +201,26 @@ namespace Platinum.Editor
 			}
 			cameraPos = cameraPos.Clamp(new VecRect(Vector2.Zero, GameState.worldSize)).Pixelize();
 
-			if (Input.KeyPressed(Keys.Delete))
-			{
-				foreach (EntityPlacement p in selection)
-				{
-					p.Kill(GameState.scene.currentMap);
-				}
-			}
-
 			// ctrl hotkeys
 			if (Input.KeyHeld(Keys.LeftControl))
 			{
 				// save
 				if (Input.KeyPressed(Keys.S)) EditorCore.SaveScene();
 			}
-			else // not-ctrl hotkeys
+			else if (UI.focusText == null) // not-ctrl hotkeys
 			{
-				if (Input.KeyPressed(Keys.L)) { // link
+				if (Input.KeyPressed(Keys.Delete)) // delete
+				{
+					foreach (EntityPlacement p in selection)
+					{
+						p.Kill(GameState.scene.currentMap);
+					}
+
+					EditorCore.SetPropertiesFromContext();
+				}
+
+				if (Input.KeyPressed(Keys.L)) // link
+				{
 					if (Input.KeyHeld(Keys.LeftShift))
 					{
 						foreach (EntityPlacement p in selection) p.Parent = null;
@@ -176,6 +237,26 @@ namespace Platinum.Editor
 							}
 						}
 					}
+				}
+
+				if (Input.KeyPressed(Keys.X)) // hide/unhide
+				{
+					if (Input.KeyHeld(Keys.LeftShift))
+					{
+						hidden.Clear();
+					}
+					else if (mouseOverEntity != null)
+					{
+						selection.Remove(mouseOverEntity);
+						hidden.Add(mouseOverEntity);
+					}
+					EditorCore.SetPropertiesFromContext();
+				}
+
+				if (Input.KeyPressed(Keys.C))
+				{
+					List<EntityPlacement> selc = new List<EntityPlacement>(selection);
+					foreach (EntityPlacement s in selc) SelectChildren(s);
 				}
 			}
 		}
@@ -226,7 +307,9 @@ namespace Platinum.Editor
 			foreach (EntityPlacement p in drawList)
 			{
 				//sb.DrawRect(p.DrawBounds.AsRectangle, Color.Blue);
-				p.type.editorEntity.DrawInEditor(p, sb);
+				Color color = Color.White;
+				if (hidden.Contains(p)) color = Color.White.MultiplyBy(0.1f);
+				p.type.editorEntity.DrawInEditor(p, sb, color);
 				if (selection.Contains(p))
 				{
 					VecRect edb = p.DrawBounds;

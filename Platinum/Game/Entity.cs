@@ -103,15 +103,15 @@ namespace Platinum
 			get
 			{
 				Matrix pmt = Matrix.Identity;
-				if (riding != null) pmt = riding.Transform;
-				else if (parent != null) pmt = parent.Transform;
+				if (riding != null) pmt = Matrix.CreateRotationZ(riding.Rotation); //riding.Transform;
+				else if (parent != null) pmt = Matrix.CreateRotationZ(parent.Rotation); //parent.Transform;
 				return Vector2.Transform(velocity, pmt);
 			}
 			set
 			{
 				Matrix pmt = Matrix.Identity;
-				if (riding != null) pmt = riding.Transform;
-				else if (parent != null) pmt = parent.Transform;
+				if (riding != null) pmt = Matrix.CreateRotationZ(riding.Rotation); //riding.Transform;
+				else if (parent != null) pmt = Matrix.CreateRotationZ(parent.Rotation); //parent.Transform;
 				velocity = Vector2.Transform(value, Matrix.Invert(pmt));
 			}
 		}
@@ -140,7 +140,7 @@ namespace Platinum
 				Matrix pmt = Matrix.Identity;
 				if (riding != null) pmt = riding.Transform;
 				else if (parent != null) pmt = parent.Transform;
-				return pmt * Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(new Vector3(position, 0));
+				return Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(new Vector3(position, 0)) * pmt;
 			}
 		}
 		Matrix transformCache;

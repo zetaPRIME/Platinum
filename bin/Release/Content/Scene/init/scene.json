@@ -18,242 +18,6 @@
                 {
                     "type" : "derp",
                     "position" : [
-                        384.0,
-                        160.0
-                    ],
-                    "name"     : "",
-                    "velocity" : [
-                        0.0,
-                        0.0
-                    ],
-                    "rotation" : 0.0,
-                    "direction" : 1,
-                    "drawLayer" : 0,
-                    "children"  : [
-                        {
-                            "type" : "derp",
-                            "position" : [
-                                32.0,
-                                32.0
-                            ],
-                            "name"     : "",
-                            "velocity" : [
-                                -384.0,
-                                -160.0
-                            ],
-                            "rotation" : 0.0,
-                            "direction" : 1,
-                            "drawLayer" : 0,
-                            "children"  : [
-                                {
-                                    "type" : "derp",
-                                    "position" : [
-                                        0.0,
-                                        -64.0
-                                    ],
-                                    "name"     : "",
-                                    "velocity" : [
-                                        -416.0,
-                                        -192.0
-                                    ],
-                                    "rotation" : 0.0,
-                                    "direction" : 1,
-                                    "drawLayer" : 0,
-                                    "children"  : [
-                                        {
-                                            "type" : "derp",
-                                            "position" : [
-                                                -64.0,
-                                                0.0
-                                            ],
-                                            "name"     : "",
-                                            "velocity" : [
-                                                -416.0,
-                                                -128.0
-                                            ],
-                                            "rotation" : 0.0,
-                                            "direction" : 1,
-                                            "drawLayer" : 0,
-                                            "children"  : [
-                                                {
-                                                    "type" : "derp",
-                                                    "position" : [
-                                                        0.0,
-                                                        64.0
-                                                    ],
-                                                    "name"     : "",
-                                                    "velocity" : [
-                                                        -352.0,
-                                                        -128.0
-                                                    ],
-                                                    "rotation" : 0.0,
-                                                    "direction" : 1,
-                                                    "drawLayer" : 0,
-                                                    "children"  : [
-                                                        {
-                                                            "type" : "derp",
-                                                            "position" : [
-                                                                112.0,
-                                                                80.0
-                                                            ],
-                                                            "name"     : "",
-                                                            "velocity" : [
-                                                                -352.0,
-                                                                -192.0
-                                                            ],
-                                                            "rotation" : 0.0,
-                                                            "direction" : 1,
-                                                            "drawLayer" : 0,
-                                                            "children"  : [
-                                                                {
-                                                                    "type" : "derp",
-                                                                    "position" : [
-                                                                        32.0,
-                                                                        -32.0
-                                                                    ],
-                                                                    "name"     : "",
-                                                                    "velocity" : [
-                                                                        -464.0,
-                                                                        -272.0
-                                                                    ],
-                                                                    "rotation" : 0.0,
-                                                                    "direction" : 1,
-                                                                    "drawLayer" : 0,
-                                                                    "children"  : [
-                                                                        {
-                                                                            "type" : "derp",
-                                                                            "position" : [
-                                                                                0.0,
-                                                                                -80.0
-                                                                            ],
-                                                                            "name"     : "",
-                                                                            "velocity" : [
-                                                                                -496.0,
-                                                                                -240.0
-                                                                            ],
-                                                                            "rotation" : 0.0,
-                                                                            "direction" : 1,
-                                                                            "drawLayer" : 0,
-                                                                            "children"  : [
-                                                                                {
-                                                                                    "type" : "derp",
-                                                                                    "position" : [
-                                                                                        -16.0,
-                                                                                        -64.0
-                                                                                    ],
-                                                                                    "name"     : "",
-                                                                                    "velocity" : [
-                                                                                        -496.0,
-                                                                                        -160.0
-                                                                                    ],
-                                                                                    "rotation" : 0.0,
-                                                                                    "direction" : 1,
-                                                                                    "drawLayer" : 0,
-                                                                                    "children"  : [
-                                                                                        {
-                                                                                            "type" : "derp",
-                                                                                            "position" : [
-                                                                                                -96.0,
-                                                                                                -32.0
-                                                                                            ],
-                                                                                            "name"     : "",
-                                                                                            "velocity" : [
-                                                                                                -480.0,
-                                                                                                -96.0
-                                                                                            ],
-                                                                                            "rotation" : 0.0,
-                                                                                            "direction" : 1,
-                                                                                            "drawLayer" : 0,
-                                                                                            "children"  : [
-                                                                                                {
-                                                                                                    "type" : "derp",
-                                                                                                    "position" : [
-                                                                                                        -96.0,
-                                                                                                        32.0
-                                                                                                    ],
-                                                                                                    "name"     : "",
-                                                                                                    "velocity" : [
-                                                                                                        -384.0,
-                                                                                                        -64.0
-                                                                                                    ],
-                                                                                                    "rotation" : 0.0,
-                                                                                                    "direction" : 1,
-                                                                                                    "drawLayer" : 0,
-                                                                                                    "children"  : [
-                                                                                                        {
-                                                                                                            "type" : "derp",
-                                                                                                            "position" : [
-                                                                                                                -16.0,
-                                                                                                                64.0
-                                                                                                            ],
-                                                                                                            "name"     : "",
-                                                                                                            "velocity" : [
-                                                                                                                -288.0,
-                                                                                                                -96.0
-                                                                                                            ],
-                                                                                                            "rotation" : 0.0,
-                                                                                                            "direction" : 1,
-                                                                                                            "drawLayer" : 0,
-                                                                                                            "children"  : [
-                                                                                                                {
-                                                                                                                    "type" : "derp",
-                                                                                                                    "position" : [
-                                                                                                                        0.0,
-                                                                                                                        80.0
-                                                                                                                    ],
-                                                                                                                    "name"     : "",
-                                                                                                                    "velocity" : [
-                                                                                                                        -272.0,
-                                                                                                                        -160.0
-                                                                                                                    ],
-                                                                                                                    "rotation" : 0.0,
-                                                                                                                    "direction" : 1,
-                                                                                                                    "drawLayer" : 0,
-                                                                                                                    "children"  : [
-                                                                                                                        {
-                                                                                                                            "type" : "derp",
-                                                                                                                            "position" : [
-                                                                                                                                32.0,
-                                                                                                                                32.0
-                                                                                                                            ],
-                                                                                                                            "name"     : "",
-                                                                                                                            "velocity" : [
-                                                                                                                                -272.0,
-                                                                                                                                -240.0
-                                                                                                                            ],
-                                                                                                                            "rotation" : 0.0,
-                                                                                                                            "direction" : 1,
-                                                                                                                            "drawLayer" : 0
-                                                                                                                        }
-                                                                                                                    ]
-                                                                                                                }
-                                                                                                            ]
-                                                                                                        }
-                                                                                                    ]
-                                                                                                }
-                                                                                            ]
-                                                                                        }
-                                                                                    ]
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type" : "derp",
-                    "position" : [
                         176.0,
                         496.0
                     ],
@@ -884,23 +648,8 @@
                 {
                     "type" : "derp",
                     "position" : [
-                        464.0,
+                        496.0,
                         592.0
-                    ],
-                    "name"     : "",
-                    "velocity" : [
-                        0.0,
-                        0.0
-                    ],
-                    "rotation" : 0.0,
-                    "direction" : 1,
-                    "drawLayer" : 0
-                },
-                {
-                    "type" : "derp",
-                    "position" : [
-                        432.0,
-                        560.0
                     ],
                     "name"     : "",
                     "velocity" : [
@@ -1177,7 +926,7 @@
                         0.0,
                         0.0
                     ],
-                    "rotation" : 0.0,
+                    "rotation" : 0.785398185253143,
                     "direction" : 1,
                     "drawLayer" : 0
                 },
@@ -1320,21 +1069,6 @@
                     "type" : "derp",
                     "position" : [
                         336.0,
-                        304.0
-                    ],
-                    "name"     : "",
-                    "velocity" : [
-                        0.0,
-                        0.0
-                    ],
-                    "rotation" : 0.0,
-                    "direction" : 1,
-                    "drawLayer" : 0
-                },
-                {
-                    "type" : "derp",
-                    "position" : [
-                        432.0,
                         304.0
                     ],
                     "name"     : "",
@@ -1525,6 +1259,89 @@
                     "rotation" : 0.0,
                     "direction" : 1,
                     "drawLayer" : 0
+                },
+                {
+                    "type" : "derp",
+                    "position" : [
+                        400.0,
+                        144.0
+                    ],
+                    "name"     : "",
+                    "velocity" : [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation" : 1.57079637050629,
+                    "direction" : 1,
+                    "drawLayer" : 0,
+                    "children"  : [
+                        {
+                            "type" : "derp",
+                            "position" : [
+                                64.0,
+                                64.0
+                            ],
+                            "name"     : "",
+                            "velocity" : [
+                                0.0,
+                                0.0
+                            ],
+                            "rotation" : 0.0,
+                            "direction" : 1,
+                            "drawLayer" : 0,
+                            "children"  : [
+                                {
+                                    "type" : "derp",
+                                    "position" : [
+                                        0.0,
+                                        -128.0
+                                    ],
+                                    "name"     : "",
+                                    "velocity" : [
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "rotation" : 0.0,
+                                    "direction" : 1,
+                                    "drawLayer" : 0,
+                                    "children"  : [
+                                        {
+                                            "type" : "derp",
+                                            "position" : [
+                                                -128.0,
+                                                0.0
+                                            ],
+                                            "name"     : "",
+                                            "velocity" : [
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "rotation" : 0.0,
+                                            "direction" : 1,
+                                            "drawLayer" : 0,
+                                            "children"  : [
+                                                {
+                                                    "type" : "derp",
+                                                    "position" : [
+                                                        0.0,
+                                                        128.0
+                                                    ],
+                                                    "name"     : "",
+                                                    "velocity" : [
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                                    "rotation" : 0.0,
+                                                    "direction" : 1,
+                                                    "drawLayer" : 0
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }

@@ -10,6 +10,9 @@ namespace Platinum.UIKit
 {
 	public class Label : UIElement
 	{
+		public Label() { }
+		public Label(string text) { this.text = text; }
+
 		public string text = "";
 		string oldText = "";
 
@@ -23,6 +26,7 @@ namespace Platinum.UIKit
 				Vector2 size = UI.Font.MeasureString(text);
 
 				bounds.Height = (int)size.Y;
+				if (parent != null) parent.Refresh();
 			}
 		}
 
