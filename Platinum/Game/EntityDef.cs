@@ -111,6 +111,8 @@ namespace Platinum
 
 		public bool BuiltIn { get; internal set; }
 
+		public string displayName;
+
 		public Type codeType;
 		public Package source;
 
@@ -130,9 +132,11 @@ namespace Platinum
 			if (txname != "") mainTexture = source.GetTexture(txname);
 
 			// defaults
+			displayName = source.path.Substring(source.path.LastIndexOf('/') + 1);
 			bounds = VecRect.Radius * 16f;
 
 			// and read in
+			j.Read("displayName", ref displayName);
 			j.Read("bounds", ref bounds);
 		}
 	}

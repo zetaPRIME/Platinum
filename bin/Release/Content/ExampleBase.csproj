@@ -62,12 +62,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\derp\derp.cs" />
+    <Compile Include="Entity\It%27sAFolder\herpderp\herpderp.cs" />
     <Compile Include="Entity\TestEntity\TestEntity.cs" />
     <Compile Include="Global\TestClass.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="Entity\derp\entity.json" />
+    <None Include="Entity\It%27sAFolder\herpderp\entity.json" />
     <None Include="Entity\TestEntity\entity.json" />
     <None Include="Global\game.json" />
     <None Include="Scene\init\scene.json" />

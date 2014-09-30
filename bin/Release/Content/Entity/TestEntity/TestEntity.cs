@@ -112,7 +112,7 @@ namespace ExampleBase
 
 			//velocity = Vector2.One;
 
-			ExtTexture tex = PackageManager.globalPackage.GetTexture("TestImage");
+			ExtTexture tex = mainTexture; // PackageManager.globalPackage.GetTexture("TestImage");
 
 			sb.Draw(tex, Position, null, Color.White, Rotation, tex.center, dscale, SpriteEffects.None);
 

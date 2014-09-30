@@ -12,6 +12,16 @@ namespace Platinum
 {
 	public class EntityPlacement
 	{
+		public EntityPlacement() { }
+		public EntityPlacement(string type, Vector2 position)
+		{
+			typeName = type;
+			this.type = EntityDef.GetDef(typeName);
+			this.position = position;
+			def = new JsonData();
+			def.SetJsonType(JsonType.Object);
+		}
+
 		public string typeName;
 		public EntityDef type;
 

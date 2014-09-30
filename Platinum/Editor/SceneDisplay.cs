@@ -17,7 +17,7 @@ namespace Platinum.Editor
 	{
 		// colors etc.
 		Color colorSelection = new Color(0.8f, 0.9f, 1f, 1f);
-		Color colorGrid = Color.White.MultiplyBy(0.5f);
+		Color colorGrid = Color.White.MultiplyBy(0.25f);
 
 		Color colorLinkParent = Color.Yellow;
 		Color colorLinkChild = Color.LightGreen;
@@ -130,7 +130,7 @@ namespace Platinum.Editor
 					EntityPlacement mp = selMaster.Copy(mouseWorld);
 					mp.AddToMap(GameState.scene.currentMap);
 					mp.Snap(GameDef.gridSize);
-					
+
 					foreach (EntityPlacement p in selection)
 					{
 						if (p == selMaster) continue;
@@ -144,6 +144,13 @@ namespace Platinum.Editor
 					selection.AddRange(selc);
 					selection.Add(mp);
 				}
+				else if (EntityDef.defs.ContainsKey(EditorCore.selectedEntity)) // new entity
+				{
+					EntityPlacement p = new EntityPlacement(EditorCore.selectedEntity, mouseWorld);
+					p.AddToMap(GameState.scene.currentMap);
+					p.Snap(GameDef.gridSize);
+					selection.Add(p);
+				}
 
 				EditorCore.SetPropertiesFromContext();
 			}
@@ -154,6 +161,13 @@ namespace Platinum.Editor
 			if (p.parent == null) return false;
 			if (selection.Contains(p.parent)) return true;
 			return HasParentSelected(p.parent);
+		}
+
+		bool IsChildOf(EntityPlacement p, EntityPlacement parent)
+		{
+			if (p.parent == null) return false;
+			if (p.parent == parent) return true;
+			return IsChildOf(p.parent, parent);
 		}
 
 		void SelectChildren(EntityPlacement p)
@@ -215,6 +229,7 @@ namespace Platinum.Editor
 					{
 						p.Kill(GameState.scene.currentMap);
 					}
+					selection.Clear();
 
 					EditorCore.SetPropertiesFromContext();
 				}
@@ -233,6 +248,7 @@ namespace Platinum.Editor
 							foreach (EntityPlacement p in selection)
 							{
 								if (p == master) continue;
+								if (IsChildOf(master, p)) continue; // NO CIRCULAR PARENTING
 								p.Parent = master;
 							}
 						}
@@ -253,7 +269,7 @@ namespace Platinum.Editor
 					EditorCore.SetPropertiesFromContext();
 				}
 
-				if (Input.KeyPressed(Keys.C))
+				if (Input.KeyPressed(Keys.C)) // extend selection to children
 				{
 					List<EntityPlacement> selc = new List<EntityPlacement>(selection);
 					foreach (EntityPlacement s in selc) SelectChildren(s);

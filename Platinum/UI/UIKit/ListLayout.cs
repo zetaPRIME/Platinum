@@ -15,6 +15,7 @@ namespace Platinum.UIKit
 		public int gap = 2;
 
 		public bool autoExpand = true;
+		public bool snapToTop = true;
 
 		public List<UIElement> children = new List<UIElement>();
 		public void AddElement(UIElement element) { children.Add(element); element.parent = this; UpdateLayout(); }
@@ -48,7 +49,7 @@ namespace Platinum.UIKit
 
 			if (parent != null)
 			{
-				bounds.Y = parent.innerBounds.Y;
+				if (snapToTop) bounds.Y = parent.innerBounds.Y;
 
 				bounds.X = parent.innerBounds.X;
 				bounds.Width = parent.innerBounds.Width;

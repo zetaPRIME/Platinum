@@ -49,18 +49,24 @@ namespace Platinum.Editor
 				Vector2 center = UI.Font.MeasureString(str) / 2f;
 				sb.DrawString(UI.Font, str, ep.Position.Pixelize(), colorModifier, 0f, center.Pixelize(), 1f, SpriteEffects.None, 0f);
 			}
-			else sb.Draw(tx, ep.position, 0, colorModifier, 0f, tx.center, 1f, SpriteEffects.None);
+			else sb.Draw(tx, ep.Position.Pixelize(), 0, colorModifier, ep.Rotation, tx.center, 1f, SpriteEffects.None);
 		}
 
 		public virtual void DrawIcon(Rectangle rect, SpriteBatch sb)
 		{
 			ExtTexture tx = def.mainTexture;
 			if (editorIcon != null) tx = editorIcon;
+			if (tx == null)
+			{
+				sb.DrawRect(rect, Color.Magenta);
+				return;
+			}
+
 			Vector2 size = tx.center * 2;
 			Vector2 maxSize = new Vector2(rect.Width, rect.Height);
 			Vector2 pos = new Vector2(rect.X, rect.Y) + maxSize / 2f;
 
-			float scale = Math.Min(Math.Max(maxSize.X / size.X, maxSize.Y / size.Y), 1);
+			float scale = Math.Min(Math.Max(size.X / maxSize.X, size.Y / maxSize.Y), 1);
 			sb.Draw(tx, pos.Pixelize(), 0, Color.White, 0f, tx.center, scale, SpriteEffects.None);
 		}
 

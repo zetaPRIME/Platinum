@@ -114,6 +114,7 @@
     <Compile Include="Platinum\Collision\CollisionManager.cs" />
     <Compile Include="Platinum\Editor\EditorCore.cs" />
     <Compile Include="Platinum\Editor\EditorEntity.cs" />
+    <Compile Include="Platinum\Editor\ExplorerEntry.cs" />
     <Compile Include="Platinum\Editor\SceneDisplay.cs" />
     <Compile Include="Platinum\Game\EntityPlacement.cs" />
     <Compile Include="Platinum\Game\Entrance.cs" />
