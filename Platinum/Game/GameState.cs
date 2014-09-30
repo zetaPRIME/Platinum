@@ -79,6 +79,8 @@ namespace Platinum
 			scene = new Scene();
 			scene.package = PackageManager.loadedPackages[path];
 			scene.Load();
+
+			if (Core.mode == EngineMode.Editor) Editor.EditorCore.FindEntities();
 		}
 
 		public static void EnterScene(string sceneName, string mapName = "", bool forceReload = false)

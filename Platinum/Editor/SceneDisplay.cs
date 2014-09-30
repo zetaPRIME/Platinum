@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
+using System.Diagnostics;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -220,6 +222,21 @@ namespace Platinum.Editor
 			{
 				// save
 				if (Input.KeyPressed(Keys.S)) EditorCore.SaveScene();
+
+				if (Input.KeyPressed(Keys.P)) // playtest
+				{
+					string procName = Environment.GetCommandLineArgs()[0];
+					procName = procName.Replace(".vshost.exe", ".exe");
+					ProcessStartInfo pi = new ProcessStartInfo(procName, "playtest \"" + GameState.scene.name + "\"");
+					pi.WorkingDirectory = procName.Substring(0, procName.LastIndexOf('\\'));
+					pi.UseShellExecute = false;
+					pi.RedirectStandardOutput = false;
+					
+					Process p = Process.Start(pi);
+					p.WaitForExit();
+
+					Program.FlushTemp("test");
+				}
 			}
 			else if (UI.focusText == null) // not-ctrl hotkeys
 			{

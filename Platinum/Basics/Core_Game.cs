@@ -16,7 +16,8 @@ namespace Platinum
 	{
 		protected void Init_Game()
 		{
-			GameState.EnterScene(GameDef.defaultScene);
+			if (forceScene != "") GameState.EnterScene(forceScene);
+			else GameState.EnterScene(GameDef.defaultScene);
 		}
 
 		protected void Update_Game(GameTime gameTime)

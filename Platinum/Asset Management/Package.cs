@@ -291,8 +291,10 @@ namespace Platinum
 			CSharpCodeProvider provider = new CSharpCodeProvider();
 			CompilerParameters parameters = new CompilerParameters();
 
+			string mod = Program.tempModifier;
+			if (mod != "") mod += "\\";
 			// set assembly path
-			parameters.OutputAssembly = "tmp\\assembly\\" + StripPath() + ".dll";
+			parameters.OutputAssembly = "tmp\\" + mod + "assembly\\" + StripPath() + ".dll";
 
 			// set up compiler parameters
 			parameters.GenerateInMemory = false;

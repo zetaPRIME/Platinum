@@ -45,6 +45,8 @@ namespace Platinum.Editor
 			sidebar.AddPage(explorer);
 
 			explorerSearch = new TextField();
+			explorerSearch.actionValidate = ExplorerSearchDelegate;
+			explorerSearch.actionEnter = (s) => explorerSearch.Clear();
 			//explorerSearch.bounds = new Rectangle(8, 0, 200 - 32, 20);
 			//explorer.AddElement(explorerSearch);
 
@@ -67,7 +69,7 @@ namespace Platinum.Editor
 			RefreshLayout();
 
 			// set up explorer
-			FindEntities();
+			//FindEntities();
 			ExplorerGo(ExplorerMode.Entity, "");
 
 			// set up an event because why not
@@ -127,6 +129,7 @@ namespace Platinum.Editor
 			GameState.scene.package.SaveDef(file);
 		}
 
+		#region Properties
 		static EntityPlacement propertyTarget;
 
 		public static void SetPropertiesFromContext()
@@ -248,9 +251,6 @@ namespace Platinum.Editor
 				propertyPage.AddElement(t);
 			}
 
-			propertyPage.AddElement(new ExplorerEntry("blah", (s) => false, null, null));
-			propertyPage.AddElement(new ExplorerEntry("blah", (s) => true, null, null));
-
 			// custom properties
 			List<UIElement> custom = ep.type.editorEntity.BuildProperties(ep);
 			if (custom != null && custom.Count > 0)
@@ -264,10 +264,14 @@ namespace Platinum.Editor
 			propertyPage.Update();
 			sidebar.currentPage = 1;
 		}
+		#endregion
 
+		#region Explorer
 		public static List<string> placeableEntities = new List<string>();
 		public static void FindEntities()
 		{
+			placeableEntities.Clear();
+
 			foreach (KeyValuePair<string, PackageInfo> kvp in PackageManager.availablePackages)
 			{
 				if (kvp.Value.type != PackageType.Entity) continue;
@@ -340,6 +344,31 @@ namespace Platinum.Editor
 				}
 			}
 		}
+		public static void ExplorerSearchDelegate(ref string s, ref int c) { ExplorerSearch(s); }
+		public static void ExplorerSearch(string query)
+		{
+			string qtolow = query.ToLower();
+			if (query == "")
+			{
+				string f = explorerFolder;
+				explorerFolder = "-";
+				ExplorerGo(explorerMode, f);
+			}
+
+			else if (explorerMode == ExplorerMode.Entity)
+			{
+				ExplorerClear();
+
+				Predicate<string> isSelected = (s) => s == selectedEntity;
+				Action<string> onSelect = (s) => selectedEntity = s;
+				
+				List<string> search = placeableEntities.FindAll((s) => EntityDef.defs[s].displayName.ToLower().Contains(qtolow));
+				foreach (string str in search)
+				{
+					explorerList.AddElement(new ExplorerEntry(str, isSelected, onSelect, ExplorerDrawEntity));
+				}
+			}
+		}
 		public static void ExplorerUp()
 		{
 			string folder = explorerFolder;
@@ -378,6 +407,7 @@ namespace Platinum.Editor
 			Vector2 measure = UI.Font.MeasureString(def.displayName);
 			sb.DrawString(UI.Font, def.displayName, new Vector2(rect.X + rect.Height + 2, rect.Center.Y - measure.Y / 2f).Pixelize(), UI.colorText);
 		}
+		#endregion
 	}
 
 	public enum ExplorerMode { Entity, Texture }

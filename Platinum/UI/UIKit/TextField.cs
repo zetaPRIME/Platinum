@@ -23,6 +23,19 @@ namespace Platinum.UIKit
 		public InputValidationDelegate actionValidate;
 		public int cursorIndex = 0;
 
+		public void Clear()
+		{
+			if (text == "") return;
+			text = "";
+			cursorIndex = 0;
+
+			if (actionValidate != null)
+			{
+				actionValidate(ref text, ref cursorIndex);
+				cursorIndex = Math.Max(0, Math.Min(cursorIndex, text.Length));
+			}
+		}
+
 		public override bool InterceptsMouse { get { return true; } }
 		public override bool InterceptsScrollwheel { get { return UI.focusText == this; } }
 

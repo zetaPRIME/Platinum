@@ -34,8 +34,13 @@ namespace Platinum
 
 		public static RenderTarget2D screenTarget;
 
+		// for command line things
+		public static string forceScene = "";
+
 		// flags
 		public static bool debugDisplay = false;
+
+		public DateTime initStart;
 
 		public Core()
 		{
@@ -45,6 +50,8 @@ namespace Platinum
 
 		protected override void Initialize()
 		{
+			initStart = DateTime.Now;
+
 			573.ToString(); // because why not
 
 			// making sure of a few things
@@ -123,6 +130,8 @@ namespace Platinum
 				if (mode == EngineMode.Game) Init_Game();
 				else if (mode == EngineMode.Editor) Init_Editor();
 
+				TimeSpan span = DateTime.Now - initStart;
+				Console.WriteLine("Init took " + span.TotalSeconds + " seconds");
 				init = true;
 			}
 			//Console.WriteLine("Resolution is " + Window.ClientBounds.Width + "x" + Window.ClientBounds.Height);

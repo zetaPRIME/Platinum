@@ -39,15 +39,15 @@ namespace ExampleBase
 					e.velocity = new Vector2(((float)rand.NextDouble() - 0.5f) * range, ((float)rand.NextDouble() - 0.5f) * range);
 				}
 
-				e = EntityDef.NewEntity("TestEntity");
-				e.position = new Vector2(128, 128);
+				//e = EntityDef.NewEntity("TestEntity");
+				//e.position = new Vector2(128, 128);
 
 				/*Entity e2 = EntityDef.NewEntity("TestEntity");
 				e2.Parent = e;
 				e2.position = new Vector2(32, 0);*/
 
 				e = new Entity();
-				GameState.entities.Add(e);
+				//GameState.entities.Add(e);
 				e.position = new Vector2(320, 240);
 
 				Collider nc = new Collider(e);
