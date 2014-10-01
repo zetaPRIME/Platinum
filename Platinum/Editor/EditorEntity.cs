@@ -88,6 +88,7 @@ namespace Platinum.Editor
 			}
 		}
 
+		public virtual void BuildDefaultJson(JsonData j) { }
 		public virtual List<UIElement> BuildProperties(EntityPlacement p)
 		{
 			return null;

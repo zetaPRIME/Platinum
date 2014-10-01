@@ -235,7 +235,7 @@ namespace Platinum.Editor
 					Process p = Process.Start(pi);
 					p.WaitForExit();
 
-					Program.FlushTemp("test");
+					Program.FlushTemp("playtest");
 				}
 			}
 			else if (UI.focusText == null) // not-ctrl hotkeys
@@ -345,7 +345,7 @@ namespace Platinum.Editor
 				p.type.editorEntity.DrawInEditor(p, sb, color);
 				if (selection.Contains(p))
 				{
-					VecRect edb = p.DrawBounds;
+					VecRect edb = p.SelectBounds; //p.DrawBounds;
 					sb.DrawRect(edb.AsRectangle, colorSelection.MultiplyBy(0.5f));
 
 					float lineWidth = 1;

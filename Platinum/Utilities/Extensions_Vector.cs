@@ -31,6 +31,11 @@ namespace Platinum
 			return res;
 		}
 
+		public static Vector2 Transform(this Vector2 inp, Matrix matrix)
+		{
+			return Vector2.Transform(inp, matrix);
+		}
+
 		// rect margins
 		public static Rectangle MarginLeft(this Rectangle inp, int margin)
 		{

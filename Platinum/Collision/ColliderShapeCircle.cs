@@ -51,7 +51,8 @@ namespace Platinum
 			for (int i = 0; i < drawPoints; i++)
 			{
 				LineSegment line = new LineSegment(points[i], points[(i + 1) % drawPoints]);
-				sb.Draw(Core.txPixel, line.start, null, Color.LightBlue, (float)Math.Atan2(line.Direction.Y, line.Direction.X), new Vector2(0f, 0.5f), new Vector2(line.Length, 1f / GameState.cameraZoom), SpriteEffects.None, 0f);
+				sb.DrawLine(line, Color.LightBlue, 1.25f);
+				// sb.Draw(Core.txPixel, line.start, null, Color.LightBlue, (float)Math.Atan2(line.Direction.Y, line.Direction.X), new Vector2(0f, 0.5f), new Vector2(line.Length, 1f / GameState.cameraZoom), SpriteEffects.None, 0f);
 			}
 		}
 

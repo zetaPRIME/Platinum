@@ -12,7 +12,7 @@ namespace Platinum
 	{
 		public static void Draw(this SpriteBatch sb, ExtTexture texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale, SpriteEffects spriteEffects)
 		{
-			sb.Draw(texture.texture, position, sourceRectangle, color, rotation, origin, scale * texture.baseScale, SpriteEffects.None, 0f);
+			sb.Draw(texture.texture, position, sourceRectangle, color, rotation, origin, scale * texture.baseScale, spriteEffects, 0f);
 		}
 
 		public static void Draw(this SpriteBatch sb, ExtTexture texture, Vector2 position, int frame, Color color, float rotation, Vector2 origin, float scale, SpriteEffects spriteEffects)
@@ -28,7 +28,7 @@ namespace Platinum
 
 				sourceRectangle = new Rectangle(fw * fx, fh * fy, fw, fh);
 			}
-			sb.Draw(texture.texture, position, sourceRectangle, color, rotation, origin, scale * texture.baseScale, SpriteEffects.None, 0f);
+			sb.Draw(texture.texture, position, sourceRectangle, color, rotation, origin, scale * texture.baseScale, spriteEffects, 0f);
 		}
 
 		public static void CameraOn(this SpriteBatch sb, bool alreadyRunning = true)

@@ -45,7 +45,7 @@ namespace Platinum
 			JsonData sub = j[name];
 			if (sub.Count == 2) // two pairs
 			{
-				if (!sub[0].IsArray || sub[1].Count != 2 || sub[1].IsArray || sub[1].Count != 2) return;
+				if (!sub[0].IsArray || sub[1].Count != 2 || !sub[1].IsArray || sub[1].Count != 2) return;
 				if (!(sub[0][0].IsDouble || sub[0][0].IsInt) || !(sub[0][1].IsDouble || sub[0][1].IsInt)) return;
 				if (!(sub[1][0].IsDouble || sub[1][0].IsInt) || !(sub[1][1].IsDouble || sub[1][1].IsInt)) return;
 				target = new VecRect(new Vector2((float)sub[0][0], (float)sub[0][1]), new Vector2((float)sub[1][0], (float)sub[1][1]));
@@ -138,6 +138,18 @@ namespace Platinum
 			a.Add(Math.Round(v.Z, ColorRoundDigits));
 			if (!asColor || v.W != 1) a.Add(Math.Round(v.W, ColorRoundDigits));
 			j[name] = a;
+		}
+
+		// and a default thing
+		public static void WriteDefault(this JsonData j, string name, JsonType type, object value)
+		{
+			if (!j.IsObject) return;
+			if (j.Has(name))
+			{
+				if (j[name].GetJsonType() == type) return; // nothing to see here
+			}
+
+			j[name] = new JsonData(value);
 		}
 	}
 }

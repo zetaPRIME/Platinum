@@ -1425,6 +1425,57 @@
                     "rotation" : 0.0,
                     "direction" : 1,
                     "drawLayer" : 0
+                },
+                {
+                    "type" : "Hazards/Rotoshredder",
+                    "name" : "",
+                    "position" : [
+                        400.0,
+                        144.0
+                    ],
+                    "velocity" : [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation" : 0.0,
+                    "direction" : 1,
+                    "drawLayer" : 10,
+                    "radius"    : 96.0,
+                    "rotationSpeed" : 3.0
+                },
+                {
+                    "type" : "Hazards/Rotoshredder",
+                    "name" : "",
+                    "position" : [
+                        400.0,
+                        144.0
+                    ],
+                    "velocity" : [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation" : 2.09439516067505,
+                    "direction" : 1,
+                    "drawLayer" : 10,
+                    "radius"    : 96.0,
+                    "rotationSpeed" : 3.0
+                },
+                {
+                    "type" : "Hazards/Rotoshredder",
+                    "name" : "",
+                    "position" : [
+                        400.0,
+                        144.0
+                    ],
+                    "velocity" : [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation" : 4.1887903213501,
+                    "direction" : 1,
+                    "drawLayer" : 10,
+                    "radius"    : 96.0,
+                    "rotationSpeed" : 3.0
                 }
             ]
         }

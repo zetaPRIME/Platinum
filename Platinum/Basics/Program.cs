@@ -24,7 +24,16 @@ namespace Platinum
 
 			using (Core core = Core.instance = new Core())
 			{
-				core.Run();
+				try
+				{
+					core.Run();
+				}
+				catch (Exception e)
+				{
+					Core.mode = EngineMode.Exception;
+					core.caughtException = e;
+					core.Run();
+				}
 			}
 
 			//FlushTemp(); // nope; can't wipe assemblies that are currently loaded
@@ -46,7 +55,7 @@ namespace Platinum
 				{
 					i++;
 
-					tempModifier = "test";
+					tempModifier = "playtest";
 
 					if (args.Length > i)
 					{

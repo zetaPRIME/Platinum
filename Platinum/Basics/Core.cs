@@ -129,6 +129,7 @@ namespace Platinum
 
 				if (mode == EngineMode.Game) Init_Game();
 				else if (mode == EngineMode.Editor) Init_Editor();
+				else if (mode == EngineMode.Exception) Init_Exception();
 
 				TimeSpan span = DateTime.Now - initStart;
 				Console.WriteLine("Init took " + span.TotalSeconds + " seconds");
@@ -140,6 +141,7 @@ namespace Platinum
 
 			if (mode == EngineMode.Game) Update_Game(gameTime);
 			else if (mode == EngineMode.Editor) Update_Editor(gameTime);
+			else if (mode == EngineMode.Exception) Update_Exception(gameTime);
 
 			base.Update(gameTime);
 		}
@@ -150,6 +152,7 @@ namespace Platinum
 
 			if (mode == EngineMode.Game) Draw_Game(gameTime);
 			else if (mode == EngineMode.Editor) Draw_Editor(gameTime);
+			else if (mode == EngineMode.Exception) Draw_Exception(gameTime);
 
 			base.Draw(gameTime);
 		}

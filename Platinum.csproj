@@ -92,6 +92,7 @@
     <Compile Include="Platinum\Asset Management\Package.cs" />
     <Compile Include="Platinum\Asset Management\PackageInfo.cs" />
     <Compile Include="Platinum\Asset Management\PackageManager.cs" />
+    <Compile Include="Platinum\Basics\Core_Exception.cs" />
     <Compile Include="Platinum\Basics\Core_Editor.cs" />
     <Compile Include="Platinum\Basics\Core.cs" />
     <Compile Include="Platinum\Basics\Core_Game.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Platinum\Editor\EditorCore.cs" />
     <Compile Include="Platinum\Editor\EditorEntity.cs" />
     <Compile Include="Platinum\Editor\ExplorerEntry.cs" />
+    <Compile Include="Platinum\Editor\PropertyHelper.cs" />
     <Compile Include="Platinum\Editor\SceneDisplay.cs" />
     <Compile Include="Platinum\Game\EntityPlacement.cs" />
     <Compile Include="Platinum\Game\Entrance.cs" />

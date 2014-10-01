@@ -161,7 +161,7 @@ namespace Platinum.Editor
 			propertyPage.children.Clear();
 
 			// common things
-			propertyPage.AddElement(new Label("Editing " + ep.typeName));
+			propertyPage.AddElement(new Label("Editing " + ep.type.displayName));
 			propertyPage.AddElement(new Separator());
 
 			propertyPage.AddElement(new Label("Position:"));
@@ -327,7 +327,7 @@ namespace Platinum.Editor
 				}
 				foreach (string str in folders)
 				{
-					explorerList.AddElement(new ExplorerEntry(str, (s) => false, (s) => { ExplorerGo(explorerMode, str); }, ExplorerDrawFolder).SetHeight(folderHeight));
+					explorerList.AddElement(new ExplorerEntry(str, (s) => false, (s) => { ExplorerGo(explorerMode, s); }, ExplorerDrawFolder).SetHeight(folderHeight));
 				}
 
 				List<string> entities = new List<string>();// placeableEntities;
@@ -362,7 +362,7 @@ namespace Platinum.Editor
 				Predicate<string> isSelected = (s) => s == selectedEntity;
 				Action<string> onSelect = (s) => selectedEntity = s;
 				
-				List<string> search = placeableEntities.FindAll((s) => EntityDef.defs[s].displayName.ToLower().Contains(qtolow));
+				List<string> search = placeableEntities.FindAll((s) => EntityDef.defs[s].displayName.ToLower().Contains(qtolow)).OrderBy((s) => EntityDef.defs[s].displayName).ToList();
 				foreach (string str in search)
 				{
 					explorerList.AddElement(new ExplorerEntry(str, isSelected, onSelect, ExplorerDrawEntity));

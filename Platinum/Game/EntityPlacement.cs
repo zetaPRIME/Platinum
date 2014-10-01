@@ -20,6 +20,8 @@ namespace Platinum
 			this.position = position;
 			def = new JsonData();
 			def.SetJsonType(JsonType.Object);
+
+			if (this.type.editorEntity != null) this.type.editorEntity.BuildDefaultJson(def);
 		}
 
 		public string typeName;
@@ -138,6 +140,7 @@ namespace Platinum
 
 			def.Read("drawLayer", ref drawLayer);
 
+			if (type.editorEntity != null) type.editorEntity.BuildDefaultJson(def);
 		}
 
 		public void Save()

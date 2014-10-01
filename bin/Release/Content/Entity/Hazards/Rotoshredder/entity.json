@@ -1,0 +1,6 @@
+﻿{
+	"mainTexture": "TestImage",
+	"editor": {
+		"selectBounds": [[-8, -8], [8, 8]]
+	}
+}
